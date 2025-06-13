@@ -1,0 +1,92 @@
+/* App.css */
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+
+.navbar {
+  background-color: #0a192f; /* dark blue strip */
+  padding: 1rem 2rem;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  display: flex;
+  gap: 2rem;
+  z-index: 100;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.navbar a {
+  color: #61dafb;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.navbar a:hover {
+  text-decoration: underline;
+}
+
+/* Push content down to not hide under fixed navbar */
+.page-content {
+  padding: 6rem 2rem 2rem 2rem;
+}
+
+.home-message {
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #2a2a2a;
+  padding: 2rem;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.home-message h1 {
+  margin-bottom: 1rem;
+  font-size: 2rem;
+}
+
+.home-message p {
+  font-size: 1.1rem;
+  color: #ccc;
+}
+
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.product-card {
+  background-color: #2e2e2e;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.product-card img {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+}
+
+.product-card h3 {
+  color: #61dafb;
+  margin: 1rem 0 0.5rem;
+}
+
+.product-card p {
+  color: #ccc;
+}
+
+.footer {
+  background-color: #0a192f;
+  color: #ccc;
+  padding: 1.5rem;
+  text-align: center;
+  margin-top: 3rem;
+}
