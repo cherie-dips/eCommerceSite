@@ -1,32 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import smartwatch from "../assets/smartwatch.avif";
-import speaker from "../assets/bluetooth-speaker.webp";
-import headphones from "../assets/Wireless-Headphones.webp";
-
-// Mock product data (temporary until backend is connected)
-const products = [
-  {
-    _id: "1",
-    name: "Wireless Headphones",
-    image: headphones,
-    price: 2999,
-  },
-  {
-    _id: "2",
-    name: "Smartwatch Pro",
-    image: smartwatch,
-    price: 4999,
-  },
-  {
-    _id: "3",
-    name: "Bluetooth Speaker",
-    image: speaker,
-    price: 1999,
-  },
-];
+import axios from "axios";
+import { useCart } from "../context/CartContext";
+import { useLikes } from "../context/LikesContext";
 
 export default function Products() {
+  const [products, setProducts] = useState([]);
+  const { addToCart } = useCart();
+  const { likedItems, toggleLike } = useLikes();
+
+  useEffect(() => {
+    axios.get("http://localhost:5050/api/products")
+      .then(res => setProducts(res.data))
+      .catch(err => console.error("Error fetching products:", err));
+  }, []);
+
   return (
     <div className="page-content">
       <h1>All Products</h1>
@@ -38,6 +26,10 @@ export default function Products() {
               <Link to={`/products/${product._id}`}>{product.name}</Link>
             </h3>
             <p>₹{product.price}</p>
+            <button onClick={() => toggleLike(product)}>
+              {likedItems.some(item => item._id === product._id) ? "💔 Unlike" : "❤️ Like"}
+            </button>
+            <button onClick={() => addToCart(product)}>Add to Cart 🛒</button>
           </div>
         ))}
       </div>
