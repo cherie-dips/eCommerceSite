@@ -20,40 +20,44 @@ export default function Register() {
       navigate("/login");
     } catch (err) {
       console.error(err);
-      // console.log("Registration error:", err.response?.data || err.message);
       alert("Registration failed!");
     }
   };
 
   return (
-    <div className="page-content">
-      <h2>Register</h2>
-      <form onSubmit={handleRegister}>
+    <div className="form-container">
+      <form onSubmit={handleRegister} className="form-card">
+        <h2 className="form-title">Join Flagzen</h2>
+        <p className="form-subtext">Create your account to get started</p>
+
+        <label>Username</label>
         <input
           type="text"
-          placeholder="Username"
+          placeholder="Your full name"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
-        /><br />
+        />
 
+        <label>Email</label>
         <input
           type="email"
-          placeholder="Email"
+          placeholder="your@email.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-        /><br />
+        />
 
+        <label>Password</label>
         <input
           type="password"
-          placeholder="Password"
+          placeholder="Create a strong password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-        /><br />
+        />
 
-        <button type="submit">Register</button>
+        <button type="submit" className="form-button">Register</button>
       </form>
     </div>
   );

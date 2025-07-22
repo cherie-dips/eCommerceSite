@@ -13,7 +13,7 @@ import { LikesProvider } from "./context/LikesContext";
 import LikedProducts from "./pages/LikedProducts";
 
 function AppContent() {
-  const { showCart } = useCart(); // ✅ useCart is now safely used inside CartProvider
+  const { showCart } = useCart(); 
 
   return (
     <>

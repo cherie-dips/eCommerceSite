@@ -18,7 +18,7 @@ export default function Navbar() {
       <div className="navbar-left">
         <Link to="/">
           <img
-            src={logo}
+            src={logo} 
             alt="Logo"
             style={{ height: "60px", verticalAlign: "middle" }}
           />
@@ -33,13 +33,13 @@ export default function Navbar() {
         <Link to="/likes">
           <img src={like} alt="Likes" style={{ height: "40px", verticalAlign: "middle" }} /> 
           <span style={{ fontFamily: "sans-serif", fontWeight: "bold", fontSize: "24px", verticalAlign: "bottom"}}>
-            {likedItems.length}
+            {likedItems.length > 0 && likedItems.length}
           </span>
         </Link>
         <Link to="#" onClick={toggleCart}>
           <img src={cart} alt="Cart" style={{ height: "40px", verticalAlign: "middle" }} />
           <span style={{ fontFamily: "sans-serif", fontWeight: "bold", fontSize: "24px" }}>
-            {cartItems.length}
+            {cartItems.length>0 && cartItems.length}
           </span>
         </Link>
         <div className="login-dropdown-container">

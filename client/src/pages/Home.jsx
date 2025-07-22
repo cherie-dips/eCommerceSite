@@ -1,35 +1,56 @@
 import React from "react";
+import hero from "../assets/Flagzen.png";
+import mug from "../assets/mug.png";
+import totebag from "../assets/totebag.png";
+import { AiFillHeart } from "react-icons/ai";
+import { FaCartPlus } from "react-icons/fa";
 
 export default function Home() {
   return (
     <div className="page-content scrollable">
       {/* Hero Section */}
       <section className="hero-section">
+        <img src={hero} alt="Flagzen Hero" className="hero-image" />
         <div className="hero-text">
-          <h1>Grow your business with us</h1>
-          <button>Shop all</button>
+          <h1>Make Your Brand Unforgettable</h1>
+          <button>Start Customizing</button>
         </div>
       </section>
 
       {/* Partner Logos */}
       <section className="partners">
         <div className="partner-row">
-          {Array(6).fill("Insert partner logo").map((text, idx) => (
+          {Array(6).fill("Trusted by top brands").map((text, idx) => (
             <div className="partner-logo" key={idx}>{text}</div>
           ))}
         </div>
       </section>
 
-      {/* Bestsellers */}
+      {/* Most Loved Products */}
       <section className="products-section">
-        <h2>Proven Bestsellers</h2>
-        <div className="products">
-          {/* Repeat this product-card */}
-          {Array(5).fill(0).map((_, idx) => (
-            <div className="product-card" key={idx}>
-              <img src="/tshirt.png" alt="Example product" />
-              <h3>Example product title</h3>
-              <p>₹1,199</p>
+        <h2>Most Loved Products In Corporate</h2>
+        <div className="products-grid">
+          {Array(4).fill(0).map((_, idx) => (
+            <div className="product-card" key={`mug-${idx}`}>
+              <button className="pc-like-float" aria-label="Like">
+                <AiFillHeart className="pc-like-icon liked" />
+              </button>
+
+              <div className="pc-imgwrap">
+                <img src={mug} alt="Branded Mug" className="pc-img" />
+              </div>
+
+              <h3 className="pc-name">Branded Mug</h3>
+              <p className="pc-price">Starting at ₹1,199</p>
+
+              <div className="pc-actions">
+                <button className="pc-action-btn" aria-label="Like">
+                  <AiFillHeart className="pc-action-icon liked" />
+                </button>
+                <button className="pc-action-btn" aria-label="Add to cart">
+                  <FaCartPlus className="pc-action-icon" />
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -37,9 +58,9 @@ export default function Home() {
 
       {/* Top Categories */}
       <section className="categories-section">
-        <h2>Shop our top categories</h2>
+        <h2>Custom Product Categories</h2>
         <div className="category-cards">
-          {Array(5).fill("Your collection's name").map((text, idx) => (
+          {["Apparel", "Drinkware", "Office Kits", "Tech Gadgets", "T-shirts"].map((text, idx) => (
             <div className="category-card" key={idx}>{text}</div>
           ))}
         </div>
@@ -47,20 +68,41 @@ export default function Home() {
 
       {/* Testimonials */}
       <section className="testimonials-section">
-        {Array(4).fill("Add a customer testimonial").map((text, idx) => (
+        {[
+          "“Flagzen made our onboarding kits stand out!”",
+          "“Excellent quality, seamless delivery.”",
+          "“A branding game-changer for our events.”",
+          "“Highly recommend for B2B merch!”"
+        ].map((text, idx) => (
           <div className="testimonial-card" key={idx}>{text}</div>
         ))}
       </section>
 
       {/* New Arrivals */}
       <section className="products-section">
-        <h2>New Arrivals</h2>
-        <div className="products">
-          {Array(5).fill(0).map((_, idx) => (
-            <div className="product-card" key={idx}>
-              <img src="/tshirt.png" alt="Example product" />
-              <h3>Example product title</h3>
-              <p>₹1,199</p>
+        <h2>Fresh Merch, Hot Off the Press</h2>
+        <div className="products-grid">
+          {Array(4).fill(0).map((_, idx) => (
+            <div className="product-card" key={`totebag-${idx}`}>
+              <button className="pc-like-float" aria-label="Like">
+                <AiFillHeart className="pc-like-icon liked" />
+              </button>
+
+              <div className="pc-imgwrap">
+                <img src={totebag} alt="Eco Tote Bag" className="pc-img" />
+              </div>
+
+              <h3 className="pc-name">Eco Tote Bag</h3>
+              <p className="pc-price">₹849</p>
+
+              <div className="pc-actions">
+                <button className="pc-action-btn" aria-label="Like">
+                  <AiFillHeart className="pc-action-icon liked" />
+                </button>
+                <button className="pc-action-btn" aria-label="Add to cart">
+                  <FaCartPlus className="pc-action-icon" />
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -68,12 +110,18 @@ export default function Home() {
 
       {/* Educational Content */}
       <section className="education-section">
-        <h2>You’re set up for success</h2>
+        <h2>Merch Strategy That Works</h2>
         <div className="education-cards">
-          {Array(4).fill("Add educational content").map((text, idx) => (
+          {[
+            "How Custom Swag Elevates Your Brand",
+            "The Psychology Behind Corporate Gifting",
+            "Streamline Employee Onboarding with Kits"
+          ].map((title, idx) => (
             <div className="education-card" key={idx}>
-              <h4>{text}</h4>
-              <p>Provide content for your customers here...</p>
+              <h4>{title}</h4>
+              <p>
+                Insights, trends, and strategies for building stronger brand presence through customized merchandise.
+              </p>
               <a href="#">Read more →</a>
             </div>
           ))}
