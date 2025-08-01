@@ -7,7 +7,7 @@ import { FaCartPlus } from "react-icons/fa";
 
 export default function Home() {
   return (
-    <div className="page-content scrollable">
+    <div className="page-content-main scrollable">
       {/* Hero Section */}
       <section className="hero-section">
         <img src={hero} alt="Flagzen Hero" className="hero-image" />
@@ -30,11 +30,8 @@ export default function Home() {
       <section className="products-section">
         <h2>Most Loved Products In Corporate</h2>
         <div className="products-grid">
-          {Array(4).fill(0).map((_, idx) => (
+          {Array(10).fill(0).map((_, idx) => (
             <div className="product-card" key={`mug-${idx}`}>
-              <button className="pc-like-float" aria-label="Like">
-                <AiFillHeart className="pc-like-icon liked" />
-              </button>
 
               <div className="pc-imgwrap">
                 <img src={mug} alt="Branded Mug" className="pc-img" />
@@ -82,12 +79,8 @@ export default function Home() {
       <section className="products-section">
         <h2>Fresh Merch, Hot Off the Press</h2>
         <div className="products-grid">
-          {Array(4).fill(0).map((_, idx) => (
+          {Array(5).fill(0).map((_, idx) => (
             <div className="product-card" key={`totebag-${idx}`}>
-              <button className="pc-like-float" aria-label="Like">
-                <AiFillHeart className="pc-like-icon liked" />
-              </button>
-
               <div className="pc-imgwrap">
                 <img src={totebag} alt="Eco Tote Bag" className="pc-img" />
               </div>

@@ -1,0 +1,190 @@
+/* Main layout */
+.product-details-ui {
+  display: flex;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1500px;
+  padding-top: 1rem;
+}
+
+/* Sidebar styling */
+.sidebar {
+  width: 250px;
+  min-width: 200px;
+  background-color: #2a2a2a;
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  min-height: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #ffffff;
+}
+
+.upload-label {
+  display: block;
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: #ccc;
+}
+
+.upload-label input {
+  display: block;
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+/* Save button */
+.save-button {
+  margin-top: 1.5rem;
+  padding: 0.6rem 1.2rem;
+  background-color: #61dafb;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+.save-button:hover {
+  background-color: #4db7d8;
+}
+
+/* Preview Section */
+.preview-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.image-preview {
+  position: relative;
+  background: #eee;
+  border: 1px solid #ccc;
+  width: 600px;
+  height: 400px;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.main-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+/* The dynamic width/height comes from the style prop on the img (logo) */
+.draggable-logo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  object-fit: contain;
+  background: rgba(255,255,255,0.6);
+  border: 1.5px dashed #888;
+  border-radius: 6px;
+  user-select: none;
+  cursor: move;
+  z-index: 2;
+  pointer-events: auto;
+  /* width/height are done inline for dynamic sizing */
+}
+
+/* Resize Slider */
+.resize-slider {
+  margin: 10px 0;
+  color: #ccc;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.resize-slider input[type="range"] {
+  width: 100%;
+}
+
+/* Angle button selector */
+.angle-selector {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.angle-button {
+  padding: 0.5rem 1rem;
+  background-color: #444;
+  color: white;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.angle-button.active,
+.angle-button:hover {
+  border-color: #61dafb;
+  background-color: #666;
+}
+
+/* Cart button */
+.cart-button {
+  padding: 0.8rem 2rem;
+  background-color: #61dafb;
+  color: white;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 1rem;
+}
+.cart-button:hover {
+  background-color: #4db7d8;
+}
+
+/* Product info box */
+.product-info-box {
+  margin-top: 1.5rem;
+  color: #fff;
+}
+.info-label {
+  margin: 0.2rem 0;
+  font-size: 1rem;
+  color: #eee;
+}
+
+.text-center { text-align: center; }
+.mt-10 { margin-top: 2.5rem; }
+.text-white { color: #fff; }
+
+/* Responsive tweaks */
+@media (max-width: 900px) {
+  .product-details-ui {
+    flex-direction: column;
+    align-items: center;
+    max-width: 100vw;
+    gap: 1rem;
+  }
+  .sidebar {
+    margin-bottom: 1rem;
+    width: 90vw;
+    min-width: unset;
+  }
+  .image-preview {
+    width: 98vw;
+    min-width: 250px;
+    max-width: 100vw;
+    height: auto;
+    aspect-ratio: 3/2;
+  }
+}

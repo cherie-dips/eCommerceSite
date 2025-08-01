@@ -8,12 +8,11 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
 import Register from "./pages/Register";
 import { CartProvider, useCart } from "./context/CartContext";
-import CartModal from "./components/CartModal";
 import { LikesProvider } from "./context/LikesContext";
 import LikedProducts from "./pages/LikedProducts";
+import CartPage from "./pages/CartPage";
 
 function AppContent() {
-  const { showCart } = useCart(); 
 
   return (
     <>
@@ -25,6 +24,7 @@ function AppContent() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/likes" element={<LikedProducts />} />
+        <Route path="/cart" element={<CartPage />} /> 
         <Route
           path="/admin"
           element={
@@ -34,7 +34,7 @@ function AppContent() {
           }
         />
       </Routes>
-      {showCart && <CartModal />}
+
     </>
   );
 }
@@ -45,7 +45,7 @@ function App() {
       <LikesProvider>
         <CartProvider>
           <Router>
-            <AppContent /> {/* ✅ context is now safe here */}
+            <AppContent />
           </Router>
         </CartProvider>
       </LikesProvider>

@@ -1,9 +1,8 @@
-//server/index.js
-
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const path = require('path'); // ✅ Required to resolve file paths
 const productRoutes = require('./routes/products');
 
 dotenv.config();
@@ -11,16 +10,22 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.use('/api/products', productRoutes);
 
-// 🔥 Mount your auth routes here
-const authRoutes = require('./routes/auth'); // 👈 adjust path if needed
-app.use('/api/auth', authRoutes);            // 👈 mounts /register at /api/auth/register
+// === Serve Static Customization Images ===
+app.use(
+  '/uploads/customizations',
+  express.static(path.join(__dirname, '..', 'uploads', 'customizations'))
+);
+
+// 🔥 Mount routes
+app.use('/api/products', productRoutes);
+const authRoutes = require('./routes/auth');
+app.use('/api/auth', authRoutes);
 
 // Basic test route
 app.get('/', (req, res) => {
-    console.log('API is running...');
-    res.send('API is running...\n');
+  console.log('API is running...');
+  res.send('API is running...\n');
 });
 
 // Start server
@@ -28,6 +33,7 @@ const PORT = process.env.PORT || 5050;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 // DB connection
-mongoose.connect(process.env.MONGO_URI)
+mongoose
+  .connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.error(err));

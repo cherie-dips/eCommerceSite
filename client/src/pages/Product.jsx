@@ -27,18 +27,6 @@ export default function Products() {
           const liked = likedItems.some((item) => item._id === product._id);
           return (
             <div key={product._id} className="product-card">
-              {/* Like icon floats over image */}
-              <button
-                className="pc-like-float"
-                onClick={() => toggleLike(product)}
-                aria-label={liked ? "Unlike" : "Like"}
-              >
-                {liked ? (
-                  <AiFillHeart className="pc-like-icon liked" />
-                ) : (
-                  <AiOutlineHeart className="pc-like-icon" />
-                )}
-              </button>
 
               <Link to={`/products/${product._id}`} className="pc-img-link">
                 <div className="pc-imgwrap">
