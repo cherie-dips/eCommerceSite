@@ -1,4 +1,3 @@
-/* Main layout */
 .product-details-ui {
   display: flex;
   gap: 2rem;
@@ -7,7 +6,6 @@
   padding-top: 1rem;
 }
 
-/* Sidebar styling */
 .sidebar {
   width: 250px;
   min-width: 200px;
@@ -41,7 +39,6 @@
   width: 100%;
 }
 
-/* Save button */
 .save-button {
   margin-top: 1.5rem;
   padding: 0.6rem 1.2rem;
@@ -58,7 +55,6 @@
   background-color: #4db7d8;
 }
 
-/* Preview Section */
 .preview-container {
   flex: 1;
   display: flex;
@@ -84,10 +80,10 @@
   object-fit: contain;
   display: block;
   border-radius: 10px;
-  pointer-events: none;
+  z-index: 1;
+  /* pointer-events: none;  Do not use this to avoid html2canvas skipping! */
 }
 
-/* The dynamic width/height comes from the style prop on the img (logo) */
 .draggable-logo {
   position: absolute;
   top: 0;
@@ -100,10 +96,8 @@
   cursor: move;
   z-index: 2;
   pointer-events: auto;
-  /* width/height are done inline for dynamic sizing */
 }
 
-/* Resize Slider */
 .resize-slider {
   margin: 10px 0;
   color: #ccc;
@@ -115,7 +109,6 @@
   width: 100%;
 }
 
-/* Angle button selector */
 .angle-selector {
   display: flex;
   gap: 1rem;
@@ -136,7 +129,6 @@
   background-color: #666;
 }
 
-/* Cart button */
 .cart-button {
   padding: 0.8rem 2rem;
   background-color: #61dafb;
@@ -152,7 +144,6 @@
   background-color: #4db7d8;
 }
 
-/* Product info box */
 .product-info-box {
   margin-top: 1.5rem;
   color: #fff;
@@ -167,7 +158,6 @@
 .mt-10 { margin-top: 2.5rem; }
 .text-white { color: #fff; }
 
-/* Responsive tweaks */
 @media (max-width: 900px) {
   .product-details-ui {
     flex-direction: column;

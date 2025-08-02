@@ -1,0 +1,150 @@
+/* Container with 2 sides (branding + form) */
+.auth-page-content {
+  padding: 5.5rem 0rem 0rem 0rem;
+}
+
+.auth-page-container {
+  display: flex;
+  min-height: 88vh;
+  max-height: 88vh;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Left purple branding panel */
+.auth-branding {
+  background: linear-gradient(135deg, #24242400, #282829);
+  flex: 1;
+  color: white;
+  padding: 3rem 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: inset 0 0 40px rgba(255, 255, 255, 0.15);
+}
+
+.auth-branding-title {
+  font-weight: 900;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.auth-branding-text {
+  font-size: 1.5rem;
+  line-height: 1.4;
+  margin-bottom: 2rem;
+}
+
+.auth-members p {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* Right white form panel */
+.auth-form-container {
+  background: white;
+  flex: 1;
+  padding: 4rem 3rem;
+  display: flex;
+  justify-content: center;
+  border-radius: 8px;
+  align-items: center;
+  box-shadow: 0 0 40px rgb(0 0 0 / 0.06);
+}
+
+/* Card form */
+.form-card {
+  max-width: 420px;
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-title {
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 0.25rem;
+  color: #2d2d2d;
+}
+
+.form-subtext {
+  color: #999;
+  margin-bottom: 1.75rem;
+  font-size: 1rem;
+}
+
+/* Labels */
+.form-card label {
+  margin-bottom: 0.35rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Inputs */
+.form-card input {
+  padding: 0.7rem 1rem;
+  font-size: 1rem;
+  border: 1.8px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 1.35rem;
+  transition: border-color 0.3s ease;
+}
+
+.form-card input:focus {
+  outline: none;
+  border-color: #4a3aff;
+}
+
+/* Buttons */
+.form-button {
+  padding: 0.85rem 0;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #4a3aff, #a384ff);
+  border: none;
+  color: white;
+  cursor: pointer;
+  margin-top: 0.75rem;
+  box-shadow: 0 4px 15px rgb(74 58 255 / 0.5);
+  transition: background 0.3s ease;
+}
+
+.form-button:hover {
+  background: linear-gradient(135deg, #3e31d6, #8c7be6);
+}
+
+/* Link below form */
+.auth-footer-text {
+  font-size: 0.875rem;
+  margin-top: 1.5rem;
+  color: #666;
+  text-align: center;
+}
+
+.auth-link {
+  font-weight: 600;
+  color: #4a3aff;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.auth-link:hover {
+  color: #2c1db8;
+}
+
+/* Responsive: stack vertically on small screens */
+@media (max-width: 768px) {
+  .auth-page-container {
+    flex-direction: column;
+  }
+  .auth-branding {
+    border-radius: 0 0 20px 20px;
+    padding: 2rem 2rem;
+    text-align: center;
+  }
+  .auth-form-container {
+    border-radius: 20px 20px 0 0;
+    padding: 2rem 2rem;
+  }
+}

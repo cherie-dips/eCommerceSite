@@ -1,14 +1,9 @@
-// client/src/context/CartContext.jsx
-
 import React, { createContext, useContext, useState } from "react";
 
-// Create the context
 const CartContext = createContext();
 
-// Custom hook to use cart context
 export const useCart = () => useContext(CartContext);
 
-// Provider component
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
 
@@ -39,11 +34,11 @@ export const CartProvider = ({ children }) => {
 
   const decreaseQuantity = (id) => {
     setCartItems((prev) =>
-      prev.map((item) =>
-        item._id === id && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
-      )
+      prev
+        .map((item) =>
+          item._id === id ? { ...item, quantity: item.quantity - 1 } : item
+        )
+        .filter((item) => item.quantity > 0)
     );
   };
 

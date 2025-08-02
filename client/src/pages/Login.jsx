@@ -1,7 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import "../styles/AuthPages.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -24,31 +25,55 @@ const Login = () => {
   };
 
   return (
-    <div className="form-container">
-      <form onSubmit={handleSubmit} className="form-card">
-        <h2 className="form-title">Welcome to Flagzen</h2>
-        <p className="form-subtext">Please log in to continue</p>
+    <div className="auth-page-content">
+      <div className="auth-page-container">
+        {/* Purple Branding Left Side */}
+        <div className="auth-branding">
+          <h1 className="auth-branding-title">Flagzen</h1>
+          <p className="auth-branding-text">
+            Welcome back! We're glad to see you again.
+          </p>
+          <div className="auth-members">
+            {/* Place members or graphics here if desired */}
+            <p>9.5k members</p>
+          </div>
+        </div>
 
-        <label>Email</label>
-        <input
-          type="email"
-          placeholder="your@email.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+        {/* Form White Right Side */}
+        <div className="auth-form-container">
+          <form onSubmit={handleSubmit} className="form-card">
+            <h2 className="form-title">Sign In</h2>
+            <p className="form-subtext">Please log in to continue</p>
 
-        <label>Password</label>
-        <input
-          type="password"
-          placeholder="Enter your password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+            <label>Email</label>
+            <input
+              type="email"
+              placeholder="your@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
 
-        <button type="submit" className="form-button">Log In</button>
-      </form>
+            <label>Password</label>
+            <input
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+
+            <button type="submit" className="form-button">Sign In</button>
+
+            <p className="auth-footer-text">
+              Don't have an account?{" "}
+              <Link to="/register" className="auth-link">
+                Register
+              </Link>
+            </p>
+          </form>
+        </div>
+      </div>
     </div>
   );
 };

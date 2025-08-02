@@ -22,6 +22,7 @@ const ProductDetails = () => {
   const [customerId] = useState("CUSTOMER123");
   const [orderId] = useState("ORDER" + Date.now());
 
+  // Fetch product data
   useEffect(() => {
     axios
       .get(`http://localhost:5050/api/products/${id}`)
@@ -29,6 +30,7 @@ const ProductDetails = () => {
       .catch((err) => console.error("Error fetching product:", err));
   }, [id]);
 
+  // Handle logo upload and center in preview
   const handleLogoUpload = (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith("image/")) {
@@ -50,6 +52,7 @@ const ProductDetails = () => {
     }
   };
 
+  // Re-center if logo size changes (on first upload)
   useEffect(() => {
     if (logo && previewRef.current && customPosition == null) {
       const { clientWidth, clientHeight } = previewRef.current;
@@ -61,13 +64,15 @@ const ProductDetails = () => {
     // eslint-disable-next-line
   }, [logo, logoSize]);
 
+  // "Save" (download and upload)
   const captureAndSave = async () => {
-    const canvas = await html2canvas(previewRef.current);
+    const canvas = await html2canvas(previewRef.current, { useCORS: true });
     const blob = await new Promise((resolve) =>
       canvas.toBlob(resolve, "image/png")
     );
     const file = new File([blob], "customized-product.png", { type: "image/png" });
 
+    // Download to user
     const url = URL.createObjectURL(file);
     const a = document.createElement("a");
     a.href = url;
@@ -75,6 +80,7 @@ const ProductDetails = () => {
     a.click();
     URL.revokeObjectURL(url);
 
+    // Upload to server
     const formData = new FormData();
     formData.append("productId", product._id);
     formData.append("customerId", customerId);
@@ -84,10 +90,18 @@ const ProductDetails = () => {
     await axios.post("http://localhost:5050/api/orders", formData);
   };
 
+  // Only compose (for cart) -- no download or upload!
+  const captureForCart = async () => {
+    const canvas = await html2canvas(previewRef.current, { useCORS: true });
+    return canvas.toDataURL("image/png");
+  };
+
+  // Add to cart handler -- no download
   const handleAddToCart = async () => {
-    await captureAndSave();
+    const compositeImage = await captureForCart();
     addToCart({
       ...product,
+      image: compositeImage, // show the customized image in the cart
       customization: {
         logo,
         position: customPosition,
@@ -96,6 +110,7 @@ const ProductDetails = () => {
         orderId,
         customerId,
       },
+      quantity: 1,
     });
     alert("Customized product added to cart!");
   };
@@ -136,12 +151,10 @@ const ProductDetails = () => {
 
         {/* Central preview */}
         <div className="preview-container">
-          <div
-            ref={previewRef}
-            className="image-preview"
-          >
+          <div ref={previewRef} className="image-preview">
             <img
               src={angleImage}
+              crossOrigin="anonymous"
               alt="Product Preview"
               className="main-image"
             />
@@ -157,6 +170,7 @@ const ProductDetails = () => {
                 <img
                   ref={logoNodeRef}
                   src={logo}
+                  crossOrigin="anonymous"
                   alt="Logo"
                   className="draggable-logo"
                   style={{
