@@ -33,10 +33,10 @@ body {
 
 /* NAVBAR ---------------------------------------------------- */
 .navbar {
-  background-color: #1a153187;
+  background-color: #16141c87;
   padding: 1rem 1rem;
   position: fixed;
-  top: 1rem;
+  top: 0rem;
   width: 98%;
   height: 40px;
   display: flex;
@@ -111,7 +111,7 @@ body {
 
 /* PAGE CONTENT SPACING BELOW NAV ---------------------------- */
 .page-content-main {
-  padding: 6rem 0rem 0rem 0rem;
+  padding: 3.5rem 0rem 0rem 0rem;
 }
 
 .page-content {

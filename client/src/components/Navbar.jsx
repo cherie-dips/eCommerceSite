@@ -7,7 +7,7 @@ import cart from "../assets/shopping-bag.png";
 import profile from "../assets/profile.png";
 
 export default function Navbar() {
-  const { cartItems } = useCart(); // ✅ Removed toggleCart
+  const { cartItems } = useCart(); 
   const { likedItems } = useLikes();
   const [showDropdown, setShowDropdown] = useState(false);
 

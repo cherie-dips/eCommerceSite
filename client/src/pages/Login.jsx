@@ -3,6 +3,7 @@ import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import "../styles/AuthPages.css";
+import authImage from "../assets/auth-image.png";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -28,7 +29,14 @@ const Login = () => {
     <div className="auth-page-content">
       <div className="auth-page-container">
         {/* Purple Branding Left Side */}
-        <div className="auth-branding">
+        <div className="auth-branding"
+          style={{
+          backgroundImage: `linear-gradient(135deg, rgba(36,36,36,0.6), rgba(40,40,41,0.6)), url(${authImage})`,
+              backgroundPosition: "center center",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
+          }}
+        >
           <h1 className="auth-branding-title">Flagzen</h1>
           <p className="auth-branding-text">
             Welcome back! We're glad to see you again.

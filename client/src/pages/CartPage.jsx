@@ -2,11 +2,22 @@ import React, { useState } from "react";
 import { useCart } from "../context/CartContext";
 import { Link } from "react-router-dom";
 import "../index.css";
+import "../styles/cartPage.css";
 
 export default function CartPage() {
   const { cartItems, increaseQuantity, decreaseQuantity } = useCart();
   const [discountCode, setDiscountCode] = useState("");
   const [appliedCode, setAppliedCode] = useState(null);
+
+  // Modal visibility state
+  const [showAddressModal, setShowAddressModal] = useState(false);
+
+  // Address inputs state
+  const [address, setAddress] = useState("");
+  const [pincode, setPincode] = useState("");
+
+  // Stored saved address (for demo, you can extend to store multiple)
+  const [savedAddress, setSavedAddress] = useState(null);
 
   const handleApplyCoupon = () => {
     if (discountCode === "SAVE10") {
@@ -26,18 +37,88 @@ export default function CartPage() {
       ? (total * 0.9).toFixed(2)
       : total.toFixed(2);
 
+  // Handle Save Address button inside modal
+  const handleSaveAddress = () => {
+    if (!address.trim() || !pincode.trim()) {
+      alert("Please enter both address and pincode.");
+      return;
+    }
+    // Save the address info as needed
+    setSavedAddress({ address: address.trim(), pincode: pincode.trim() });
+    // Close modal
+    setShowAddressModal(false);
+  };
+
+  // Handle Cancel button in modal
+  const handleCancelAddress = () => {
+    setShowAddressModal(false);
+  };
+
   return (
     <div className="page-content">
-      <h2 className = "cart-heading">Checkout</h2>
+      <h2 className="cart-heading">Checkout</h2>
       <div className="cart-container">
         <div className="cart-left">
-          {/* Address */}
+          {/* Address Section */}
           <div className="address-section">
-            <p>No address saved</p>
-            <button className="add-address-btn">Add new location</button>
+            {savedAddress ? (
+              <div className="saved-address-card">
+                <h4>Saved Address</h4>
+                <p>{savedAddress.address}</p>
+                <p>Pincode: {savedAddress.pincode}</p>
+                <button
+                  className="add-address-btn"
+                  onClick={() => setShowAddressModal(true)}
+                >
+                  Edit Address
+                </button>
+              </div>
+            ) : (
+              <>
+                <p>No address saved</p>
+                <button
+                  className="add-address-btn"
+                  onClick={() => setShowAddressModal(true)}
+                >
+                  Add new location
+                </button>
+              </>
+            )}
           </div>
 
-          {/* Cart */}
+          {/* Address Modal */}
+          {showAddressModal && (
+            <div className="modal-overlay">
+              <div className="modal-card">
+                <h3>Enter Your Address</h3>
+                <label>Address</label>
+                <textarea
+                  rows={3}
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="Enter your full address"
+                />
+                <label>Pincode</label>
+                <input
+                  type="text"
+                  value={pincode}
+                  onChange={(e) => setPincode(e.target.value)}
+                  placeholder="Enter pincode"
+                />
+
+                <div className="modal-buttons">
+                  <button className="save-btn" onClick={handleSaveAddress}>
+                    Save
+                  </button>
+                  <button className="cancel-btn" onClick={handleCancelAddress}>
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Cart Section */}
           <div className="cart-section">
             <h3>Cart ({cartItems.length} items)</h3>
             {cartItems.length === 0 ? (
@@ -52,14 +133,14 @@ export default function CartPage() {
                     <strong>{item.name}</strong>
                     <p>₹{item.price} per item</p>
                   </div>
-                  <div className = "cart-quantity">
+                  <div className="cart-quantity">
                     <div className="quantity-controls">
                       <button onClick={() => decreaseQuantity(item._id)}>-</button>
                       <span>{item.quantity}</span>
                       <button onClick={() => increaseQuantity(item._id)}>+</button>
                     </div>
                     <div className="item-total">
-                        ₹{(item.price * item.quantity).toFixed(2)}
+                      ₹{(item.price * item.quantity).toFixed(2)}
                     </div>
                   </div>
                 </div>

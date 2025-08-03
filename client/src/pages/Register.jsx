@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import "../styles/AuthPages.css";
+import authImage from "../assets/auth-image.png";
 
 export default function Register() {
   const [username, setUsername] = useState("");
@@ -29,10 +30,20 @@ export default function Register() {
     <div className="auth-page-content">
       <div className="auth-page-container">
         {/* Purple Branding Left Side */}
-        <div className="auth-branding">
+        <div className="auth-branding"
+          style={{
+          backgroundImage: `linear-gradient(135deg, rgba(36,36,36,0.6), rgba(40,40,41,0.6)), url(${authImage})`,
+              backgroundPosition: "center center",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
+          }}
+        >
           <h1 className="auth-branding-title">Flagzen</h1>
           <p className="auth-branding-text">
-            Ready to take your startup to the next level? Join <strong>Flagzen</strong> today.
+            Ready to take your startup to the next level?
+          </p>
+          <p className="auth-branding-text">
+            Join <strong>Flagzen</strong> today.
           </p>
           <div className="auth-members">
             {/* You can place member avatars here if needed */}

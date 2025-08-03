@@ -1,12 +1,12 @@
 /* Container with 2 sides (branding + form) */
 .auth-page-content {
-  padding: 5.5rem 0rem 0rem 0rem;
+  padding: 4.5rem 0rem 0rem 0rem;
 }
 
 .auth-page-container {
   display: flex;
-  min-height: 88vh;
-  max-height: 88vh;
+  min-height: 90vh;
+  max-height: 90vh;
   font-family: "Poppins", sans-serif;
 }
 
@@ -23,6 +23,7 @@
 }
 
 .auth-branding-title {
+  color: #3ae5ff;
   font-weight: 900;
   font-size: 3rem;
   margin-bottom: 1rem;
@@ -34,6 +35,10 @@
   margin-bottom: 2rem;
 }
 
+.brand-color {
+  color: #3ae5ff;
+}
+
 .auth-members p {
   font-size: 0.9rem;
   opacity: 0.8;
@@ -41,12 +46,12 @@
 
 /* Right white form panel */
 .auth-form-container {
+    max-width: 60vh;
   background: white;
   flex: 1;
   padding: 4rem 3rem;
   display: flex;
   justify-content: center;
-  border-radius: 8px;
   align-items: center;
   box-shadow: 0 0 40px rgb(0 0 0 / 0.06);
 }
@@ -91,26 +96,24 @@
 
 .form-card input:focus {
   outline: none;
-  border-color: #4a3aff;
+  border-color: #727272;
 }
 
 /* Buttons */
 .form-button {
-  padding: 0.85rem 0;
-  font-weight: 600;
-  font-size: 1rem;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #4a3aff, #a384ff);
+  background: #61dafb;
   border: none;
-  color: white;
+  padding: 0.5rem 1rem; 
+  border-radius: 6px;
   cursor: pointer;
-  margin-top: 0.75rem;
-  box-shadow: 0 4px 15px rgb(74 58 255 / 0.5);
-  transition: background 0.3s ease;
+  font-weight: bold;
+  color: white;       
+  font-size: 1rem;       
+  transition: background-color 0.3s ease;
 }
 
 .form-button:hover {
-  background: linear-gradient(135deg, #3e31d6, #8c7be6);
+  background-color: #4db7d8;
 }
 
 /* Link below form */
@@ -123,14 +126,14 @@
 
 .auth-link {
   font-weight: 600;
-  color: #4a3aff;
+  color: #73eef7;
   text-decoration: none;
   cursor: pointer;
   transition: color 0.3s ease;
 }
 
 .auth-link:hover {
-  color: #2c1db8;
+  color: #0cc6e2;
 }
 
 /* Responsive: stack vertically on small screens */
