@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useCart } from "../context/CartContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; 
 import "../index.css";
 import "../styles/cartPage.css";
 
@@ -11,13 +11,13 @@ export default function CartPage() {
 
   // Modal visibility state
   const [showAddressModal, setShowAddressModal] = useState(false);
-
   // Address inputs state
   const [address, setAddress] = useState("");
   const [pincode, setPincode] = useState("");
-
-  // Stored saved address (for demo, you can extend to store multiple)
+  // Stored saved address
   const [savedAddress, setSavedAddress] = useState(null);
+  
+  const navigate = useNavigate(); // <-- set up navigation
 
   const handleApplyCoupon = () => {
     if (discountCode === "SAVE10") {
@@ -37,21 +37,22 @@ export default function CartPage() {
       ? (total * 0.9).toFixed(2)
       : total.toFixed(2);
 
-  // Handle Save Address button inside modal
   const handleSaveAddress = () => {
     if (!address.trim() || !pincode.trim()) {
       alert("Please enter both address and pincode.");
       return;
     }
-    // Save the address info as needed
     setSavedAddress({ address: address.trim(), pincode: pincode.trim() });
-    // Close modal
     setShowAddressModal(false);
   };
 
-  // Handle Cancel button in modal
   const handleCancelAddress = () => {
     setShowAddressModal(false);
+  };
+
+  const handleCheckout = () => {
+    // Here you could also validate address, cart, etc!
+    navigate("/checkout");
   };
 
   return (
@@ -105,7 +106,6 @@ export default function CartPage() {
                   onChange={(e) => setPincode(e.target.value)}
                   placeholder="Enter pincode"
                 />
-
                 <div className="modal-buttons">
                   <button className="save-btn" onClick={handleSaveAddress}>
                     Save
@@ -153,7 +153,6 @@ export default function CartPage() {
         <div className="cart-right">
           <div className="summary-section">
             <h3>Summary</h3>
-
             <label className="discount-label">Discount Code</label>
             <div className="discount-input">
               <input
@@ -165,7 +164,6 @@ export default function CartPage() {
               <button onClick={handleApplyCoupon}>Apply</button>
             </div>
             {appliedCode && <p className="discount-msg">{appliedCode}</p>}
-
             <div className="summary-line">
               <span>Subtotal</span>
               <span>₹{total.toFixed(2)}</span>
@@ -178,8 +176,9 @@ export default function CartPage() {
               <strong>Total</strong>
               <strong>₹{discountedTotal}</strong>
             </div>
-
-            <button className="checkout-button full">Checkout</button>
+            <button className="checkout-button full" onClick={handleCheckout}>
+              Checkout
+            </button>
           </div>
         </div>
       </div>

@@ -1,0 +1,81 @@
+.navbar {
+  background-color: #ffffffb3;
+  padding: 1rem 1rem;
+  position: fixed;
+  top: 0rem;
+  width: 98%;
+  height: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  gap: 1rem;
+}
+
+.navbar-left,
+.navbar-right {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.navbar-logo, .navbar-home, .navbar-products {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #000000;
+}
+
+.navbar a,
+.navbar button {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+  font-size: 1rem;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background 0.3s ease, color 0.3s ease;
+  max-width: 100%;
+}
+
+.login-dropdown-container {
+  position: relative;
+}
+
+.login-button {
+  background: none;
+  border: none;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+.login-dropdown {
+  position: absolute;
+  right: 0;
+  margin-top: 0.5rem;
+  background-color: #1f2937;
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  min-width: 120px;
+}
+
+.login-dropdown a {
+  color: #e5e7eb;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.login-dropdown a:hover {
+  background-color: #374151;
+  color: #38bdf8;
+}

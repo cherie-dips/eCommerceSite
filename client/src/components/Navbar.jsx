@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import like from "../assets/like.png";
 import cart from "../assets/shopping-bag.png";
 import profile from "../assets/profile.png";
+import "../styles/Navbar.css";
 
 export default function Navbar() {
   const { cartItems } = useCart(); 
@@ -14,13 +15,9 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-left">
-        <Link to="/">
-          FLAGZEN
-        </Link>
-        <Link to="/"> 
-          Home
-        </Link>
-        <Link to="/products">Products</Link>
+        <Link to="/" className="navbar-logo text-black"> FLAGZEN </Link>
+        <Link to="/" className="navbar-home"> Home </Link>
+        <Link to="/products" className="navbar-products"> Products </Link>
       </div>
 
       <div className="navbar-right">

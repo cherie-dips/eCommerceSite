@@ -11,6 +11,7 @@ import { CartProvider, useCart } from "./context/CartContext";
 import { LikesProvider } from "./context/LikesContext";
 import LikedProducts from "./pages/LikedProducts";
 import CartPage from "./pages/CartPage";
+import Checkout from "./pages/Checkout";
 
 function AppContent() {
 
@@ -25,6 +26,7 @@ function AppContent() {
         <Route path="/login" element={<Login />} />
         <Route path="/likes" element={<LikedProducts />} />
         <Route path="/cart" element={<CartPage />} /> 
+        <Route path="/checkout" element={<Checkout />} />
         <Route
           path="/admin"
           element={
