@@ -1,19 +1,24 @@
 import React from "react";
 import hero from "../assets/Flagzen.png";
+import hero2 from "../assets/Flagzen2.png";
 import mug from "../assets/mug.png";
 import totebag from "../assets/totebag.png";
 import { AiFillHeart } from "react-icons/ai";
 import { FaCartPlus } from "react-icons/fa";
+import "../styles/Home.css";
 
 export default function Home() {
   return (
     <div className="page-content-main scrollable">
       {/* Hero Section */}
       <section className="hero-section">
-        <img src={hero} alt="Flagzen Hero" className="hero-image" />
+        <div className="hero-images">
+          <img src={hero} alt="Flagzen Hero" className="hero-image" />
+          <img src={hero2} alt="Flagzen Hero 2" className="hero-image" />
+        </div>
         <div className="hero-text">
           <h1>Make Your Brand Unforgettable</h1>
-          <button>Start Customizing</button>
+          <button className="hero-button">Start Customizing</button>
         </div>
       </section>
 
@@ -30,7 +35,7 @@ export default function Home() {
       <section className="products-section">
         <h2>Most Loved Products In Corporate</h2>
         <div className="products-grid">
-          {Array(10).fill(0).map((_, idx) => (
+          {Array(8).fill(0).map((_, idx) => (
             <div className="product-card" key={`mug-${idx}`}>
 
               <div className="pc-imgwrap">
@@ -79,7 +84,7 @@ export default function Home() {
       <section className="products-section">
         <h2>Fresh Merch, Hot Off the Press</h2>
         <div className="products-grid">
-          {Array(5).fill(0).map((_, idx) => (
+          {Array(4).fill(0).map((_, idx) => (
             <div className="product-card" key={`totebag-${idx}`}>
               <div className="pc-imgwrap">
                 <img src={totebag} alt="Eco Tote Bag" className="pc-img" />

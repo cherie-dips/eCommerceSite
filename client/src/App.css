@@ -1,92 +1,109 @@
 /* App.css */
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #1e1e1e;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #2d3748;
 }
 
 .navbar {
-  background-color: #0a192f; /* dark blue strip */
-  padding: 1rem 2rem;
+  background-color: #ffffff;
+  padding: 0.75rem 2rem;
   position: fixed;
   top: 0;
   width: 100%;
   display: flex;
   gap: 2rem;
   z-index: 100;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .navbar a {
-  color: #61dafb;
+  color: #4a5568;
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 500;
+  transition: color 0.2s ease;
 }
 
 .navbar a:hover {
-  text-decoration: underline;
+  color: #ffb3ba;
 }
 
 /* Push content down to not hide under fixed navbar */
 .page-content {
-  padding: 6rem 2rem 2rem 2rem;
+  padding: 5rem 2rem 2rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .home-message {
   max-width: 600px;
   margin: 0 auto;
-  background-color: #2a2a2a;
+  background-color: #f8fafc;
   padding: 2rem;
-  border-radius: 10px;
+  border-radius: 12px;
   text-align: center;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
 }
 
 .home-message h1 {
   margin-bottom: 1rem;
   font-size: 2rem;
+  color: #2d3748;
 }
 
 .home-message p {
   font-size: 1.1rem;
-  color: #ccc;
+  color: #4a5568;
 }
 
 .products {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
+  gap: 2rem;
 }
 
 .product-card {
-  background-color: #2e2e2e;
-  padding: 1rem;
-  border-radius: 8px;
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 12px;
   text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 .product-card img {
   width: 100%;
   max-height: 200px;
   object-fit: cover;
+  border-radius: 8px;
 }
 
 .product-card h3 {
-  color: #61dafb;
+  color: #2d3748;
   margin: 1rem 0 0.5rem;
+  font-weight: 600;
 }
 
 .product-card p {
-  color: #ccc;
+  color: #4a5568;
 }
 
 .footer {
-  background-color: #0a192f;
-  color: #ccc;
-  padding: 1.5rem;
+  background-color: #f8fafc;
+  color: #4a5568;
+  padding: 2rem;
   text-align: center;
   margin-top: 3rem;
+  border-top: 1px solid #e2e8f0;
 }

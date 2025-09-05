@@ -1,19 +1,28 @@
+.page-content-productDetails {
+  padding: 5rem 0rem 0rem 0rem;
+  background-color: #f7fafc;
+  min-height: 100vh;
+}
+
 .product-details-ui {
   display: flex;
-  gap: 2rem;
+  gap: 1rem; /* Reduced gap */
   width: 100%;
-  max-width: 1500px;
-  padding-top: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #fafbfc;
+  min-height: 80vh;
 }
 
 .sidebar {
-  width: 250px;
-  min-width: 200px;
-  background-color: #2a2a2a;
-  padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  min-height: 350px;
+  width: 260px; /* Reduced width */
+  min-width: 220px;
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+  min-height: 500px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -22,37 +31,50 @@
 
 .section-title {
   font-size: 1.5rem;
-  margin-bottom: 1rem;
-  color: #ffffff;
+  margin-bottom: 1.5rem;
+  color: #2d3748;
+  font-weight: 700;
 }
 
 .upload-label {
   display: block;
   margin-top: 1rem;
   font-size: 1rem;
-  color: #ccc;
+  color: #4a5568;
+  font-weight: 500;
 }
 
 .upload-label input {
   display: block;
   margin-top: 0.5rem;
   width: 100%;
+  padding: 0.75rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.upload-label input:focus {
+  outline: none;
+  border-color: #ffb3ba;
+  box-shadow: 0 0 0 3px rgba(255, 179, 186, 0.1);
 }
 
 .save-button {
   margin-top: 1.5rem;
-  padding: 0.6rem 1.2rem;
-  background-color: #61dafb;
+  padding: 0.75rem 1.5rem;
+  background-color: #ffb3ba;
   border: none;
-  color: white;
+  color: #2d3748;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 600;
   width: 100%;
-  transition: background-color 0.3s ease;
+  transition: all 0.2s ease;
 }
 .save-button:hover {
-  background-color: #4db7d8;
+  background-color: #ff9aa2;
+  transform: translateY(-1px);
 }
 
 .preview-container {
@@ -65,13 +87,14 @@
 
 .image-preview {
   position: relative;
-  background: #eee;
-  border: 1px solid #ccc;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   width: 600px;
   height: 400px;
   margin: 0 auto;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .main-image {
@@ -89,18 +112,19 @@
   top: 0;
   left: 0;
   object-fit: contain;
-  background: rgba(255,255,255,0.6);
-  border: 1.5px dashed #888;
-  border-radius: 6px;
+  background: rgba(255,255,255,0.9);
+  border: 2px dashed #ffb3ba;
+  border-radius: 8px;
   user-select: none;
   cursor: move;
   z-index: 2;
   pointer-events: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .resize-slider {
   margin: 10px 0;
-  color: #ccc;
+  color: #4a5568;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -115,65 +139,73 @@
   margin-top: 1rem;
 }
 .angle-button {
-  padding: 0.5rem 1rem;
-  background-color: #444;
-  color: white;
-  border: 2px solid transparent;
-  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  background-color: #fafbfc;
+  color: #4a5568;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  font-weight: 500;
 }
 .angle-button.active,
 .angle-button:hover {
-  border-color: #61dafb;
-  background-color: #666;
+  border-color: #ffb3ba;
+  background-color: #ffb3ba;
+  color: #2d3748;
 }
 
 .cart-button {
   padding: 0.8rem 2rem;
-  background-color: #61dafb;
-  color: white;
+  background-color: #ffb3ba;
+  color: #2d3748;
   font-size: 1rem;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.2s ease;
   margin-top: 1rem;
+  font-weight: 600;
 }
 .cart-button:hover {
-  background-color: #4db7d8;
+  background-color: #ff9aa2;
+  transform: translateY(-1px);
 }
 
 .product-info-box {
-  margin-top: 1.5rem;
-  color: #fff;
+  flex-shrink: 0; /* prevent it from squishing */
+  width: 250px;   /* give it a fixed width */
 }
+
 .info-label {
   margin: 0.2rem 0;
   font-size: 1rem;
-  color: #eee;
+  color: #4a5568;
+  font-weight: 500;
 }
 
 .text-center { text-align: center; }
 .mt-10 { margin-top: 2.5rem; }
-.text-white { color: #fff; }
+.text-white { color: #2d3748; }
 
 @media (max-width: 900px) {
   .product-details-ui {
     flex-direction: column;
     align-items: center;
     max-width: 100vw;
-    gap: 1rem;
+    gap: 1.5rem;
+    padding: 1rem;
   }
   .sidebar {
     margin-bottom: 1rem;
-    width: 90vw;
+    width: 95vw;
     min-width: unset;
+    max-width: 400px;
   }
   .image-preview {
-    width: 98vw;
+    width: 95vw;
     min-width: 250px;
-    max-width: 100vw;
+    max-width: 500px;
     height: auto;
     aspect-ratio: 3/2;
   }

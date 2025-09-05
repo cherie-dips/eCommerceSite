@@ -1,22 +1,21 @@
 .checkout-page-content {
-  padding: 4.5rem 0rem 0rem 0rem;
+  padding: 4rem 0rem 0rem 0rem;
 }
 
 .checkout-layout {
   display: flex;
   min-height: 86vh;
-  background: rgba(0, 0, 0, 0.4);
-  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #f0f8ff 0%, #f5f0ff 100%);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 }
 
 .checkout-cards-title {
-
   font-size: 1.2rem;
   font-weight: 700;
   position: absolute;
   top: 6rem;
   left: 2rem;
-  color: #ffffff;
+  color: #2d3748;
 }
 
 .checkout-cards { 
@@ -63,11 +62,12 @@
   min-width: 380px;
 }
 .checkout-form {
-  background: #2a2a2a;
-  /* box-shadow: 0 6px 32px #a384ff2b; */
+  background: #ffffff;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
   padding: 2.35rem 2.7rem;
   width: 465px;
-  min-height: 575px;
+  min-height: 585px;
   display: flex;
   flex-direction: column;
   gap: 1.1rem;
@@ -81,9 +81,9 @@
 .title-row h2 {
   font-size: 1.42rem;
   font-weight: 700;
-  color: #ffffff;
+  color: #2d3748;
 }
-.qr-code { color: #7ef0fc; font-size: 0.9rem; cursor: pointer; }
+.qr-code { color: #ffb3ba; font-size: 0.9rem; cursor: pointer; }
 
 .alt-options-row {
   display: flex;
@@ -122,23 +122,24 @@
 }
 .input-row label {
   font-size: 0.93rem;
-  color: #959595;
+  color: #4a5568;
   margin-bottom: 0.18rem;
+  font-weight: 500;
 }
 
 .input-row input {
-  padding: 0.54rem 0.84rem;
-  border-radius: 7px;
-  border: 1.5px solid #d6daf0;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1.5px solid #e2e8f0;
   font-size: 1rem;
-  background: #f5f8ff;
+  background: #ffffff;
   margin-bottom: 0.1rem;
-  transition: border-color 0.22s;
+  transition: all 0.2s ease;
 }
 .input-row input:focus {
   outline: none;
-  border-color: #535353;
-  background: #f6f5ff;
+  border-color: #ffb3ba;
+  box-shadow: 0 0 0 3px rgba(255, 179, 186, 0.1);
 }
 
 .row-cols-2 {
@@ -158,31 +159,32 @@
 }
 
 .pay-btn {
-  background: #61dafb;
-  color: white;
-  font-weight: bold;
+  background: #ffb3ba;
+  color: #2d3748;
+  font-weight: 600;
   font-size: 1.08rem;
   border: none;
-  padding: 0.7rem 0;
-  border-radius: 9px;
+  padding: 0.75rem 0;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background 0.19s;
+  transition: all 0.2s ease;
   width: 100%;
   margin-top: 0.5rem;
-  box-shadow: 0 4px 15px #04aec944;
+  box-shadow: 0 4px 15px rgba(255, 179, 186, 0.3);
 }
 .pay-btn:hover {
-  background: #4db7d8;
+  background: #ff9aa2;
+  transform: translateY(-1px);
 }
 .pay-success {
-  color: #40b17b;
+  color: #10b981;
   font-weight: 600;
   text-align: center;
   margin-top: 0.3rem;
 }
 
 .err {
-  color: #f85b5d;
+  color: #ef4444;
   font-size: 0.98em;
   margin-top: -3px;
   margin-bottom: 0;

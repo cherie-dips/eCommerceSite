@@ -1,30 +1,30 @@
 /* Container with 2 sides (branding + form) */
 .auth-page-content {
-  padding: 4.5rem 0rem 0rem 0rem;
+  padding: 4rem 0rem 0rem 0rem;
 }
 
 .auth-page-container {
   display: flex;
-  min-height: 90vh;
-  max-height: 90vh;
-  font-family: "Poppins", sans-serif;
+  min-height: 95vh;
+  max-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 }
 
-/* Left purple branding panel */
+/* Left branding panel */
 .auth-branding {
-  background: linear-gradient(135deg, #24242400, #282829);
+  background: linear-gradient(135deg, #f0f8ff 0%, #f5f0ff 100%);
   flex: 1;
-  color: white;
+  color: #2d3748;
   padding: 3rem 4rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  box-shadow: inset 0 0 40px rgba(255, 255, 255, 0.15);
+  border-right: 1px solid #e2e8f0;
 }
 
 .auth-branding-title {
-  color: #3ae5ff;
-  font-weight: 900;
+  color: #ffb3ba;
+  font-weight: 800;
   font-size: 3rem;
   margin-bottom: 1rem;
 }
@@ -33,27 +33,28 @@
   font-size: 1.5rem;
   line-height: 1.4;
   margin-bottom: 2rem;
+  color: #4a5568;
 }
 
 .brand-color {
-  color: #3ae5ff;
+  color: #ffb3ba;
 }
 
 .auth-members p {
   font-size: 0.9rem;
-  opacity: 0.8;
+  color: #718096;
 }
 
 /* Right white form panel */
 .auth-form-container {
-    max-width: 60vh;
+  max-width: 60vh;
   background: white;
   flex: 1;
   padding: 4rem 3rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 0 40px rgb(0 0 0 / 0.06);
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.06);
 }
 
 /* Card form */
@@ -68,11 +69,11 @@
   font-weight: 700;
   font-size: 2rem;
   margin-bottom: 0.25rem;
-  color: #2d2d2d;
+  color: #2d3748;
 }
 
 .form-subtext {
-  color: #999;
+  color: #718096;
   margin-bottom: 1.75rem;
   font-size: 1rem;
 }
@@ -81,59 +82,63 @@
 .form-card label {
   margin-bottom: 0.35rem;
   font-size: 0.9rem;
-  color: #555;
+  color: #4a5568;
+  font-weight: 500;
 }
 
 /* Inputs */
 .form-card input {
   padding: 0.7rem 1rem;
   font-size: 1rem;
-  border: 1.8px solid #ddd;
+  border: 1.5px solid #e2e8f0;
   border-radius: 8px;
   margin-bottom: 1.35rem;
-  transition: border-color 0.3s ease;
+  transition: all 0.2s ease;
+  background-color: #ffffff;
 }
 
 .form-card input:focus {
   outline: none;
-  border-color: #727272;
+  border-color: #ffb3ba;
+  box-shadow: 0 0 0 3px rgba(255, 179, 186, 0.1);
 }
 
 /* Buttons */
 .form-button {
-  background: #61dafb;
+  background: #ffb3ba;
   border: none;
-  padding: 0.5rem 1rem; 
-  border-radius: 6px;
+  padding: 0.75rem 1rem; 
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: bold;
-  color: white;       
+  font-weight: 600;
+  color: #2d3748;       
   font-size: 1rem;       
-  transition: background-color 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .form-button:hover {
-  background-color: #4db7d8;
+  background-color: #ff9aa2;
+  transform: translateY(-1px);
 }
 
 /* Link below form */
 .auth-footer-text {
   font-size: 0.875rem;
   margin-top: 1.5rem;
-  color: #666;
+  color: #718096;
   text-align: center;
 }
 
 .auth-link {
   font-weight: 600;
-  color: #73eef7;
+  color: #ffb3ba;
   text-decoration: none;
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: color 0.2s ease;
 }
 
 .auth-link:hover {
-  color: #0cc6e2;
+  color: #ff9aa2;
 }
 
 /* Responsive: stack vertically on small screens */

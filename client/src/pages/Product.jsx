@@ -5,6 +5,7 @@ import { useCart } from "../context/CartContext";
 import { useLikes } from "../context/LikesContext";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { FaCartPlus } from "react-icons/fa";
+import "../styles/Product.css";
 
 export default function Products() {
   const [products, setProducts] = useState([]);

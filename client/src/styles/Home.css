@@ -1,0 +1,219 @@
+/* PAGE CONTENT SPACING BELOW NAV ---------------------------- */
+.page-content-main {
+  padding: 4rem 0rem 0rem 0rem;
+}
+
+/* HOME MESSAGE BOX ------------------------------------------ */
+.home-message {
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #f8fafc;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+}
+.home-message h1 {
+  margin-bottom: 1rem;
+  font-size: 2rem;
+  color: #2d3748;
+}
+.home-message p {
+  font-size: 1.1rem;
+  color: #4a5568;
+}
+
+/* HOME PAGE ------------------------------------------------- */
+.scrollable { scroll-behavior: smooth; }
+
+.hero-section {
+  text-align: center;
+  background-color: #fafbfc;
+}
+
+.hero-images {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.hero-image {
+  width: 50%;
+  max-width: 50vw;
+  height: auto;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.hero-button {
+  margin-bottom: 2rem;
+}
+
+.hero-text h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #2d3748;
+}
+
+.hero-text button {
+  background-color: #ffb3ba;
+  color: #2d3748;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.hero-text button:hover {
+  background-color: #ff9aa2;
+  transform: translateY(-2px);
+}
+
+.partners {
+  background-color: #ffffff;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+.partner-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.partner-logo {
+  background-color: #fafbfc;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  min-width: 120px;
+  text-align: center;
+  border: 1px solid #e2e8f0;
+  color: #4a5568;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+.partner-logo:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.products-section {
+  padding: 4rem 2rem;
+  background-color: #fafbfc;
+  color: #2d3748;
+}
+.products-section h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  color: #2d3748;
+}
+
+.categories-section {
+  background-color: #ffffff;
+  padding: 4rem 2rem;
+  color: #2d3748;
+}
+.categories-section h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  color: #2d3748;
+}
+.category-cards {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.category-card {
+  background-color: #fafbfc;
+  padding: 2rem;
+  border-radius: 12px;
+  color: #2d3748;
+  min-width: 200px;
+  text-align: center;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+.category-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.testimonials-section {
+  background-color: #fafbfc;
+  padding: 4rem 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  color: #2d3748;
+}
+.testimonial-card {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  min-width: 250px;
+  text-align: center;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+.testimonial-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.education-section {
+  background-color: #ffffff;
+  padding: 4rem 2rem;
+  color: #2d3748;
+}
+.education-section h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  color: #2d3748;
+}
+.education-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.education-card {
+  background-color: #fafbfc;
+  padding: 2rem;
+  border-radius: 12px;
+  min-width: 250px;
+  max-width: 300px;
+  text-align: left;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+.education-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.education-card h4 {
+  color: #2d3748;
+  margin-bottom: 1rem;
+}
+.education-card p {
+  color: #4a5568;
+  margin-bottom: 1rem;
+}
+.education-card a {
+  color: #ffb3ba;
+  font-weight: 600;
+}

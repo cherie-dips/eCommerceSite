@@ -122,7 +122,7 @@ const ProductDetails = () => {
   const angleImage = product.images?.[selectedAngle] || product.image;
 
   return (
-    <div className="page-content">
+    <div className="page-content-productDetails">
       <div className="product-details-ui">
         {/* Sidebar left */}
         <div className="sidebar">
