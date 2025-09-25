@@ -23,7 +23,7 @@
 }
 
 .auth-branding-title {
-  color: #ffb3ba;
+  color: #7c0034;
   font-weight: 800;
   font-size: 3rem;
   margin-bottom: 1rem;
@@ -37,7 +37,7 @@
 }
 
 .brand-color {
-  color: #ffb3ba;
+  color: #7c0034;
 }
 
 .auth-members p {
@@ -99,25 +99,25 @@
 
 .form-card input:focus {
   outline: none;
-  border-color: #ffb3ba;
-  box-shadow: 0 0 0 3px rgba(255, 179, 186, 0.1);
+  border-color: #7c0034;
+  box-shadow: 0 0 0 3px rgba(124, 0, 52, 0.1);
 }
 
 /* Buttons */
 .form-button {
-  background: #ffb3ba;
+  background: #7c0034;
   border: none;
   padding: 0.75rem 1rem; 
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
-  color: #2d3748;       
+  color: #ffffff;       
   font-size: 1rem;       
   transition: all 0.2s ease;
 }
 
 .form-button:hover {
-  background-color: #ff9aa2;
+  background-color: #7c0034;
   transform: translateY(-1px);
 }
 
@@ -131,14 +131,14 @@
 
 .auth-link {
   font-weight: 600;
-  color: #ffb3ba;
+  color: #7c0034;
   text-decoration: none;
   cursor: pointer;
   transition: color 0.2s ease;
 }
 
 .auth-link:hover {
-  color: #ff9aa2;
+  color: #7c0034;
 }
 
 /* Responsive: stack vertically on small screens */

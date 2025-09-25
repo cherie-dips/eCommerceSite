@@ -18,7 +18,7 @@ a {
   transition: color 0.2s ease;
 }
 a:hover {
-  color: #ffb3ba;
+  color: #7c0034;
 }
 
 body {
@@ -46,17 +46,17 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #ffb3ba;
+  background-color: #7c0034;
   color: #2d3748;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 button:hover {
-  background-color: #ff9aa2;
+  background-color: #7c0034;
   transform: translateY(-1px);
 }
 button:focus,
 button:focus-visible {
-  outline: 2px solid #ffb3ba;
+  outline: 2px solid #7c0034;
   outline-offset: 2px;
 }

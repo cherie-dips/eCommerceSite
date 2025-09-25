@@ -21,6 +21,8 @@ app.use(
 app.use('/api/products', productRoutes);
 const authRoutes = require('./routes/auth');
 app.use('/api/auth', authRoutes);
+const retailerRoutes = require('./routes/retailer');
+app.use('/api/retailer', retailerRoutes);
 
 // Basic test route
 app.get('/', (req, res) => {

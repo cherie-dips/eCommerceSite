@@ -3,7 +3,7 @@ const Product = require("../models/Product");
 
 const router = express.Router();
 
-// Create new product (admin only)
+// Create new product
 router.post("/", async (req, res) => {
   try {
     const product = new Product(req.body);

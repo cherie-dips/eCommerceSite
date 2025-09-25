@@ -12,6 +12,9 @@ import { LikesProvider } from "./context/LikesContext";
 import LikedProducts from "./pages/LikedProducts";
 import CartPage from "./pages/CartPage";
 import Checkout from "./pages/Checkout";
+import RetailerProducts from "./pages/RetailerProducts";
+import RetailerOrders from "./pages/RetailerOrders";
+import UploadProduct from "./pages/UploadProduct";
 
 function AppContent() {
 
@@ -27,6 +30,30 @@ function AppContent() {
         <Route path="/likes" element={<LikedProducts />} />
         <Route path="/cart" element={<CartPage />} /> 
         <Route path="/checkout" element={<Checkout />} />
+        <Route
+          path="/retailer/products"
+          element={
+            <ProtectedRoute allowRoles={["retailer"]}>
+              <RetailerProducts />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/retailer/orders"
+          element={
+            <ProtectedRoute allowRoles={["retailer"]}>
+              <RetailerOrders />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/retailer/upload"
+          element={
+            <ProtectedRoute allowRoles={["retailer"]}>
+              <UploadProduct />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/admin"
           element={

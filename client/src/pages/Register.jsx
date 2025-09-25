@@ -1,23 +1,19 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
-import "../styles/AuthPages.css";
-import authImage from "../assets/auth-image.png";
 
 export default function Register() {
   const [username, setUsername] = useState("");
   const [email, setEmail]     = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("user");
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5050/api/auth/register", {
-        username,
-        email,
-        password,
-      });
+      const endpoint = role === "retailer" ? "http://localhost:5050/api/retailer/register" : "http://localhost:5050/api/auth/register";
+      await axios.post(endpoint, { username, email, password, role });
       alert("Registration successful! Please login.");
       navigate("/login");
     } catch (err) {
@@ -27,74 +23,26 @@ export default function Register() {
   };
 
   return (
-    <div className="auth-page-content">
-      <div className="auth-page-container">
-        {/* Purple Branding Left Side */}
-        <div className="auth-branding"
-          style={{
-          backgroundImage: `linear-gradient(135deg, rgba(36,36,36,0.6), rgba(40,40,41,0.6)), url(${authImage})`,
-              backgroundPosition: "center center",
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "cover",
-          }}
-        >
-          <h1 className="auth-branding-title">Flagzen</h1>
-          <p className="auth-branding-text">
-            Ready to take your startup to the next level?
-          </p>
-          <p className="auth-branding-text">
-            Join <strong>Flagzen</strong> today.
-          </p>
-          <div className="auth-members">
-            {/* You can place member avatars here if needed */}
-            <p>9.5k members</p>
-          </div>
-        </div>
-
-        {/* Form White Right Side */}
-        <div className="auth-form-container">
-          <form onSubmit={handleRegister} className="form-card">
-            <h2 className="form-title">Sign Up</h2>
-            <p className="form-subtext">Get started with an account on Flagzen</p>
-
-            <label>Username</label>
-            <input
-              type="text"
-              placeholder="Your full name"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
-
-            <label>Email</label>
-            <input
-              type="email"
-              placeholder="your@email.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-
-            <label>Password</label>
-            <input
-              type="password"
-              placeholder="Create a strong password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-
-            <button type="submit" className="form-button">Sign Up</button>
-
-            <p className="auth-footer-text">
-              Already have an account?{" "}
-              <Link to="/login" className="auth-link">
-                Sign In
-              </Link>
-            </p>
-          </form>
-        </div>
-      </div>
+    <div style={{ maxWidth: 420, margin: "40px auto", padding: 20 }}>
+      <h2 style={{ marginBottom: 8 }}>Sign Up</h2>
+      <p style={{ marginTop: 0, color: "#666" }}>Create your account</p>
+      <form onSubmit={handleRegister} style={{ display: "grid", gap: 10 }}>
+        <label>Username</label>
+        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
+        <label>Email</label>
+        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <label>Password</label>
+        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <label>Sign up as</label>
+        <select value={role} onChange={(e) => setRole(e.target.value)}>
+          <option value="user">Customer</option>
+          <option value="retailer">Retailer</option>
+        </select>
+        <button type="submit" style={{ background: "#7c0034", color: "#ffffff", border: "none", padding: "0.75rem 1rem", borderRadius: 8, fontWeight: 600 }}>Sign Up</button>
+        <p style={{ margin: 0 }}>
+          Already have an account? <Link to="/login">Sign In</Link>
+        </p>
+      </form>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import React from "react";
-import hero from "../assets/Flagzen.png";
-import hero2 from "../assets/Flagzen2.png";
+import heroPoster from "../assets/hero-image.webp";
+import heroVideo from "../assets/hero.mov";
 import mug from "../assets/mug.png";
 import totebag from "../assets/totebag.png";
 import { AiFillHeart } from "react-icons/ai";
@@ -12,9 +12,16 @@ export default function Home() {
     <div className="page-content-main scrollable">
       {/* Hero Section */}
       <section className="hero-section">
-        <div className="hero-images">
-          <img src={hero} alt="Flagzen Hero" className="hero-image" />
-          <img src={hero2} alt="Flagzen Hero 2" className="hero-image" />
+        <div className="hero-video-wrap">
+          <video
+            className="hero-video"
+            src={heroVideo}
+            poster={heroPoster}
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
         </div>
         <div className="hero-text">
           <h1>Make Your Brand Unforgettable</h1>

@@ -16,10 +16,11 @@ router.post("/register", async (req, res) => {
       username: req.body.username,
       email: req.body.email,
       password: hashedPassword,
+      role: req.body.role || "user",
     });
 
     const savedUser = await newUser.save();
-    res.status(201).json({ message: "User registered", user: savedUser._id });
+    res.status(201).json({ message: "User registered", user: { id: savedUser._id, role: savedUser.role } });
   } catch (err) {
     console.error("Registration Error:", err); // 👈 This line is important
     res.status(500).json({ error: err.message });

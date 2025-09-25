@@ -30,20 +30,24 @@
 .hero-section {
   text-align: center;
   background-color: #fafbfc;
+  margin-top: 4 rem;
+  min-height: 90vh;
 }
 
-.hero-images {
+.hero-video-wrap {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 2rem;
+  margin-top: 3rem;
 }
 
-.hero-image {
-  width: 50%;
-  max-width: 50vw;
-  height: auto;
+.hero-video {
+  width: 90%;
+  max-width: 1000px;
+  max-height: 60vh;
   object-fit: cover;
+  border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
@@ -58,8 +62,8 @@
 }
 
 .hero-text button {
-  background-color: #ffb3ba;
-  color: #2d3748;
+  background-color: #7c0034;
+  color: #ffffff;
   padding: 0.75rem 1.5rem;
   font-weight: 600;
   border: none;
@@ -68,7 +72,7 @@
   transition: all 0.2s ease;
 }
 .hero-text button:hover {
-  background-color: #ff9aa2;
+  background-color: #7c0034;
   transform: translateY(-2px);
 }
 
@@ -214,6 +218,6 @@
   margin-bottom: 1rem;
 }
 .education-card a {
-  color: #ffb3ba;
+  color: #7c0034;
   font-weight: 600;
 }

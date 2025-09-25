@@ -2,17 +2,21 @@ import { useState } from "react";
 import { useCart } from "../context/CartContext";
 import { useLikes } from "../context/LikesContext";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import like from "../assets/like.png";
 import cart from "../assets/shopping-bag.gif";
 import profile from "../assets/profile.png";
 import home from "../assets/home.png";
 import customize from "../assets/customize.gif";
+import addIcon from "../assets/upload.png";
 import "../styles/Navbar.css";
+
 
 export default function Navbar() {
   const { cartItems } = useCart(); 
   const { likedItems } = useLikes();
   const [showDropdown, setShowDropdown] = useState(false);
+  const { user, role, logout } = useAuth();
 
   return (
     <nav className="navbar">
@@ -27,6 +31,11 @@ export default function Navbar() {
       </div>
 
       <div className="navbar-right">
+        {user && role === "retailer" && (
+          <Link to="/retailer/upload" className="navbar-icon-link" title="Upload Product">
+            <img src={addIcon} alt="Upload" className="navbar-icon" />
+          </Link>
+        )}
         <Link to="/likes" className="navbar-icon-link">
           <img src={like} alt="Likes" className="navbar-icon" />
           {likedItems.length > 0 && (
@@ -50,12 +59,31 @@ export default function Navbar() {
           </button>
           {showDropdown && (
             <div className="login-dropdown">
-              <Link to="/login" onClick={() => setShowDropdown(false)}>
-                Login
-              </Link>
-              <Link to="/register" onClick={() => setShowDropdown(false)}>
-                Register
-              </Link>
+              {!user && (
+                <>
+                  <Link to="/login" onClick={() => setShowDropdown(false)}>
+                    Login
+                  </Link>
+                  <Link to="/register" onClick={() => setShowDropdown(false)}>
+                    Register
+                  </Link>
+                </>
+              )}
+              {user && role === "retailer" && (
+                <>
+                  <Link to="/retailer/products" onClick={() => setShowDropdown(false)}>
+                    My Products
+                  </Link>
+                  <Link to="/retailer/orders" onClick={() => setShowDropdown(false)}>
+                    Orders
+                  </Link>
+                </>
+              )}
+              {user && (
+                <button onClick={() => { logout(); setShowDropdown(false); }} style={{ width: "100%", textAlign: "left" }}>
+                  Logout
+                </button>
+              )}
             </div>
           )}
         </div>

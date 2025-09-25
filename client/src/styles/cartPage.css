@@ -36,18 +36,18 @@
 
 .add-address-btn {
   margin-top: 1rem;
-  background: #ffb3ba;
+  background: #7c0034;
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
-  color: #2d3748;
+  color: #ffffff;
   transition: all 0.2s ease;
 }
 
 .add-address-btn:hover {
-  background: #ff9aa2;
+  background: #7c0034;
   transform: translateY(-1px);
 }
 
@@ -135,23 +135,23 @@
 
 .discount-input input:focus {
   outline: none;
-  border-color: #ffb3ba;
-  box-shadow: 0 0 0 3px rgba(255, 179, 186, 0.1);
+  border-color: #7c0034;
+  box-shadow: 0 0 0 3px rgba(124, 0, 52, 0.1);
 }
 
 .discount-input button {
-  background: #ffb3ba;
+  background: #7c0034;
   border: none;
   padding: 0.75rem 1rem;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
-  color: #2d3748;
+  color: #ffffff;
   transition: all 0.2s ease;
 }
 
 .discount-input button:hover {
-  background-color: #ff9aa2;
+  background-color: #7c0034;
   transform: translateY(-1px);
 }
 
@@ -182,17 +182,17 @@
   width: 100%;
   padding: 0.75rem;
   margin-top: 1.5rem;
-  background-color: #ffb3ba;
+  background-color: #7c0034;
   border: none;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
-  color: #2d3748;
+  color: #ffffff;
   transition: all 0.2s ease;
 }
 
 .checkout-button.full:hover {
-  background-color: #ff9aa2;
+  background-color: #7c0034;
   transform: translateY(-1px);
 }
 
@@ -229,9 +229,9 @@
 }
 
 .quantity-controls button:hover {
-  background: #ffb3ba;
-  border-color: #ffb3ba;
-  color: #2d3748;
+  background: #7c0034;
+  border-color: #7c0034;
+  color: #ffffff;
 }
 
 .item-total {
@@ -292,8 +292,8 @@
 .modal-card input:focus,
 .modal-card textarea:focus {
   outline: none;
-  border-color: #ffb3ba;
-  box-shadow: 0 0 0 3px rgba(255, 179, 186, 0.1);
+  border-color: #7c0034;
+  box-shadow: 0 0 0 3px rgba(124, 0, 52, 0.1);
 }
 
 .modal-buttons {
@@ -315,12 +315,12 @@
 }
 
 .save-btn {
-  background-color: #ffb3ba;
-  color: #2d3748;
+  background-color: #7c0034;
+  color: #ffffff;
 }
 
 .save-btn:hover {
-  background-color: #ff9aa2;
+  background-color: #7c0034;
   transform: translateY(-1px);
 }
 

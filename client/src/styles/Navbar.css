@@ -39,8 +39,8 @@
 }
 
 .navbar-home:hover, .navbar-products:hover {
-  color: #ffb3ba;
-  border-bottom-color: #ffb3ba;
+  color: #7c0034;
+  border-bottom-color: #7c0034;
 }
 
 .navbar a,
@@ -71,7 +71,7 @@
 
 .login-button:hover {
   background-color: #f8fafc;
-  color: #ffb3ba;
+  color: #7c0034;
 }
 
 .login-dropdown {
@@ -105,7 +105,7 @@
 
 .login-dropdown a:hover {
   background-color: #f8fafc;
-  color: #ffb3ba;
+  color: #7c0034;
 }
 
 /* Navbar Icons and Badges */
@@ -137,8 +137,8 @@
   position: absolute;
   top: 0;
   right: 0;
-  background-color: #ffb3ba;
-  color: #000000;
+  background-color: #7c0034;
+  color: #ffffff;
   font-size: 0.75rem;
   font-weight: 600;
   padding: 0.125rem 0.375rem;

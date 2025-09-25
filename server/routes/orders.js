@@ -46,3 +46,14 @@ router.post("/", upload.single("customImage"), async (req, res) => {
 });
 
 module.exports = router;
+ 
+// List orders (optionally by retailer or customer)
+router.get("/", async (req, res) => {
+  try {
+    // Basic listing of all orders for now (no auth binding in minimal change)
+    const orders = await Order.find().sort({ createdAt: -1 });
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch orders." });
+  }
+});
