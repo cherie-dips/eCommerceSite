@@ -1,6 +1,6 @@
 /* Container with 2 sides (branding + form) */
 .auth-page-content {
-  padding: 4rem 0rem 0rem 0rem;
+  padding: 0rem 0rem 0rem 0rem;
 }
 
 .auth-page-container {
@@ -141,6 +141,203 @@
   color: #7c0034;
 }
 
+/* New Clean Auth Design */
+.auth-page-container-new {
+  min-height: 100vh;
+  background-color: #f8f8f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.auth-form-wrapper {
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 380px;
+}
+
+.auth-logo {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.auth-logo h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #7c0034;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.auth-form-new {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.2rem;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 0.75rem;
+  color: #9ca3af;
+  font-size: 0.9rem;
+  z-index: 1;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.65rem 0.75rem 0.65rem 2.25rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background: white;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #7c0034;
+  box-shadow: 0 0 0 3px rgba(124, 0, 52, 0.1);
+}
+
+.form-select {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background: white;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: #7c0034;
+  box-shadow: 0 0 0 3px rgba(124, 0, 52, 0.1);
+}
+
+.auth-button-primary {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  background: #7c0034;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 0.4rem;
+}
+
+.auth-button-primary:hover {
+  background: #6a002e;
+  transform: translateY(-1px);
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 0.75rem 0;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e5e7eb;
+}
+
+.auth-divider span {
+  padding: 0 0.75rem;
+  color: #6b7280;
+  font-size: 0.8rem;
+}
+
+.auth-button-google {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  background: white;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.auth-button-google:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.google-icon {
+  width: 18px;
+  height: 18px;
+  background: linear-gradient(45deg, #4285f4, #34a853, #fbbc05, #ea4335);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 0.75rem;
+}
+
+.auth-links {
+  text-align: center;
+  margin-top: 0.75rem;
+}
+
+.auth-links p {
+  color: #6b7280;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.auth-link-text {
+  color: #7c0034;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.auth-link-text:hover {
+  color: #6a002e;
+  text-decoration: underline;
+}
+
 /* Responsive: stack vertically on small screens */
 @media (max-width: 768px) {
   .auth-page-container {
@@ -154,5 +351,22 @@
   .auth-form-container {
     border-radius: 20px 20px 0 0;
     padding: 2rem 2rem;
+  }
+  
+  .auth-page-container-new {
+    padding: 0.5rem;
+  }
+  
+  .auth-form-wrapper {
+    padding: 1.5rem;
+    max-width: 350px;
+  }
+  
+  .auth-logo h1 {
+    font-size: 1.5rem;
+  }
+  
+  .auth-form-new {
+    gap: 1rem;
   }
 }

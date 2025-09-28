@@ -2,8 +2,12 @@ const express = require("express");
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { OAuth2Client } = require("google-auth-library");
 
 const router = express.Router();
+
+// Google OAuth client
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Register
 router.post("/register", async (req, res) => {
@@ -51,6 +55,58 @@ router.post("/login", async (req, res) => {
   } catch (err) {
       console.error("Login Error:", err);
       res.status(500).json({ error: err.message });
+  }
+});
+
+// Google OAuth for customers
+router.post("/google", async (req, res) => {
+  try {
+    const { token, role = "user" } = req.body;
+    
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    
+    const payload = ticket.getPayload();
+    const { email, name, picture } = payload;
+    
+    // Check if user exists
+    let user = await User.findOne({ email });
+    
+    if (!user) {
+      // Create new user
+      user = new User({
+        username: name,
+        email: email,
+        password: '', // No password for Google users
+        role: role,
+        googleId: payload.sub,
+        profilePicture: picture
+      });
+      await user.save();
+    }
+    
+    // Generate JWT
+    const jwtToken = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "2d" }
+    );
+    
+    res.json({ 
+      token: jwtToken, 
+      user: { 
+        id: user._id, 
+        username: user.username, 
+        role: user.role,
+        email: user.email,
+        profilePicture: user.profilePicture
+      } 
+    });
+  } catch (err) {
+    console.error("Google OAuth Error:", err);
+    res.status(500).json({ error: "Google authentication failed" });
   }
 });
 

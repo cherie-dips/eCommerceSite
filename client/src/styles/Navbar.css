@@ -1,5 +1,5 @@
 .navbar {
-  background-color: #ffffff;
+  background-color: #ffffff00;
   padding: 0.75rem 2rem;
   position: fixed;
   top: 0;
@@ -9,8 +9,6 @@
   align-items: center;
   justify-content: space-between;
   z-index: 1000;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  border-bottom: 1px solid #e2e8f0;
 }
 
 .navbar-left,
@@ -23,7 +21,7 @@
 .navbar-logo {
   font-size: 1.75rem;
   font-weight: 700;
-  color: #000000;
+  color: #0000009b;
   text-decoration: none;
   letter-spacing: -0.5px;
 }

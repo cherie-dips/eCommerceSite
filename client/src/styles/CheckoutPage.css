@@ -1,8 +1,9 @@
 .checkout-page-content {
-  padding: 4rem 0rem 0rem 0rem;
+  padding: 0rem 0rem 0rem 0rem;
 }
 
 .checkout-layout {
+  padding-top: 4rem;
   display: flex;
   min-height: 93vh;
   background: linear-gradient(135deg, #f0f8ff 0%, #f5f0ff 100%);

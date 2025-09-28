@@ -10,7 +10,11 @@ import home from "../assets/home.png";
 import customize from "../assets/customize.gif";
 import addIcon from "../assets/upload.png";
 import "../styles/Navbar.css";
-
+import RedeemOutlinedIcon from '@mui/icons-material/RedeemOutlined';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined';
+import PermIdentityOutlinedIcon from '@mui/icons-material/PermIdentityOutlined';
 
 export default function Navbar() {
   const { cartItems } = useCart(); 
@@ -23,10 +27,10 @@ export default function Navbar() {
       <div className="navbar-left">
         <Link to="/" className="navbar-logo text-black"> FLAGZEN </Link>
         <Link to="/" className="navbar-icon-link">
-          <img src={home} alt="Home" className="navbar-icon" />
+          <HomeOutlinedIcon alt="Home" className="navbar-icon" />
         </Link>
         <Link to="/products" className="navbar-icon-link">
-          <img src={customize} alt="Customize" className="navbar-icon" />
+          <RedeemOutlinedIcon alt="Products" className="navbar-icon" />
         </Link>
       </div>
 
@@ -37,14 +41,14 @@ export default function Navbar() {
           </Link>
         )}
         <Link to="/likes" className="navbar-icon-link">
-          <img src={like} alt="Likes" className="navbar-icon" />
+          <FavoriteBorderOutlinedIcon alt="Likes" className="navbar-icon" />
           {likedItems.length > 0 && (
             <span className="navbar-badge">{likedItems.length}</span>
           )}
         </Link>
 
         <Link to="/cart" className="navbar-icon-link">
-          <img src={cart} alt="Cart" className="navbar-icon" />
+          <LocalMallOutlinedIcon alt="Cart" className="navbar-icon" />
           {cartItems.length > 0 && (
             <span className="navbar-badge">{cartItems.length}</span>
           )}
@@ -55,7 +59,7 @@ export default function Navbar() {
             className="login-button"
             onClick={() => setShowDropdown((prev) => !prev)}
           >
-            <img src={profile} alt="Profile" className="navbar-icon" />
+            <PermIdentityOutlinedIcon alt="Profile" className="navbar-icon" />
           </button>
           {showDropdown && (
             <div className="login-dropdown">

@@ -1,5 +1,4 @@
 import React from "react";
-import heroPoster from "../assets/hero-image.webp";
 import heroVideo from "../assets/hero.mov";
 import mug from "../assets/mug.png";
 import totebag from "../assets/totebag.png";
@@ -16,7 +15,6 @@ export default function Home() {
           <video
             className="hero-video"
             src={heroVideo}
-            poster={heroPoster}
             autoPlay
             loop
             muted
@@ -26,15 +24,6 @@ export default function Home() {
         <div className="hero-text">
           <h1>Make Your Brand Unforgettable</h1>
           <button className="hero-button">Start Customizing</button>
-        </div>
-      </section>
-
-      {/* Partner Logos */}
-      <section className="partners">
-        <div className="partner-row">
-          {Array(6).fill("Trusted by top brands").map((text, idx) => (
-            <div className="partner-logo" key={idx}>{text}</div>
-          ))}
         </div>
       </section>
 
