@@ -9,8 +9,19 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("user");
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const navigate = useNavigate();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      if (user.role === "retailer") {
+        navigate("/retailer/products");
+      } else {
+        navigate("/");
+      }
+    }
+  }, [user, navigate]);
 
   useEffect(() => {
     // Initialize Google Sign-In

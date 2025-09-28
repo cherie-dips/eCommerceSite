@@ -48,7 +48,7 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: "2d" }
+      { expiresIn: "7d" }
     );
 
     res.json({ token, user: { id: user._id, username: user.username, role: user.role } });
@@ -91,7 +91,7 @@ router.post("/google", async (req, res) => {
     const jwtToken = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: "2d" }
+      { expiresIn: "7d" }
     );
     
     res.json({ 

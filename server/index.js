@@ -23,6 +23,12 @@ const authRoutes = require('./routes/auth');
 app.use('/api/auth', authRoutes);
 const retailerRoutes = require('./routes/retailer');
 app.use('/api/retailer', retailerRoutes);
+const orderRoutes = require('./routes/orders');
+app.use('/api/orders', orderRoutes);
+
+// Create separate retailer-specific product routes
+const retailerProductRoutes = require('./routes/retailer-products');
+app.use('/api/retailer-products', retailerProductRoutes);
 
 // Basic test route
 app.get('/', (req, res) => {

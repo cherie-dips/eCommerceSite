@@ -1,12 +1,17 @@
 const express = require("express");
 const Product = require("../models/Product");
+const { verifyToken, verifyRetailer } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
-// Create new product
-router.post("/", async (req, res) => {
+// Create new product (retailer only)
+router.post("/", verifyRetailer, async (req, res) => {
   try {
-    const product = new Product(req.body);
+    const productData = {
+      ...req.body,
+      retailerId: req.user.id
+    };
+    const product = new Product(productData);
     const saved = await product.save();
     res.status(201).json(saved);
   } catch (err) {
@@ -14,10 +19,10 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Get all products
+// Get all products (public)
 router.get("/", async (req, res) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find().populate('retailerId', 'username email');
     res.json(products);
   } catch (err) {
     res.status(500).json({ error: err.message });

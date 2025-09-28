@@ -3,11 +3,6 @@ import { useCart } from "../context/CartContext";
 import { useLikes } from "../context/LikesContext";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import like from "../assets/like.png";
-import cart from "../assets/shopping-bag.gif";
-import profile from "../assets/profile.png";
-import home from "../assets/home.png";
-import customize from "../assets/customize.gif";
 import addIcon from "../assets/upload.png";
 import "../styles/Navbar.css";
 import RedeemOutlinedIcon from '@mui/icons-material/RedeemOutlined';
@@ -15,6 +10,7 @@ import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined';
 import PermIdentityOutlinedIcon from '@mui/icons-material/PermIdentityOutlined';
+import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 
 export default function Navbar() {
   const { cartItems } = useCart(); 
@@ -37,7 +33,7 @@ export default function Navbar() {
       <div className="navbar-right">
         {user && role === "retailer" && (
           <Link to="/retailer/upload" className="navbar-icon-link" title="Upload Product">
-            <img src={addIcon} alt="Upload" className="navbar-icon" />
+            <FileUploadOutlinedIcon alt="Upload" className="navbar-icon" />
           </Link>
         )}
         <Link to="/likes" className="navbar-icon-link">
@@ -84,9 +80,11 @@ export default function Navbar() {
                 </>
               )}
               {user && (
-                <button onClick={() => { logout(); setShowDropdown(false); }} style={{ width: "100%", textAlign: "left" }}>
-                  Logout
-                </button>
+                <>
+                  <button onClick={() => { logout(); setShowDropdown(false); }} style={{ width: "100%", textAlign: "left", color: "white" }}>
+                    Logout
+                  </button>
+                </>
               )}
             </div>
           )}

@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import Navbar from "../components/Navbar";
 import "../styles/AuthPages.css";
 
@@ -9,7 +10,19 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("user");
+  const { user } = useAuth();
   const navigate = useNavigate();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      if (user.role === "retailer") {
+        navigate("/retailer/products");
+      } else {
+        navigate("/");
+      }
+    }
+  }, [user, navigate]);
 
   const handleRegister = async (e) => {
     e.preventDefault();

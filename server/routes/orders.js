@@ -5,6 +5,8 @@ const fs = require("fs");
 const path = require("path");
 const { v4: uuidv4 } = require("uuid");
 const Order = require("../models/Order");
+const Product = require("../models/Product");
+const { verifyToken, verifyRetailer } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
@@ -25,14 +27,21 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Create new customized order
-router.post("/", upload.single("customImage"), async (req, res) => {
+router.post("/", verifyToken, upload.single("customImage"), async (req, res) => {
   try {
-    const { productId, customerId, orderId } = req.body;
+    const { productId, orderId } = req.body;
     const filePath = req.file.path;
+
+    // Get product to find retailer
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
 
     const newOrder = new Order({
       productId,
-      customerId,
+      customerId: req.user.id,
+      retailerId: product.retailerId,
       orderId,
       imagePath: filePath,
     });
@@ -45,15 +54,44 @@ router.post("/", upload.single("customImage"), async (req, res) => {
   }
 });
 
-module.exports = router;
- 
-// List orders (optionally by retailer or customer)
-router.get("/", async (req, res) => {
+// Get orders by retailer (retailer only)
+router.get("/retailer", verifyRetailer, async (req, res) => {
   try {
-    // Basic listing of all orders for now (no auth binding in minimal change)
-    const orders = await Order.find().sort({ createdAt: -1 });
+    const orders = await Order.find({ retailerId: req.user.id })
+      .populate('productId', 'name price image')
+      .populate('customerId', 'username email')
+      .sort({ createdAt: -1 });
     res.json(orders);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch orders." });
   }
 });
+
+// Get orders by customer (authenticated user only)
+router.get("/customer", verifyToken, async (req, res) => {
+  try {
+    const orders = await Order.find({ customerId: req.user.id })
+      .populate('productId', 'name price image')
+      .populate('retailerId', 'username email')
+      .sort({ createdAt: -1 });
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch orders." });
+  }
+});
+
+// List all orders (admin only - optional)
+router.get("/", async (req, res) => {
+  try {
+    const orders = await Order.find()
+      .populate('productId', 'name price image')
+      .populate('customerId', 'username email')
+      .populate('retailerId', 'username email')
+      .sort({ createdAt: -1 });
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch orders." });
+  }
+});
+
+module.exports = router;

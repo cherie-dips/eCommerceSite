@@ -2,8 +2,9 @@
 const mongoose = require("mongoose");
 
 const OrderSchema = new mongoose.Schema({
-  productId: String,
-  customerId: String,
+  productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true },
+  customerId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  retailerId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   orderId: String,
   imagePath: String,
   createdAt: {
