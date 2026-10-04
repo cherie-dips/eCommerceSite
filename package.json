@@ -1,0 +1,18 @@
+{
+  "name": "flagzen",
+  "private": true,
+  "description": "Flagzen: custom-branded merchandise store with an in-app design studio",
+  "scripts": {
+    "install:all": "npm install && npm install --prefix server && npm install --prefix client",
+    "dev": "concurrently -n server,client -c blue,magenta \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "build": "npm run build --prefix client",
+    "start": "npm start --prefix server",
+    "test": "npm test --prefix server",
+    "lint": "npm run lint --prefix client",
+    "seed": "npm run seed --prefix server",
+    "create-admin": "npm run create-admin --prefix server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

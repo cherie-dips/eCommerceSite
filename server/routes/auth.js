@@ -1,113 +1,92 @@
 const express = require("express");
-const User = require("../models/User");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { OAuth2Client } = require("google-auth-library");
+const User = require("../models/User");
+const config = require("../config");
+const { verifyToken } = require("../middleware/authMiddleware");
+const { loginLimiter, accountLimiter } = require("../utils/rateLimits");
+const { publicUser, hashToken, createOneTimeToken } = require("../utils/tokens");
+const { emails } = require("../utils/email");
+const {
+  register,
+  login,
+  googleLogin,
+  findUserByEmail,
+  sendVerificationEmail,
+  MIN_PASSWORD_LENGTH,
+} = require("./authHandlers");
 
 const router = express.Router();
 
-// Google OAuth client
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+// === Customers: register / login / Google ===
+router.post("/register", accountLimiter, register("user"));
+router.post("/login", loginLimiter, login);
+router.post("/google", loginLimiter, googleLogin("user"));
 
-// Register
-router.post("/register", async (req, res) => {
-  try {
-    console.log("REGISTER REQUEST BODY:", req.body);
-
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
-    const newUser = new User({
-      username: req.body.username,
-      email: req.body.email,
-      password: hashedPassword,
-      role: req.body.role || "user",
-    });
-
-    const savedUser = await newUser.save();
-    res.status(201).json({ message: "User registered", user: { id: savedUser._id, role: savedUser.role } });
-  } catch (err) {
-    console.error("Registration Error:", err); // 👈 This line is important
-    res.status(500).json({ error: err.message });
-  }
+// === Who am I (refreshes role, approval and email status) ===
+router.get("/me", verifyToken, async (req, res) => {
+  const user = await User.findById(req.user.id);
+  if (!user) return res.status(401).json("You are not authenticated");
+  res.json({ user: publicUser(user) });
 });
 
-// Login
-router.post("/login", async (req, res) => {
-  try {
-    const user = await User.findOne({ email: req.body.email });
-    if (!user) {
-      console.error("User not found for email:", req.body.email);
-      return res.status(401).json("Invalid credentials");
-    }
+// === Forgot password: emails a reset link (valid for 1 hour) ===
+router.post("/forgot-password", accountLimiter, async (req, res) => {
+  const user = await findUserByEmail(req.body.email);
+  // Same answer whether or not the email exists, so nobody can check who has an account.
+  const reply = { message: "If an account exists for this email, a reset link has been sent." };
+  if (!user) return res.json(reply);
 
-    if (!user) return res.status(401).json("Invalid credentials");
-
-    const validPassword = await bcrypt.compare(req.body.password, user.password);
-    if (!validPassword) return res.status(401).json("Invalid credentials");
-
-    const token = jwt.sign(
-      { id: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
-
-    res.json({ token, user: { id: user._id, username: user.username, role: user.role } });
-  } catch (err) {
-      console.error("Login Error:", err);
-      res.status(500).json({ error: err.message });
-  }
+  const { token, hash } = createOneTimeToken();
+  user.resetTokenHash = hash;
+  user.resetExpires = new Date(Date.now() + 60 * 60 * 1000);
+  await user.save();
+  await emails.resetPassword(user, `${config.clientUrl}/reset-password?token=${token}`);
+  res.json(reply);
 });
 
-// Google OAuth for customers
-router.post("/google", async (req, res) => {
-  try {
-    const { token, role = "user" } = req.body;
-    
-    const ticket = await client.verifyIdToken({
-      idToken: token,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
-    
-    const payload = ticket.getPayload();
-    const { email, name, picture } = payload;
-    
-    // Check if user exists
-    let user = await User.findOne({ email });
-    
-    if (!user) {
-      // Create new user
-      user = new User({
-        username: name,
-        email: email,
-        password: '', // No password for Google users
-        role: role,
-        googleId: payload.sub,
-        profilePicture: picture
-      });
-      await user.save();
-    }
-    
-    // Generate JWT
-    const jwtToken = jwt.sign(
-      { id: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
-    
-    res.json({ 
-      token: jwtToken, 
-      user: { 
-        id: user._id, 
-        username: user.username, 
-        role: user.role,
-        email: user.email,
-        profilePicture: user.profilePicture
-      } 
-    });
-  } catch (err) {
-    console.error("Google OAuth Error:", err);
-    res.status(500).json({ error: "Google authentication failed" });
+// === Reset password with the emailed link ===
+router.post("/reset-password", accountLimiter, async (req, res) => {
+  const { token, password } = req.body || {};
+  if (!token || !password) return res.status(400).json({ error: "Reset link and new password are required." });
+  if (String(password).length < MIN_PASSWORD_LENGTH) {
+    return res.status(400).json({ error: `Password must be at least ${MIN_PASSWORD_LENGTH} characters.` });
   }
+  const user = await User.findOne({
+    resetTokenHash: hashToken(String(token)),
+    resetExpires: { $gt: new Date() },
+  }).select("+resetTokenHash +resetExpires");
+  if (!user) return res.status(400).json({ error: "This reset link is invalid or has expired. Please ask for a new one." });
+
+  user.password = await bcrypt.hash(String(password), 10);
+  user.resetTokenHash = undefined;
+  user.resetExpires = undefined;
+  await user.save();
+  res.json({ message: "Your password has been changed. You can now log in." });
+});
+
+// === Confirm email with the emailed link ===
+router.post("/verify-email", async (req, res) => {
+  const token = String(req.body?.token || "");
+  if (!token) return res.status(400).json({ error: "Verification link is missing." });
+  const user = await User.findOne({
+    emailVerifyTokenHash: hashToken(token),
+    emailVerifyExpires: { $gt: new Date() },
+  }).select("+emailVerifyTokenHash +emailVerifyExpires");
+  if (!user) return res.status(400).json({ error: "This link is invalid or has expired." });
+
+  user.emailVerified = true;
+  user.emailVerifyTokenHash = undefined;
+  user.emailVerifyExpires = undefined;
+  await user.save();
+  res.json({ message: "Your email is confirmed.", user: publicUser(user) });
+});
+
+router.post("/resend-verification", verifyToken, accountLimiter, async (req, res) => {
+  const user = await User.findById(req.user.id);
+  if (!user) return res.status(401).json("You are not authenticated");
+  if (user.emailVerified) return res.json({ message: "Your email is already confirmed." });
+  await sendVerificationEmail(user);
+  res.json({ message: "We've sent you a new confirmation email." });
 });
 
 module.exports = router;

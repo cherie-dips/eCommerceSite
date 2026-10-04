@@ -1,10 +1,15 @@
 .navbar {
-  background-color: #ffffff00;
+  background-color: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
   padding: 0.75rem 2rem;
   position: fixed;
   top: 0;
-  width: 97%;
-  height: 40px;
+  left: 0;
+  right: 0;
+  box-sizing: border-box;
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -65,10 +70,16 @@
   padding: 0.5rem;
   border-radius: 6px;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
 }
 
 .login-button:hover {
   background-color: #f8fafc;
+}
+
+.login-button:hover .navbar-icon {
+  opacity: 1;
   color: #7c0034;
 }
 
@@ -147,4 +158,41 @@
   align-items: center;
   justify-content: center;
   transform: translate(25%, -25%);
+}
+
+/* Current page */
+.navbar-icon-link.active .navbar-icon { opacity: 1; color: #7c0034; }
+
+/* "Design" link with a label */
+.navbar-text-link { gap: 0.35rem; color: #2d3748; }
+.navbar-link-label { font-size: 0.92rem; font-weight: 600; }
+.navbar-text-link.active { color: #7c0034; }
+
+.dropdown-user {
+  padding: 0.7rem 1rem 0.5rem;
+  font-size: 0.8rem;
+  color: #718096;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dropdown-divider { height: 1px; background: #e2e8f0; }
+.login-dropdown { min-width: 190px; }
+.dropdown-logout {
+  background: none;
+  border: none;
+  border-radius: 0;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  color: #b91c1c;
+  font-weight: 500;
+}
+.dropdown-logout:hover { background: #fef2f2; transform: none; }
+
+/* Phones: smaller gaps, hide the "Design" label */
+@media (max-width: 640px) {
+  .navbar { padding: 0.5rem 0.75rem; height: 56px; }
+  .navbar-left, .navbar-right { gap: 0.25rem; }
+  .navbar-logo { font-size: 1.2rem; margin-right: 0.25rem; }
+  .navbar-link-label { display: none; }
 }

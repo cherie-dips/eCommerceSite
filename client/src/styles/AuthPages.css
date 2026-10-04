@@ -370,3 +370,9 @@
     gap: 1rem;
   }
 }
+/* Google's own sign-in button (Login and Register pages) */
+.google-signin-button {
+  display: flex;
+  justify-content: center;
+  min-height: 44px;
+}

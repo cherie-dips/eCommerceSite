@@ -1,47 +1,36 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const cors = require('cors');
-const path = require('path'); // ✅ Required to resolve file paths
-const productRoutes = require('./routes/products');
+// Starts the server: connect to the database first, then accept requests.
+const mongoose = require("mongoose");
+const config = require("./config");
+const app = require("./app");
+const { cancelStalePendingOrders } = require("./services/orders");
 
-dotenv.config();
+const missing = ["MONGO_URI", "JWT_SECRET"].filter((key) => !process.env[key]);
+if (missing.length) {
+  console.error(`❌ Missing settings in server/.env: ${missing.join(", ")} (see server/.env.example)`);
+  process.exit(1);
+}
+if (!config.googleClientId) console.warn("[WARN] GOOGLE_CLIENT_ID is not set. Google sign-in will fail.");
 
-const app = express();
-app.use(express.json());
-app.use(cors());
+async function start() {
+  try {
+    await mongoose.connect(config.mongoUri);
+    console.log("✅ MongoDB Connected");
+  } catch (err) {
+    console.error("❌ MongoDB Connection Error:", err.message);
+    process.exit(1);
+  }
 
-// === Serve Static Customization Images ===
-app.use(
-  '/uploads/customizations',
-  express.static(path.join(__dirname, '..', 'uploads', 'customizations'))
-);
+  app.listen(config.port, () => {
+    console.log(`🚀 Server running on port ${config.port}`);
+    console.log(`   Payments: ${config.razorpay.enabled ? "Razorpay" : "test mode (no RAZORPAY keys)"}`);
+    console.log(`   Email:    ${config.email.enabled ? "SMTP" : "printed here in the console (no SMTP_HOST)"}`);
+    console.log(`   AI ideas: ${config.ai.enabled ? "on" : "off (no ANTHROPIC_API_KEY)"}`);
+  });
 
-// 🔥 Mount routes
-app.use('/api/products', productRoutes);
-const authRoutes = require('./routes/auth');
-app.use('/api/auth', authRoutes);
-const retailerRoutes = require('./routes/retailer');
-app.use('/api/retailer', retailerRoutes);
-const orderRoutes = require('./routes/orders');
-app.use('/api/orders', orderRoutes);
+  // Free the stock of orders that were never paid.
+  const sweep = () => cancelStalePendingOrders().catch((err) => console.error("Order clean-up failed:", err.message));
+  setInterval(sweep, 5 * 60 * 1000).unref();
+  sweep();
+}
 
-// Create separate retailer-specific product routes
-const retailerProductRoutes = require('./routes/retailer-products');
-app.use('/api/retailer-products', retailerProductRoutes);
-
-// Basic test route
-app.get('/', (req, res) => {
-  console.log('API is running...');
-  res.send('API is running...\n');
-});
-
-// Start server
-const PORT = process.env.PORT || 5050;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-// DB connection
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log('MongoDB Connected'))
-  .catch(err => console.error(err));
+start();

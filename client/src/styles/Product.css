@@ -3,7 +3,6 @@
 /* ============================= */
 
 .products-page {
-  padding: 4rem;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -25,8 +24,7 @@
 .product-card {
   background: #fff;
   border-radius: 12px;
-  padding: 1.5rem;
-  max-height: 360px;
+  padding: 1.25rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
@@ -97,4 +95,31 @@
   width: 20px;
   height: 20px;
   color: #4a5568;
+}
+
+/* Search and filters */
+.product-filters { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.product-search { display: flex; gap: 0.5rem; flex: 1 1 320px; }
+.product-filters .select { width: auto; min-width: 170px; }
+
+/* "Customisable" tag on product photos */
+.pc-tag {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  background: rgba(124, 0, 52, 0.9);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+}
+.pc-actions { align-items: center; }
+.pc-action-icon.liked { color: #e11d48; }
+
+@media (max-width: 640px) {
+  .products-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
+  .product-card { padding: 0.75rem; }
+  .pc-name { font-size: 0.95rem; }
+  .product-filters .select { flex: 1 1 140px; }
 }

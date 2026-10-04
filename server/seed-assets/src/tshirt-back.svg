@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="85%"><stop offset="0" stop-color="#f8f9fb"/><stop offset="1" stop-color="#e2e5ea"/></radialGradient>
+    <linearGradient id="tee" x1="0" x2="1"><stop offset="0" stop-color="#e3e4e8"/><stop offset="0.2" stop-color="#f8f8fa"/><stop offset="0.5" stop-color="#ffffff"/><stop offset="0.8" stop-color="#fbfbfc"/><stop offset="1" stop-color="#e6e7eb"/></linearGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="14"/></filter>
+  </defs>
+  <rect width="1200" height="1200" fill="url(#bg)"/>
+  <path d="M495 205 Q600 240 705 205 L850 245 L1020 440 L925 520 L855 455 L860 1055 Q600 1075 340 1055 L345 455 L275 520 L180 440 L350 245 Z" fill="#000" opacity="0.12" filter="url(#soft)" transform="translate(0 14)"/>
+  <path d="M495 205 Q600 240 705 205 L850 245 L1020 440 L925 520 L855 455 L860 1055 Q600 1075 340 1055 L345 455 L275 520 L180 440 L350 245 Z" fill="url(#tee)" stroke="#d3d5db" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M492 204 Q600 250 708 204" fill="none" stroke="#e1e2e7" stroke-width="16" stroke-linecap="round"/>
+  <path d="M925 520 L1020 440" stroke="#dcdde2" stroke-width="4"/><path d="M275 520 L180 440" stroke="#dcdde2" stroke-width="4"/>
+  <path d="M350 1030 Q600 1050 855 1030" fill="none" stroke="#e1e2e6" stroke-width="3"/>
+</svg>

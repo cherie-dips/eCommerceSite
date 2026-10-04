@@ -1,112 +1,32 @@
 const express = require("express");
-const User = require("../models/User");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { OAuth2Client } = require("google-auth-library");
+const Order = require("../models/Order");
+const Product = require("../models/Product");
+const { verifyRetailer } = require("../middleware/authMiddleware");
+const { loginLimiter, accountLimiter } = require("../utils/rateLimits");
+const { register, login, googleLogin } = require("./authHandlers");
 
 const router = express.Router();
 
-// Google OAuth client
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+// Retailer sign-up always creates a retailer account (waiting for admin approval).
+router.post("/register", accountLimiter, register("retailer"));
+// Same login as customers; the response carries the account's real role.
+router.post("/login", loginLimiter, login);
+router.post("/google", loginLimiter, googleLogin("retailer"));
 
-// Retailer Register - force role to retailer
-router.post("/register", async (req, res) => {
-  try {
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    const newUser = new User({
-      username: req.body.username,
-      email: req.body.email,
-      password: hashedPassword,
-      role: "retailer",
-    });
-
-    const savedUser = await newUser.save();
-    res.status(201).json({ message: "Retailer registered", user: { id: savedUser._id, role: savedUser.role } });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Retailer Login - ensure role retailer in response
-router.post("/login", async (req, res) => {
-  try {
-    const user = await User.findOne({ email: req.body.email });
-    if (!user) return res.status(401).json("Invalid credentials");
-
-    const validPassword = await bcrypt.compare(req.body.password, user.password);
-    if (!validPassword) return res.status(401).json("Invalid credentials");
-
-    // If a user exists but not retailer, still allow but mark role as user's stored role
-    const token = jwt.sign(
-      { id: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
-
-    res.json({ token, user: { id: user._id, username: user.username, role: user.role } });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Google OAuth for retailers
-router.post("/google", async (req, res) => {
-  try {
-    const { token } = req.body;
-    
-    const ticket = await client.verifyIdToken({
-      idToken: token,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
-    
-    const payload = ticket.getPayload();
-    const { email, name, picture } = payload;
-    
-    // Check if user exists
-    let user = await User.findOne({ email });
-    
-    if (!user) {
-      // Create new retailer user
-      user = new User({
-        username: name,
-        email: email,
-        password: '', // No password for Google users
-        role: "retailer",
-        googleId: payload.sub,
-        profilePicture: picture
-      });
-      await user.save();
-    } else if (user.role !== "retailer") {
-      // Update existing user to retailer if they're using retailer Google auth
-      user.role = "retailer";
-      user.googleId = payload.sub;
-      user.profilePicture = picture;
-      await user.save();
-    }
-    
-    // Generate JWT
-    const jwtToken = jwt.sign(
-      { id: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
-    
-    res.json({ 
-      token: jwtToken, 
-      user: { 
-        id: user._id, 
-        username: user.username, 
-        role: user.role,
-        email: user.email,
-        profilePicture: user.profilePicture
-      } 
-    });
-  } catch (err) {
-    console.error("Retailer Google OAuth Error:", err);
-    res.status(500).json({ error: "Google authentication failed" });
-  }
+// Numbers for the retailer dashboard
+router.get("/stats", verifyRetailer, async (req, res) => {
+  const retailerId = req.user.id;
+  const [products, lines] = await Promise.all([
+    Product.countDocuments({ retailerId, active: true }),
+    Order.find({ retailerId, status: { $ne: "pending_payment" } }).select("status quantity unitPrice"),
+  ]);
+  const paidLines = lines.filter((l) => l.status !== "cancelled");
+  res.json({
+    products,
+    orders: paidLines.length,
+    toFulfil: paidLines.filter((l) => ["paid", "processing"].includes(l.status)).length,
+    revenue: paidLines.reduce((sum, l) => sum + (l.unitPrice || 0) * (l.quantity || 1), 0),
+  });
 });
 
 module.exports = router;
-
-

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="38%" r="80%"><stop offset="0" stop-color="#fbfbfc"/><stop offset="1" stop-color="#e3e4ea"/></radialGradient>
+    <linearGradient id="body" x1="0" x2="1"><stop offset="0" stop-color="#cfd0d6"/><stop offset="0.1" stop-color="#ececef"/><stop offset="0.32" stop-color="#ffffff"/><stop offset="0.7" stop-color="#f3f3f5"/><stop offset="0.92" stop-color="#dcdde2"/><stop offset="1" stop-color="#c7c8cf"/></linearGradient>
+    <linearGradient id="inner" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c9cad1"/><stop offset="1" stop-color="#eeeef2"/></linearGradient>
+    <linearGradient id="handle" x1="0" x2="1"><stop offset="0" stop-color="#e2e3e8"/><stop offset="0.5" stop-color="#fafafb"/><stop offset="1" stop-color="#cbccd3"/></linearGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="20"/></filter>
+  </defs>
+  <rect width="1200" height="1200" fill="url(#bg)"/>
+  <ellipse cx="600" cy="930" rx="330" ry="40" fill="#000" opacity="0.16" filter="url(#soft)"/>
+  <path d="M812 410 C 1010 390, 1030 780, 812 770" fill="none" stroke="#c4c5cc" stroke-width="66" stroke-linecap="round"/>
+  <path d="M812 410 C 1010 390, 1030 780, 812 770" fill="none" stroke="url(#handle)" stroke-width="54" stroke-linecap="round"/>
+  <path d="M340 300 L340 860 Q340 915 395 915 L765 915 Q820 915 820 860 L820 300 Z" fill="url(#body)"/>
+  <ellipse cx="580" cy="300" rx="240" ry="44" fill="#e7e8ec"/>
+  <ellipse cx="580" cy="304" rx="222" ry="33" fill="url(#inner)"/>
+  <path d="M368 330 L368 860" stroke="#ffffff" stroke-width="10" opacity="0.6"/>
+</svg>

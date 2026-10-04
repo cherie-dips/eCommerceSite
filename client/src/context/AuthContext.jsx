@@ -1,4 +1,5 @@
-import { createContext, useState, useContext, useEffect } from "react";
+import { createContext, useState, useContext, useEffect, useCallback } from "react";
+import api from "../utils/api";
 
 const AuthContext = createContext();
 
@@ -6,87 +7,105 @@ const AuthContext = createContext();
 const STORAGE_KEYS = {
   USER: 'flagzen_user',
   TOKEN: 'flagzen_token',
-  LAST_ACTIVITY: 'flagzen_last_activity',
-  LOGIN_TIME: 'flagzen_login_time'
+};
+// Keys used by older versions of the app; removed on logout.
+const OLD_STORAGE_KEYS = ['flagzen_last_activity', 'flagzen_login_time'];
+
+// Reads the expiry time the server put inside the login token.
+// The website uses the same expiry as the server, so both agree on when a login ends.
+const getTokenExpiry = (token) => {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+    return payload.exp ? payload.exp * 1000 : null;
+  } catch {
+    return null;
+  }
 };
 
-const SESSION_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
+const isTokenExpired = (token) => {
+  const expiry = getTokenExpiry(token);
+  return !expiry || Date.now() >= expiry;
+};
+
+// Function to clear all stored session data
+const clearStoredSession = () => {
+  [...Object.values(STORAGE_KEYS), ...OLD_STORAGE_KEYS].forEach((key) => {
+    localStorage.removeItem(key);
+  });
+};
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [role, setRole] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-
-  // Function to update last activity
-  const updateLastActivity = () => {
-    const now = new Date().getTime();
-    localStorage.setItem(STORAGE_KEYS.LAST_ACTIVITY, now.toString());
-  };
-
-  // Function to check if session is expired
-  const isSessionExpired = () => {
-    const lastActivity = localStorage.getItem(STORAGE_KEYS.LAST_ACTIVITY);
-    if (!lastActivity) return true;
-    
-    const now = new Date().getTime();
-    const timeSinceLastActivity = now - parseInt(lastActivity);
-    return timeSinceLastActivity > SESSION_DURATION;
-  };
-
-  // Function to clear all stored session data
-  const clearStoredSession = () => {
-    Object.values(STORAGE_KEYS).forEach(key => {
-      localStorage.removeItem(key);
-    });
-  };
+  // True after the user pressed "Logout" (members-only pages then go home, not to the login page)
+  const [loggedOut, setLoggedOut] = useState(false);
 
   const login = (userData, authToken) => {
-    const now = new Date().getTime();
-    
     // Store in state
     setUser(userData);
     setToken(authToken);
     setRole(userData?.role || null);
-    
+    setLoggedOut(false);
+
     // Store in localStorage for persistence
     localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(userData));
     localStorage.setItem(STORAGE_KEYS.TOKEN, authToken);
-    localStorage.setItem(STORAGE_KEYS.LOGIN_TIME, now.toString());
-    localStorage.setItem(STORAGE_KEYS.LAST_ACTIVITY, now.toString());
   };
 
-  const logout = () => {
+  // Saves changed account details (e.g. a new name, or "email confirmed").
+  const updateUser = useCallback((changes) => {
+    setUser((current) => {
+      if (!current) return current;
+      const next = { ...current, ...changes };
+      localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(next));
+      setRole(next.role || null);
+      return next;
+    });
+  }, []);
+
+  // Fetches the latest account details (role, seller approval, email status) from the server.
+  const refreshUser = useCallback(async () => {
+    try {
+      const res = await api.get("/auth/me");
+      updateUser(res.data.user);
+      return res.data.user;
+    } catch {
+      return null;
+    }
+  }, [updateUser]);
+
+  // byUser: false when the login simply expired (then the login page is shown)
+  const logout = useCallback((byUser = true) => {
     setUser(null);
     setToken(null);
     setRole(null);
+    setLoggedOut(byUser);
     clearStoredSession();
-  };
+    // Only matters for the page the user was on when logging out
+    if (byUser) setTimeout(() => setLoggedOut(false), 500);
+  }, []);
 
-  // Function to restore session from localStorage
-  const restoreSession = () => {
+  // Restore session from localStorage on app load
+  useEffect(() => {
     try {
       const storedUser = localStorage.getItem(STORAGE_KEYS.USER);
       const storedToken = localStorage.getItem(STORAGE_KEYS.TOKEN);
-      
+
       if (storedUser && storedToken) {
-        // Check if session is expired
-        if (isSessionExpired()) {
+        if (isTokenExpired(storedToken)) {
           console.log('Session expired, logging out');
           clearStoredSession();
           return;
         }
-        
-        // Restore session
+
         const userData = JSON.parse(storedUser);
         setUser(userData);
         setToken(storedToken);
         setRole(userData?.role || null);
-        
-        // Update last activity
-        updateLastActivity();
-        
-        console.log('Session restored successfully');
+        // Pick up changes made elsewhere (e.g. an admin approved this seller).
+        refreshUser();
       }
     } catch (error) {
       console.error('Error restoring session:', error);
@@ -94,54 +113,31 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [refreshUser]);
 
-  // Effect to restore session on app load
+  // Log out automatically when the login token runs out
   useEffect(() => {
-    restoreSession();
-  }, []);
-
-  // Effect to track user activity and update last activity time
-  useEffect(() => {
-    if (user && token) {
-      const activityEvents = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
-      
-      const handleActivity = () => {
-        updateLastActivity();
-      };
-      
-      // Add activity listeners
-      activityEvents.forEach(event => {
-        document.addEventListener(event, handleActivity, true);
-      });
-      
-      // Set up interval to check for session expiry
-      const sessionCheckInterval = setInterval(() => {
-        if (isSessionExpired()) {
-          console.log('Session expired due to inactivity');
-          logout();
-        }
-      }, 60000); // Check every minute
-      
-      // Cleanup
-      return () => {
-        activityEvents.forEach(event => {
-          document.removeEventListener(event, handleActivity, true);
-        });
-        clearInterval(sessionCheckInterval);
-      };
-    }
-  }, [user, token]);
+    if (!token) return;
+    const sessionCheckInterval = setInterval(() => {
+      if (isTokenExpired(token)) {
+        console.log('Session expired');
+        logout(false);
+      }
+    }, 60000); // Check every minute
+    return () => clearInterval(sessionCheckInterval);
+  }, [token, logout]);
 
   return (
-    <AuthContext.Provider value={{ 
-      user, 
-      token, 
-      role, 
-      login, 
-      logout, 
+    <AuthContext.Provider value={{
+      user,
+      token,
+      role,
+      login,
+      logout,
       isLoading,
-      updateLastActivity
+      loggedOut,
+      updateUser,
+      refreshUser,
     }}>
       {children}
     </AuthContext.Provider>

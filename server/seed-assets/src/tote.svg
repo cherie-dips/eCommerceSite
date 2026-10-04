@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="35%" r="85%"><stop offset="0" stop-color="#fbfbfa"/><stop offset="1" stop-color="#e6e5e1"/></radialGradient>
+    <linearGradient id="bag" x1="0" x2="1"><stop offset="0" stop-color="#e2d7c1"/><stop offset="0.25" stop-color="#efe6d3"/><stop offset="0.6" stop-color="#f3ebda"/><stop offset="1" stop-color="#dccfb6"/></linearGradient>
+    <linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0.08"/><stop offset="0.15" stop-color="#000" stop-opacity="0"/><stop offset="0.9" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.08"/></linearGradient>
+    <filter id="weave"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 0.45  0 0 0 0 0.38  0 0 0 0 0.28  0 0 0 0.12 0"/><feComposite in2="SourceGraphic" operator="in"/></filter>
+    <filter id="soft"><feGaussianBlur stdDeviation="22"/></filter>
+  </defs>
+  <rect width="1200" height="1200" fill="url(#bg)"/>
+  <ellipse cx="600" cy="1085" rx="350" ry="30" fill="#000" opacity="0.14" filter="url(#soft)"/>
+  <path d="M400 380 C 380 70, 600 70, 580 380" fill="none" stroke="#d8ccb2" stroke-width="40"/>
+  <path d="M620 380 C 600 70, 820 70, 800 380" fill="none" stroke="#d8ccb2" stroke-width="40"/>
+  <path d="M400 380 C 380 70, 600 70, 580 380" fill="none" stroke="#e9dfca" stroke-width="30"/>
+  <path d="M620 380 C 600 70, 820 70, 800 380" fill="none" stroke="#e9dfca" stroke-width="30"/>
+  <path d="M270 360 L930 360 L955 1070 L245 1070 Z" fill="url(#bag)"/>
+  <path d="M270 360 L930 360 L955 1070 L245 1070 Z" fill="url(#shade)"/>
+  <path d="M270 360 L930 360 L955 1070 L245 1070 Z" filter="url(#weave)"/>
+  <path d="M270 392 L930 392" stroke="#d6c9ae" stroke-width="3" stroke-dasharray="10 8"/>
+  <rect x="385" y="360" width="30" height="60" fill="#e4d9c3"/><rect x="565" y="360" width="30" height="60" fill="#e4d9c3"/><rect x="605" y="360" width="30" height="60" fill="#e4d9c3"/>
+  <rect x="785" y="360" width="30" height="60" fill="#e4d9c3"/>
+</svg>
