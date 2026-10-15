@@ -5,6 +5,8 @@ import api, { errorMessage } from "../utils/api";
 import GoogleSignInButton from "../components/GoogleSignInButton";
 import { useToast } from "../context/ToastContext";
 import "../styles/AuthPages.css";
+import AuthShell from "../components/AuthShell";
+import { PiEnvelopeSimple, PiLockSimple, PiUser } from "react-icons/pi";
 
 export default function Register() {
   const [username, setUsername] = useState("");
@@ -64,98 +66,90 @@ export default function Register() {
   };
 
   return (
-    <>
-      <div className="auth-page-container-new">
-        <div className="auth-form-wrapper">
-          <div className="auth-logo">
-            <h1>FLAGZEN</h1>
+    <AuthShell eyebrow="Create an account" title={<>Start designing <em>in 3D</em></>}>
+      <form onSubmit={handleRegister} className="auth-form-new">
+        <div className="form-group">
+          <label className="form-label">Username</label>
+          <div className="input-wrapper">
+            <PiUser className="input-icon" />
+            <input
+              type="text"
+              className="form-input"
+              placeholder="Your full name"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
           </div>
-
-          <form onSubmit={handleRegister} className="auth-form-new">
-            <div className="form-group">
-              <label className="form-label">Username</label>
-              <div className="input-wrapper">
-                <span className="input-icon">👤</span>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="Your full name"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Email address</label>
-              <div className="input-wrapper">
-                <span className="input-icon">✉</span>
-                <input
-                  type="email"
-                  className="form-input"
-                  placeholder="your@email.address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Password</label>
-              <div className="input-wrapper">
-                <span className="input-icon">🔒</span>
-                <input
-                  type="password"
-                  className="form-input"
-                  placeholder="At least 6 characters"
-                  minLength={6}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Sign up as</label>
-              <select
-                className="form-select"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-              >
-                <option value="user">Customer</option>
-                <option value="retailer">Retailer</option>
-              </select>
-            </div>
-
-            {role === "retailer" && (
-              <div className="notice notice-info small">Seller accounts are checked by the Flagzen team before you can list products.</div>
-            )}
-            {error && <div className="form-error" role="alert">{error}</div>}
-            <button type="submit" className="auth-button-primary" disabled={busy}>
-              {busy ? "Creating account..." : "Create new account"}
-            </button>
-
-            <div className="auth-divider">
-              <span>or</span>
-            </div>
-
-            {/* Google Sign-In Button */}
-            <GoogleSignInButton onCredential={handleGoogleSignIn} />
-
-            <div className="auth-links">
-              <p>
-                Already have an account?{" "}
-                <Link to="/login" state={{ from }} className="auth-link-text">
-                  Sign In
-                </Link>
-              </p>
-            </div>
-          </form>
         </div>
-      </div>
-    </>
+
+        <div className="form-group">
+          <label className="form-label">Email address</label>
+          <div className="input-wrapper">
+            <PiEnvelopeSimple className="input-icon" />
+            <input
+              type="email"
+              className="form-input"
+              placeholder="your@email.address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">Password</label>
+          <div className="input-wrapper">
+            <PiLockSimple className="input-icon" />
+            <input
+              type="password"
+              className="form-input"
+              placeholder="At least 6 characters"
+              minLength={6}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">Sign up as</label>
+          <select
+            className="form-select"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+          >
+            <option value="user">Customer</option>
+            <option value="retailer">Retailer</option>
+          </select>
+        </div>
+
+        {role === "retailer" && (
+          <div className="notice notice-info small">Seller accounts are checked by the Flagzen team before you can list products.</div>
+        )}
+        {error && <div className="form-error" role="alert">{error}</div>}
+        <button type="submit" className="auth-button-primary" disabled={busy}>
+          {busy ? "Creating account..." : "Create new account"}
+        </button>
+
+        <div className="auth-divider">
+          <span>or</span>
+        </div>
+
+        {/* Google Sign-In Button */}
+        <GoogleSignInButton onCredential={handleGoogleSignIn} />
+
+        <div className="auth-links">
+          <p>
+            Already have an account?{" "}
+            <Link to="/login" state={{ from }} className="auth-link-text">
+              Sign In
+            </Link>
+          </p>
+        </div>
+      </form>
+    </AuthShell>
   );
 }

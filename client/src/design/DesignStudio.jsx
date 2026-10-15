@@ -2,6 +2,7 @@
 // suggestions, see the design on the product's 3D model and save it / add it to the cart.
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { PiArrowClockwise, PiArrowCounterClockwise, PiArrowRight, PiCircle, PiCube, PiPencilSimple, PiSquare, PiTextT, PiUploadSimple } from "react-icons/pi";
 import api, { assetUrl, errorMessage } from "../utils/api";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
@@ -534,13 +535,14 @@ export default function DesignStudio({ product, initialDesign, onAddToCart, onSa
                 handleFiles(e.dataTransfer.files);
               }}
             >
+              <PiUploadSimple size={26} />
               <strong>Upload photo or logo</strong>
               <span className="muted small">PNG, JPG or WebP. Logos with a transparent background look best.</span>
             </button>
             <div className="row">
-              <button className="btn btn-secondary" onClick={addText}>＋ Text</button>
-              <button className="btn btn-secondary" onClick={() => { addLayer(createShapeLayer("rect", H, { fill: palette[0] || "#7c0034" })); setTab("edit"); }}>▭ Rectangle</button>
-              <button className="btn btn-secondary" onClick={() => { addLayer(createShapeLayer("ellipse", H, { fill: palette[0] || "#7c0034" })); setTab("edit"); }}>◯ Circle</button>
+              <button className="btn btn-secondary" onClick={addText}><PiTextT /> Text</button>
+              <button className="btn btn-secondary" onClick={() => { addLayer(createShapeLayer("rect", H, { fill: palette[0] || "#131316" })); setTab("edit"); }}><PiSquare /> Rectangle</button>
+              <button className="btn btn-secondary" onClick={() => { addLayer(createShapeLayer("ellipse", H, { fill: palette[0] || "#131316" })); setTab("edit"); }}><PiCircle /> Circle</button>
             </div>
             {uploads.length > 0 && (
               <div>
@@ -623,13 +625,17 @@ export default function DesignStudio({ product, initialDesign, onAddToCart, onSa
             </div>
           )}
           <div className="row">
-            <button className="btn btn-ghost btn-sm" onClick={history.undo} disabled={!history.canUndo} title="Undo (Ctrl/Cmd+Z)">↶ Undo</button>
-            <button className="btn btn-ghost btn-sm" onClick={history.redo} disabled={!history.canRedo} title="Redo (Ctrl/Cmd+Shift+Z)">↷ Redo</button>
+            <button className="btn btn-ghost btn-sm" onClick={history.undo} disabled={!history.canUndo} title="Undo (Ctrl/Cmd+Z)" aria-label="Undo">
+              <PiArrowCounterClockwise />
+            </button>
+            <button className="btn btn-ghost btn-sm" onClick={history.redo} disabled={!history.canRedo} title="Redo (Ctrl/Cmd+Shift+Z)" aria-label="Redo">
+              <PiArrowClockwise />
+            </button>
             <label className="checkbox small">
               <input type="checkbox" checked={showGuides} onChange={(e) => setShowGuides(e.target.checked)} /> Print area
             </label>
-            <button className={`btn btn-sm ${show3D ? "btn-primary" : "btn-secondary"}`} onClick={() => setShow3D((s) => !s)}>
-              {show3D ? "Back to editing" : "3D view"}
+            <button className={`btn btn-sm ${show3D ? "btn-secondary" : "btn-primary"}`} onClick={() => setShow3D((s) => !s)}>
+              {show3D ? <><PiPencilSimple /> Back to editing</> : <><PiCube /> 3D view</>}
             </button>
           </div>
         </div>
@@ -658,16 +664,17 @@ export default function DesignStudio({ product, initialDesign, onAddToCart, onSa
             />
           )}
         </div>
-        <p className="muted small studio-help">
-          Drag to move · corner handles resize · top handle rotates · Delete removes · arrow keys nudge.
-          Print area: {activeView.area.widthCm} × {printHeightCm(activeView.area, H).toFixed(1)} cm.
+        <p className="studio-help">
+          {show3D
+            ? "Your design on the product, where the seller prints it"
+            : `Drag to move · handles resize & rotate · Delete removes · Print area ${activeView.area.widthCm} × ${printHeightCm(activeView.area, H).toFixed(1)} cm`}
         </p>
       </section>
 
       {/* ---------- Bottom bar: price, quantity, save ---------- */}
       <div className="studio-actions">
         <div className="studio-price">
-          <span className="muted small">Price</span>
+          <span className="muted">Total</span>
           <strong>₹{(product.price * quantity).toFixed(2)}</strong>
           {quantity > 1 && <span className="muted small">₹{product.price} each</span>}
         </div>
@@ -680,7 +687,7 @@ export default function DesignStudio({ product, initialDesign, onAddToCart, onSa
           Save design
         </button>
         <button className="btn btn-primary btn-lg" onClick={() => saveDesign({ addToCart: true })} disabled={Boolean(saving) || !totalLayers || product.stock === 0}>
-          {saving || (product.stock === 0 ? "Out of stock" : "Add to cart")}
+          {saving || (product.stock === 0 ? "Out of stock" : <>Add to cart <PiArrowRight className="arrow" /></>)}
         </button>
       </div>
     </div>

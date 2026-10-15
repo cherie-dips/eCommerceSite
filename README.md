@@ -40,7 +40,8 @@ Sellers get print-ready files with every order, and admins look after the whole 
 
 | Part | Technology |
 | --- | --- |
-| Website (`client/`) | React 19, Vite, React Router, Material UI icons |
+| Website (`client/`) | React 19, Vite, React Router, Phosphor icons (react-icons) |
+| Look | Own design system in `client/src/styles/ui.css`: Instrument Serif, Geist and Geist Mono fonts, glass panels, one lime accent |
 | Design studio | Konva / react-konva (2D editor and print files) |
 | 3D | three.js, react-three-fiber, drei (product models built in code, one shared WebGL canvas) |
 | Server (`server/`) | Node.js, Express 5, Helmet, rate limiting |

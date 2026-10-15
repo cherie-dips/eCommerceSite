@@ -1,62 +1,95 @@
+/* Base styles for the whole website. Colours and components live in styles/ui.css. */
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.6;
+  font-family: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.55;
   font-weight: 400;
   color-scheme: light;
-  color: #2d3748;
-  background-color: #ffffff;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #4a5568;
-  text-decoration: inherit;
-  transition: color 0.2s ease;
-}
-a:hover {
-  color: #7c0034;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  display: block;
   min-width: 320px;
   min-height: 100vh;
-  background-color: #fafbfc;
-  color: #2d3748;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  color: var(--ink);
+  /* A soft "studio light" from above on warm paper */
+  background:
+    radial-gradient(1200px 560px at 50% -180px, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0) 70%),
+    var(--paper);
+  background-attachment: fixed;
   overflow-x: hidden;
 }
 
-.page-content {
-  padding: 5rem 2rem 2rem 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+::selection {
+  background: var(--accent);
+  color: var(--ink);
 }
 
-/* GLOBAL BUTTONS -------------------------------------------- */
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+h1,
+h2,
+h3,
+h4 {
+  color: var(--ink);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+a {
+  color: inherit;
   font-weight: 500;
-  font-family: inherit;
-  background-color: #7c0034;
-  color: #2d3748;
+  text-decoration: none;
+  transition: color 0.15s ease, opacity 0.15s ease;
+}
+a:hover {
+  color: var(--ink);
+  opacity: 0.8;
+}
+
+img {
+  max-width: 100%;
+}
+
+/* Buttons without a class look like quiet secondary buttons */
+button {
+  font: inherit;
+  font-weight: 500;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 0.5em 1.1em;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
 }
 button:hover {
-  background-color: #7c0034;
-  transform: translateY(-1px);
+  border-color: var(--ink);
 }
-button:focus,
-button:focus-visible {
-  outline: 2px solid #7c0034;
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+:focus-visible {
+  outline: 2px solid var(--ink);
   outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

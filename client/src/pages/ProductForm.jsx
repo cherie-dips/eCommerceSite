@@ -192,8 +192,8 @@ export default function ProductForm() {
     <div className="page page-narrow" style={{ maxWidth: 880 }}>
       <div className="page-header">
         <div>
-          <Link to="/retailer/products" className="small">← My products</Link>
-          <h1>{editing ? "Edit product" : "Add a product"}</h1>
+          <Link to="/retailer/products" className="eyebrow">Seller studio · My products</Link>
+          <h1>{editing ? <>Edit <em>product</em></> : <>Add a <em>product</em></>}</h1>
         </div>
       </div>
 

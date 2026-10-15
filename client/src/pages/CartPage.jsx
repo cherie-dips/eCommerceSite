@@ -86,13 +86,18 @@ export default function CartPage() {
   const sameAddress = (a, b) => a && b && (a._id ? a._id === b._id : formatAddress(a) === formatAddress(b));
 
   return (
-    <div className="page-content">
-      <h2 className="cart-heading">Your Cart</h2>
+    <div className="page">
+      <div className="page-header">
+        <div>
+          <span className="eyebrow">{itemCount} item{itemCount === 1 ? "" : "s"}</span>
+          <h1>Your <em>cart</em></h1>
+        </div>
+      </div>
       <div className="cart-container">
         <div className="cart-left">
           {/* Address Section */}
           <div className="address-section">
-            <h4 style={{ marginTop: 0 }}>Delivery address</h4>
+            <h3>Delivery address</h3>
             {savedAddresses.length > 0 && !showForm && (
               <div className="address-options">
                 {savedAddresses.map((a) => (
@@ -137,7 +142,7 @@ export default function CartPage() {
 
           {/* Cart Section */}
           <div className="cart-section">
-            <h3>Cart ({itemCount} item{itemCount === 1 ? "" : "s"})</h3>
+            <h3>Items</h3>
             {cartItems.length === 0 ? (
               <p>
                 Your cart is empty. <Link to="/customize">Browse products</Link>
@@ -161,7 +166,7 @@ export default function CartPage() {
                   </div>
                   <div className="cart-quantity">
                     <div className="quantity-controls">
-                      <button onClick={() => decreaseQuantity(item.cartId)} aria-label="Fewer">-</button>
+                      <button onClick={() => decreaseQuantity(item.cartId)} aria-label="Fewer">−</button>
                       <span>{item.quantity}</span>
                       <button onClick={() => increaseQuantity(item.cartId)} aria-label="More">+</button>
                     </div>
@@ -179,7 +184,7 @@ export default function CartPage() {
         <div className="cart-right">
           <div className="summary-section">
             <h3>Summary</h3>
-            <label className="discount-label">Discount Code</label>
+            <label className="discount-label">Discount code</label>
             <div className="discount-input">
               <input
                 type="text"

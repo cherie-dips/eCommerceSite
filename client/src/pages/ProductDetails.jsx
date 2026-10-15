@@ -146,14 +146,17 @@ const ProductDetails = () => {
   };
 
   return (
-    <div className="page" style={{ maxWidth: 1280 }}>
+    <div className="page">
       <div className="product-head">
         <div>
-          <Link to="/customize" className="small">← All products</Link>
+          <nav className="product-crumbs" aria-label="Breadcrumb">
+            <Link to="/customize">All products</Link>
+            <span>/</span>
+            <Link to={`/customize?category=${encodeURIComponent(product.category)}`}>{product.category}</Link>
+          </nav>
           <h1>{product.name}</h1>
           <div className="product-meta">
             <Stars value={product.ratingAvg} count={product.ratingCount} />
-            <span className="badge">{product.category}</span>
             {product.retailerId?.username && <span>Sold by {product.retailerId.username}</span>}
             {outOfStock ? (
               <span className="badge badge-danger">Out of stock</span>
@@ -164,8 +167,8 @@ const ProductDetails = () => {
             )}
           </div>
         </div>
-        <div style={{ textAlign: "right" }}>
-          <div style={{ fontSize: "1.6rem", fontWeight: 700 }}>₹{product.price}</div>
+        <div className="product-buy">
+          <span className="product-price">₹{product.price}</span>
           {product.customizable !== false && !outOfStock && (
             <button className="btn btn-ghost btn-sm" onClick={addPlain}>Add without a design</button>
           )}

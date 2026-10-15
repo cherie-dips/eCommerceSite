@@ -75,10 +75,11 @@ export default function RetailerOrders() {
   const visible = (orders || []).filter((l) => !statuses || statuses.includes(l.status));
 
   return (
-    <div className="page" style={{ maxWidth: 1300 }}>
+    <div className="page">
       <div className="page-header">
         <div>
-          <h1>Orders Received</h1>
+          <span className="eyebrow">Seller studio</span>
+          <h1>Orders <em>received</em></h1>
           <p>Download the print files, make the items, then add the courier tracking ID.</p>
         </div>
       </div>

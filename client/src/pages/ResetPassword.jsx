@@ -3,6 +3,8 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import api, { errorMessage } from "../utils/api";
 import { useToast } from "../context/ToastContext";
 import "../styles/AuthPages.css";
+import AuthShell from "../components/AuthShell";
+import { PiLockSimple } from "react-icons/pi";
 
 export default function ResetPassword() {
   const [params] = useSearchParams();
@@ -34,36 +36,33 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="auth-page-container-new">
-      <div className="auth-form-wrapper">
-        <div className="auth-logo"><h1>FLAGZEN</h1></div>
-        {!token ? (
-          <div className="auth-form-new">
-            <h2>This link is incomplete</h2>
-            <p>Please open the full link from the email, or <Link to="/forgot-password">ask for a new one</Link>.</p>
+    <AuthShell eyebrow="Account help">
+      {!token ? (
+        <div className="auth-form-new">
+          <h2>This link is incomplete</h2>
+          <p>Please open the full link from the email, or <Link to="/forgot-password">ask for a new one</Link>.</p>
+        </div>
+      ) : (
+        <form className="auth-form-new" onSubmit={submit}>
+          <h2>Choose a new password</h2>
+          <div className="form-group">
+            <label className="form-label">New password</label>
+            <div className="input-wrapper">
+              <PiLockSimple className="input-icon" />
+              <input type="password" className="form-input" minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="At least 6 characters" />
+            </div>
           </div>
-        ) : (
-          <form className="auth-form-new" onSubmit={submit}>
-            <h2>Choose a new password</h2>
-            <div className="form-group">
-              <label className="form-label">New password</label>
-              <div className="input-wrapper">
-                <span className="input-icon">🔒</span>
-                <input type="password" className="form-input" minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="At least 6 characters" />
-              </div>
+          <div className="form-group">
+            <label className="form-label">Type it again</label>
+            <div className="input-wrapper">
+              <PiLockSimple className="input-icon" />
+              <input type="password" className="form-input" minLength={6} value={confirm} onChange={(e) => setConfirm(e.target.value)} required />
             </div>
-            <div className="form-group">
-              <label className="form-label">Type it again</label>
-              <div className="input-wrapper">
-                <span className="input-icon">🔒</span>
-                <input type="password" className="form-input" minLength={6} value={confirm} onChange={(e) => setConfirm(e.target.value)} required />
-              </div>
-            </div>
-            {error && <div className="form-error">{error} {/expired|invalid/i.test(error) && <Link to="/forgot-password">Get a new link</Link>}</div>}
-            <button className="auth-button-primary" disabled={busy}>{busy ? "Saving..." : "Save new password"}</button>
-          </form>
-        )}
-      </div>
-    </div>
+          </div>
+          {error && <div className="form-error">{error} {/expired|invalid/i.test(error) && <Link to="/forgot-password">Get a new link</Link>}</div>}
+          <button className="auth-button-primary" disabled={busy}>{busy ? "Saving..." : "Save new password"}</button>
+        </form>
+      )}
+    </AuthShell>
   );
 }

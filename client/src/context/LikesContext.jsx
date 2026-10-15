@@ -42,8 +42,9 @@ export const LikesProvider = ({ children }) => {
       if (exists) {
         return prev.filter((item) => item._id !== product._id); // unlike
       }
-      const { _id, name, price, image } = product;
-      return [...prev, { _id, name, price, image }]; // like
+      // Enough to show the product (in 3D when it has a model) on the Liked page
+      const { _id, name, price, image, images, category, customizable, model3d, modelFile, ratingAvg, ratingCount } = product;
+      return [...prev, { _id, name, price, image, images, category, customizable, model3d, modelFile, ratingAvg, ratingCount }]; // like
     });
   };
 

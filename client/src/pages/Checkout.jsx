@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import gpay from "../assets/gpay.png";
-import applepay from "../assets/apple-pay.png";
-import paypal from "../assets/paypal.png";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
 import api, { errorMessage } from "../utils/api";
 import { formatAddress } from "../components/AddressForm";
 import "../styles/CheckoutPage.css";
+import { PiLockSimple } from "react-icons/pi";
 
 // Loads Razorpay's payment window script once.
 function loadRazorpay() {
@@ -57,7 +55,7 @@ export default function Checkout() {
         name: "Flagzen",
         description: `Order ${orderId}`,
         prefill: payment.prefill,
-        theme: { color: "#7c0034" },
+        theme: { color: "#131316" },
         handler: async (response) => {
           try {
             await api.post(`/orders/${orderId}/verify-payment`, response);
@@ -132,7 +130,8 @@ export default function Checkout() {
     <div className="page">
       <div className="page-header">
         <div>
-          <h1>Checkout</h1>
+          <span className="eyebrow">Checkout</span>
+          <h1>Review &amp; <em>pay</em></h1>
           <p>Check your order, then pay securely.</p>
         </div>
       </div>
@@ -199,14 +198,12 @@ export default function Checkout() {
             <button className="btn btn-primary btn-lg btn-block" onClick={placeOrder} disabled={busy || !address || paymentMode === "off"}>
               {busy ? "Processing..." : `Pay ₹${total.toFixed(2)}`}
             </button>
-            <p className="muted small" style={{ textAlign: "center", marginBottom: 0 }}>
-              UPI, cards, net banking and wallets via Razorpay. We never see your card details.
+            <p className="pay-methods">
+              <PiLockSimple /> UPI · Cards · Net banking · Wallets
             </p>
-            <div className="pay-logos">
-              <img src={gpay} alt="Google Pay" />
-              <img src={applepay} alt="Apple Pay" />
-              <img src={paypal} alt="PayPal" />
-            </div>
+            <p className="muted small" style={{ textAlign: "center", margin: 0 }}>
+              Payments by Razorpay. We never see your card details.
+            </p>
           </div>
         </div>
       )}

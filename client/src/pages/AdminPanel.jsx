@@ -201,10 +201,11 @@ const TABS = [
 export default function AdminPanel() {
   const [tab, setTab] = useState("overview");
   return (
-    <div className="page" style={{ maxWidth: 1300 }}>
+    <div className="page">
       <div className="page-header">
         <div>
-          <h1>Admin Panel</h1>
+          <span className="eyebrow">Flagzen admin</span>
+          <h1>Admin <em>panel</em></h1>
           <p>Approve sellers, manage users and products, and see every order.</p>
         </div>
       </div>

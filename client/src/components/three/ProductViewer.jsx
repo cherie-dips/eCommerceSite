@@ -42,13 +42,13 @@ function placeholderImage(label, aspect) {
   canvas.width = 512;
   canvas.height = Math.max(64, Math.round(512 * aspect));
   const ctx = canvas.getContext("2d");
-  ctx.fillStyle = "rgba(124, 0, 52, 0.14)";
+  ctx.fillStyle = "rgba(216, 245, 74, 0.45)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.setLineDash([22, 14]);
   ctx.lineWidth = 10;
-  ctx.strokeStyle = "#7c0034";
+  ctx.strokeStyle = "#131316";
   ctx.strokeRect(5, 5, canvas.width - 10, canvas.height - 10);
-  ctx.fillStyle = "#7c0034";
+  ctx.fillStyle = "#131316";
   ctx.font = "bold 54px sans-serif";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
@@ -117,14 +117,26 @@ function Scene({ product, designs, spots, placeholders, editSide, onPlace, onFit
 // spots:        print spots to use instead of the product's saved ones (product form)
 // placeholders: { front, back } aspect ratios for "design goes here" boxes (product form)
 // editSide:     "front" | "back" while a seller is placing that side; clicks call onPlace(side, spot)
-export default function ProductViewer({ product, designs = NONE, spots, placeholders = NONE, editSide = null, onPlace, height = 420 }) {
+// autoRotate:   turn the product slowly; zoom: allow zooming with the mouse wheel
+export default function ProductViewer({
+  product,
+  designs = NONE,
+  spots,
+  placeholders = NONE,
+  editSide = null,
+  onPlace,
+  height = 420,
+  autoRotate = false,
+  zoom = true,
+  className = "",
+}) {
   const [middle, setMiddle] = useState(0.5);
   const [failed, setFailed] = useState(false);
   const modelKey = product.modelFile || product.model3d;
   useEffect(() => setFailed(false), [modelKey]);
 
   return (
-    <div className="product-viewer" style={{ height }}>
+    <div className={`product-viewer ${className}`} style={{ height }}>
       <Canvas flat dpr={[1, 2]} camera={{ position: [0.7, 0.8, 2.4], fov: 30 }}>
         <ambientLight intensity={0.25} />
         <directionalLight position={[2, 3, 2.5]} intensity={0.95} />
@@ -144,7 +156,16 @@ export default function ProductViewer({ product, designs = NONE, spots, placehol
             />
           </Suspense>
         </ModelErrorBoundary>
-        <OrbitControls makeDefault target={[0, middle, 0]} enablePan={false} minDistance={1.2} maxDistance={4} />
+        <OrbitControls
+          makeDefault
+          target={[0, middle, 0]}
+          enablePan={false}
+          enableZoom={zoom}
+          minDistance={1.2}
+          maxDistance={4}
+          autoRotate={autoRotate}
+          autoRotateSpeed={1.2}
+        />
       </Canvas>
       {failed && <div className="product-viewer-message">This 3D model couldn't be shown.</div>}
     </div>

@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider, useAuth } from "./context/AuthContext";
@@ -30,18 +31,11 @@ const AdminPanel = lazy(() => import("./pages/AdminPanel"));
 const CustomizationPage = lazy(() => import("./pages/CustomizationPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
-// Loading component for session restoration
+// Shown while the session is restored and while a page's code loads
 const LoadingSpinner = ({ message = "Restoring your session..." }) => (
-  <div style={{
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    minHeight: '100vh',
-    flexDirection: 'column',
-    backgroundColor: '#f8f9fa'
-  }}>
+  <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", flexDirection: "column" }}>
     <div className="spinner" />
-    <p style={{ marginTop: '0', color: '#666' }}>{message}</p>
+    <p className="muted small" style={{ marginTop: 0 }}>{message}</p>
   </div>
 );
 
@@ -109,6 +103,7 @@ function AppContent() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
+      <Footer />
     </>
   );
 }

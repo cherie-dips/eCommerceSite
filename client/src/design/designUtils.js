@@ -96,7 +96,7 @@ export function createShapeLayer(type, H, overrides = {}) {
     height: size,
     rotation: 0,
     opacity: 1,
-    fill: "#7c0034",
+    fill: "#131316",
     stroke: "",
     strokeWidth: 0,
     cornerRadius: type === "rect" ? 24 : 0,

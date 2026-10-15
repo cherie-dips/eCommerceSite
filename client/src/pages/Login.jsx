@@ -5,6 +5,8 @@ import api, { errorMessage } from "../utils/api";
 import GoogleSignInButton from "../components/GoogleSignInButton";
 import { useToast } from "../context/ToastContext";
 import "../styles/AuthPages.css";
+import AuthShell from "../components/AuthShell";
+import { PiEnvelopeSimple, PiLockSimple } from "react-icons/pi";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -65,82 +67,74 @@ const Login = () => {
   };
 
   return (
-    <>
-      <div className="auth-page-container-new">
-        <div className="auth-form-wrapper">
-          <div className="auth-logo">
-            <h1>FLAGZEN</h1>
+    <AuthShell eyebrow="Welcome back" title={<>Log in to <em>Flagzen</em></>}>
+      <form onSubmit={handleSubmit} className="auth-form-new">
+        <div className="form-group">
+          <label className="form-label">Email address</label>
+          <div className="input-wrapper">
+            <PiEnvelopeSimple className="input-icon" />
+            <input 
+              type="email" 
+              className="form-input"
+              placeholder="your@email.address"
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)} 
+              required 
+            />
           </div>
-          
-          <form onSubmit={handleSubmit} className="auth-form-new">
-            <div className="form-group">
-              <label className="form-label">Email address</label>
-              <div className="input-wrapper">
-                <span className="input-icon">✉</span>
-                <input 
-                  type="email" 
-                  className="form-input"
-                  placeholder="your@email.address"
-                  value={email} 
-                  onChange={(e) => setEmail(e.target.value)} 
-                  required 
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Password</label>
-              <div className="input-wrapper">
-                <span className="input-icon">🔒</span>
-                <input 
-                  type="password" 
-                  className="form-input"
-                  placeholder="Your secret password"
-                  value={password} 
-                  onChange={(e) => setPassword(e.target.value)} 
-                  required 
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Login as</label>
-              <select 
-                className="form-select"
-                value={role} 
-                onChange={(e) => setRole(e.target.value)}
-              >
-                <option value="user">Customer</option>
-                <option value="retailer">Retailer</option>
-              </select>
-            </div>
-
-            {error && <div className="form-error" role="alert">{error}</div>}
-            {from && !error && <div className="notice notice-info small">Please log in to continue.</div>}
-
-            <button type="submit" className="auth-button-primary" disabled={busy}>
-              {busy ? "Logging in..." : "Log in"}
-            </button>
-            <div style={{ textAlign: "right", marginTop: "0.5rem" }}>
-              <Link to="/forgot-password" className="auth-link-text small">Forgot password?</Link>
-            </div>
-
-            <div className="auth-divider">
-              <span>or</span>
-            </div>
-
-            <GoogleSignInButton onCredential={handleGoogleSignIn} />
-
-            <div className="auth-links">
-              <p>
-                Don't have an account yet?{" "}
-                <Link to="/register" state={{ from }} className="auth-link-text">Create a new one</Link>
-              </p>
-            </div>
-          </form>
         </div>
-      </div>
-    </>
+
+        <div className="form-group">
+          <label className="form-label">Password</label>
+          <div className="input-wrapper">
+            <PiLockSimple className="input-icon" />
+            <input 
+              type="password" 
+              className="form-input"
+              placeholder="Your secret password"
+              value={password} 
+              onChange={(e) => setPassword(e.target.value)} 
+              required 
+            />
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">Login as</label>
+          <select 
+            className="form-select"
+            value={role} 
+            onChange={(e) => setRole(e.target.value)}
+          >
+            <option value="user">Customer</option>
+            <option value="retailer">Retailer</option>
+          </select>
+        </div>
+
+        {error && <div className="form-error" role="alert">{error}</div>}
+        {from && !error && <div className="notice notice-info small">Please log in to continue.</div>}
+
+        <button type="submit" className="auth-button-primary" disabled={busy}>
+          {busy ? "Logging in..." : "Log in"}
+        </button>
+        <div style={{ textAlign: "right", marginTop: "0.5rem" }}>
+          <Link to="/forgot-password" className="auth-link-text small">Forgot password?</Link>
+        </div>
+
+        <div className="auth-divider">
+          <span>or</span>
+        </div>
+
+        <GoogleSignInButton onCredential={handleGoogleSignIn} />
+
+        <div className="auth-links">
+          <p>
+            Don't have an account yet?{" "}
+            <Link to="/register" state={{ from }} className="auth-link-text">Create a new one</Link>
+          </p>
+        </div>
+      </form>
+    </AuthShell>
   );
 };
 

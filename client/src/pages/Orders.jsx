@@ -50,7 +50,8 @@ export default function Orders() {
     <div className="page">
       <div className="page-header">
         <div>
-          <h1>My Orders</h1>
+          <span className="eyebrow">Your account</span>
+          <h1>My <em>orders</em></h1>
           <p>Track your orders and their delivery.</p>
         </div>
       </div>

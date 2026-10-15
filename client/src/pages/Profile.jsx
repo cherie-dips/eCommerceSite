@@ -72,6 +72,7 @@ export default function Profile() {
     <div className="page page-narrow">
       <div className="page-header">
         <div>
+          <span className="eyebrow">Your account</span>
           <h1>Profile</h1>
           <p>{user?.email}</p>
         </div>

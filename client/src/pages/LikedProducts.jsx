@@ -1,24 +1,27 @@
-import React from "react";
+import { Link } from "react-router-dom";
 import { useLikes } from "../context/LikesContext";
-import ProductCard from "../components/ProductCard";
+import ProductGallery from "../components/ProductGallery";
 
 export default function LikedProducts() {
   const { likedItems } = useLikes();
 
   return (
-    <div className="page-content products-page">
-      <h1 className="products-heading">Liked Products</h1>
+    <div className="page">
+      <div className="page-header">
+        <div>
+          <span className="eyebrow">Saved for later</span>
+          <h1>Things you <em>liked</em></h1>
+        </div>
+      </div>
 
       {likedItems.length === 0 ? (
-        <p style={{ color: "#ccc", marginTop: "2rem" }}>
-          You haven’t liked any products yet.
-        </p>
-      ) : (
-        <div className="products-grid">
-          {likedItems.map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))}
+        <div className="empty">
+          <h3>No favourites yet</h3>
+          <p>Tap the heart on any product to keep it here.</p>
+          <Link to="/customize" className="btn btn-primary">Browse products</Link>
         </div>
+      ) : (
+        <ProductGallery products={likedItems} />
       )}
     </div>
   );

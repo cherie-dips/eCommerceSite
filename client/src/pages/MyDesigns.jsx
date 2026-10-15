@@ -28,7 +28,8 @@ export default function MyDesigns() {
     <div className="page">
       <div className="page-header">
         <div>
-          <h1>My Designs</h1>
+          <span className="eyebrow">Your studio</span>
+          <h1>My <em>designs</em></h1>
           <p>Designs you've saved or ordered. Open one to change it or order it again.</p>
         </div>
         <Link to="/customize" className="btn btn-primary">New design</Link>

@@ -24,7 +24,8 @@ export default function VerifyEmail() {
 
   return (
     <div className="page page-narrow" style={{ textAlign: "center" }}>
-      <div className="card">
+      <div className="card status-card">
+        <span className="eyebrow">Email confirmation</span>
         {!token ? (
           <p>This confirmation link is incomplete. Please open the full link from the email.</p>
         ) : state.status === "working" ? (
@@ -34,8 +35,8 @@ export default function VerifyEmail() {
           </>
         ) : state.status === "done" ? (
           <>
-            <h2>✅ {state.message}</h2>
-            <Link to="/" className="btn btn-primary">Start shopping</Link>
+            <h2>{state.message}</h2>
+            <Link to="/customize" className="btn btn-primary">Start designing</Link>
           </>
         ) : (
           <>

@@ -131,10 +131,10 @@ export default function DesignCanvas({
           <Rect
             name="print-area"
             {...areaBox}
-            stroke="#7c0034"
+            stroke="#131316"
             strokeWidth={1.5}
             dash={[8, 6]}
-            fill="rgba(124, 0, 52, 0.03)"
+            fill="rgba(216, 245, 74, 0.08)"
           />
         )}
 
@@ -180,8 +180,8 @@ export default function DesignCanvas({
           enabledAnchors={transformerAnchors}
           anchorSize={11}
           anchorCornerRadius={6}
-          anchorStroke="#7c0034"
-          borderStroke="#7c0034"
+          anchorStroke="#131316"
+          borderStroke="#131316"
           rotateAnchorOffset={28}
           rotationSnaps={[0, 45, 90, 135, 180, 225, 270, 315]}
           boundBoxFunc={(oldBox, newBox) => (Math.abs(newBox.width) < 12 || Math.abs(newBox.height) < 12 ? oldBox : newBox)}

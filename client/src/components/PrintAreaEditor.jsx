@@ -56,8 +56,8 @@ export default function PrintAreaEditor({ imageUrl, value, onChange, width = 340
           y={value.y * height}
           width={value.width * width}
           height={value.height * height}
-          fill="rgba(124, 0, 52, 0.12)"
-          stroke="#7c0034"
+          fill="rgba(216, 245, 74, 0.28)"
+          stroke="#131316"
           strokeWidth={2}
           dash={[8, 5]}
           draggable
@@ -72,8 +72,8 @@ export default function PrintAreaEditor({ imageUrl, value, onChange, width = 340
           ref={trRef}
           rotateEnabled={false}
           keepRatio={false}
-          anchorStroke="#7c0034"
-          borderStroke="#7c0034"
+          anchorStroke="#131316"
+          borderStroke="#131316"
           boundBoxFunc={(oldBox, box) =>
             box.x < -1 || box.y < -1 || box.x + box.width > width + 1 || box.y + box.height > height + 1 || box.width < 20 || box.height < 20
               ? oldBox

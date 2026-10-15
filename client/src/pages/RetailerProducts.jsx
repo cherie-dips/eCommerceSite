@@ -53,7 +53,8 @@ export default function RetailerProducts() {
     <div className="page">
       <div className="page-header">
         <div>
-          <h1>My Products</h1>
+          <span className="eyebrow">Seller studio</span>
+          <h1>Your <em>products</em></h1>
           <p>Manage what you sell and keep stock up to date.</p>
         </div>
         <div className="row">
