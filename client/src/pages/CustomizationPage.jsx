@@ -44,7 +44,7 @@ function ModelStage({ model }) {
   );
 }
 
-// The shop: every product as a 3D model, plus the 3D logo lab.
+// The shop: every product as a 3D model.
 export default function CustomizationPage() {
   const [params, setParams] = useSearchParams();
   const category = params.get("category") || "";
@@ -77,14 +77,6 @@ export default function CustomizationPage() {
           <h1>Design your own</h1>
           <p>Pick a product, upload your logo or photo, and choose from instant design ideas.</p>
         </div>
-      </div>
-
-      <div className="lab-banner">
-        <div>
-          <strong>3D logo lab</strong>
-          <span className="muted small">Place logos anywhere around a mug, change its colour and turn it in 3D.</span>
-        </div>
-        <Link to="/customize-3d" className="btn btn-secondary">Open the 3D logo lab</Link>
       </div>
 
       {categories.length > 1 && (

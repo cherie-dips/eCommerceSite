@@ -181,11 +181,6 @@ const ProductDetails = () => {
             onAddToCart={addDesign}
             onSaved={() => {}}
           />
-          {product.model3d === "mug" && (
-            <p className="muted small" style={{ marginTop: "0.75rem" }}>
-              Want to place logos anywhere around the mug? Try the <Link to={`/customize-3d?product=${product._id}`}>3D logo lab</Link>.
-            </p>
-          )}
         </>
       ) : (
         <div className="product-plain">

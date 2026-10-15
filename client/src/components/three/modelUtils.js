@@ -1,4 +1,4 @@
-// Shared 3D helpers for the 3D customizer and the mug preview in the design studio.
+// Shared 3D helpers for the product models and the mug preview in the design studio.
 import { useEffect, useMemo } from "react";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";

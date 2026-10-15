@@ -28,7 +28,6 @@ const RetailerOrders = lazy(() => import("./pages/RetailerOrders"));
 const ProductForm = lazy(() => import("./pages/ProductForm"));
 const AdminPanel = lazy(() => import("./pages/AdminPanel"));
 const CustomizationPage = lazy(() => import("./pages/CustomizationPage"));
-const CustomizationPage3D = lazy(() => import("./pages/3dCustomizationPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 // Loading component for session restoration
@@ -69,7 +68,7 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/customize" element={<CustomizationPage />} />
-          <Route path="/customize-3d" element={<CustomizationPage3D />} />
+          <Route path="/customize-3d" element={<Navigate to="/customize" replace />} />
           {/* The product list is part of the Design page now */}
           <Route path="/products" element={<ToDesignPage />} />
           <Route path="/products/:id" element={<ProductDetails />} />

@@ -286,20 +286,6 @@
 .choose-name { font-weight: 700; color: var(--text); text-decoration: none; }
 .choose-name:hover { color: var(--brand); }
 .choose-actions { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
-.lab-banner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
-  padding: 1rem 1.25rem;
-  margin-bottom: 1.25rem;
-  background: var(--brand-soft);
-  border: 1px solid #f1d3df;
-  border-radius: var(--radius);
-}
-.lab-banner > div { display: flex; flex-direction: column; gap: 0.15rem; }
-.lab-banner strong { color: var(--brand); }
 .chip-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
 .chip {
   padding: 0.4rem 0.9rem;
