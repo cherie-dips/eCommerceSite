@@ -16,7 +16,7 @@ The plan for taking this to real customers is in [docs/ROADMAP.md](docs/ROADMAP.
   - **3 instant design ideas** after an upload, based on the logo/photo's colours and shape.
   - **AI design ideas** (optional) from Claude, when the server has an Anthropic API key.
   - Print-quality warning when an image is too small for its printed size.
-  - Live **3D preview** for mugs, and a separate 3D logo lab.
+  - Rotating **3D models** of every product on the Design page, a live **3D preview** for mugs, and a separate 3D logo lab.
   - Unfinished designs are kept in the browser (survive a refresh or logging in).
 - Cart with saved addresses and discount codes; checkout with **Razorpay** (UPI, cards, net banking, wallets).
 - My Orders (status steps, courier tracking, cancel with automatic refund), My Designs, Profile.

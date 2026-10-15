@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 
 const CATEGORIES = ["Drinkware", "Apparel", "Bags", "Stationery", "Tech", "Office Kits", "Other"];
 const VIEWS = ["front", "back", "side"];
+// Products with a 3D model on the "Design your own" page (the mug also has a live 3D preview).
+const MODELS_3D = ["mug", "tshirt", "tote", "notebook", "cap", "bottle", "phonecase", "mousepad"];
 
 // Where a design can be printed on a product photo.
 // x, y, width, height are fractions (0-1) of the photo; widthCm is the real printed width.
@@ -32,8 +34,8 @@ const productSchema = new mongoose.Schema({
     back:  printAreaSchema,
     side:  printAreaSchema,
   },
-  // Optional 3D model for the live 3D preview ("mug" is the only model for now).
-  model3d:  { type: String, enum: ["", "mug"], default: "" },
+  // Optional 3D model shown on the "Design your own" page (one of MODELS_3D).
+  model3d:  { type: String, enum: ["", ...MODELS_3D], default: "" },
   active:   { type: Boolean, default: true },
   retailerId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   likedBy:  [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
@@ -47,3 +49,4 @@ productSchema.index({ active: 1, category: 1, createdAt: -1 });
 module.exports = mongoose.model("Product", productSchema);
 module.exports.CATEGORIES = CATEGORIES;
 module.exports.VIEWS = VIEWS;
+module.exports.MODELS_3D = MODELS_3D;

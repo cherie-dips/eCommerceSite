@@ -6,7 +6,7 @@ const Review = require("../models/Review");
 const { verifyToken, verifyApprovedRetailer } = require("../middleware/authMiddleware");
 const { imageUploader, UPLOAD_DIRS, publicPath } = require("../utils/uploads");
 
-const { CATEGORIES } = Product;
+const { CATEGORIES, MODELS_3D } = Product;
 const router = express.Router();
 
 const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -68,7 +68,7 @@ const cleanProduct = (body = {}, { partial = false } = {}) => {
       if (area) data.printAreas[view] = area;
     }
   }
-  if (has("model3d")) data.model3d = body.model3d === "mug" ? "mug" : "";
+  if (has("model3d")) data.model3d = MODELS_3D.includes(body.model3d) ? body.model3d : "";
   return { data };
 };
 
@@ -76,7 +76,7 @@ const canManage = (req, product) =>
   req.user.role === "admin" || String(product.retailerId) === String(req.user.id);
 
 // === List / search products (public) ===
-// ?search=&category=&sort=newest|price_asc|price_desc|popular|rating&page=&limit=&customizable=true
+// ?search=&category=&sort=newest|price_asc|price_desc|popular|rating&page=&limit=&customizable=true&has3d=true
 router.get("/", async (req, res) => {
   const filter = { active: { $ne: false } };
   const search = String(req.query.search || "").trim();
@@ -86,6 +86,7 @@ router.get("/", async (req, res) => {
   }
   if (CATEGORIES.includes(req.query.category)) filter.category = req.query.category;
   if (req.query.customizable === "true") filter.customizable = { $ne: false };
+  if (req.query.has3d === "true") filter.model3d = { $in: MODELS_3D };
 
   const sorts = {
     newest: { createdAt: -1 },

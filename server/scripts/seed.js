@@ -1,5 +1,6 @@
-// Adds a demo seller and ready-to-customise demo products (mug, tote, T-shirt, notebook).
-// Safe to run more than once: existing demo products are left as they are.
+// Adds a demo seller and ready-to-customise demo products, one for each 3D model on the
+// "Design your own" page. Safe to run more than once: existing demo products are kept
+// (only their 3D model is filled in if it is missing).
 //   npm run seed
 const fs = require("fs");
 const path = require("path");
@@ -31,6 +32,7 @@ const PRODUCTS = [
     stock: 150,
     description: "Sturdy natural-cotton tote with long handles. Great for events and onboarding kits.",
     image: "tote.jpg",
+    model3d: "tote",
     printAreas: { front: { x: 0.32, y: 0.4, width: 0.36, height: 0.4, widthCm: 28 } },
   },
   {
@@ -40,6 +42,7 @@ const PRODUCTS = [
     stock: 300,
     description: "Soft 180 GSM cotton crew-neck tee. Print on the front, the back, or both.",
     image: "tshirt-front.jpg",
+    model3d: "tshirt",
     images: { back: "tshirt-back.jpg" },
     printAreas: {
       front: { x: 0.35, y: 0.27, width: 0.3, height: 0.38, widthCm: 30 },
@@ -53,7 +56,48 @@ const PRODUCTS = [
     stock: 250,
     description: "A5 hardcover notebook with a kraft cover, 160 ruled pages and an elastic band.",
     image: "notebook.jpg",
+    model3d: "notebook",
     printAreas: { front: { x: 0.36, y: 0.3, width: 0.28, height: 0.36, widthCm: 10 } },
+  },
+  {
+    name: "Structured Cotton Cap",
+    category: "Apparel",
+    price: 399,
+    stock: 200,
+    description: "Six-panel cotton twill cap with a curved brim and adjustable strap. Your logo goes on the front.",
+    image: "cap.jpg",
+    model3d: "cap",
+    printAreas: { front: { x: 0.44, y: 0.46, width: 0.2, height: 0.13, widthCm: 9 } },
+  },
+  {
+    name: "Steel Water Bottle",
+    category: "Drinkware",
+    price: 799,
+    stock: 150,
+    description: "750 ml double-wall stainless steel bottle with a carry-loop cap. Keeps drinks cold for 24 hours.",
+    image: "bottle.jpg",
+    model3d: "bottle",
+    printAreas: { front: { x: 0.43, y: 0.45, width: 0.14, height: 0.3, widthCm: 7 } },
+  },
+  {
+    name: "Slim Phone Case",
+    category: "Tech",
+    price: 449,
+    stock: 250,
+    description: "Slim, shock-absorbing case with a matte finish. Your design is printed across the back.",
+    image: "phonecase.jpg",
+    model3d: "phonecase",
+    printAreas: { front: { x: 0.35, y: 0.36, width: 0.3, height: 0.44, widthCm: 6.5 } },
+  },
+  {
+    name: "Desk Mouse Pad",
+    category: "Office Kits",
+    price: 299,
+    stock: 300,
+    description: "25 x 21 cm mouse pad with a smooth fabric top and non-slip rubber base. Printed edge to edge.",
+    image: "mousepad.jpg",
+    model3d: "mousepad",
+    printAreas: { front: { x: 0.17, y: 0.23, width: 0.66, height: 0.54, widthCm: 23 } },
   },
 ];
 
@@ -85,8 +129,15 @@ async function main() {
   }
 
   for (const p of PRODUCTS) {
-    if (await Product.exists({ name: p.name, retailerId: seller._id })) {
-      console.log(`- ${p.name}: already there`);
+    const existing = await Product.findOne({ name: p.name, retailerId: seller._id });
+    if (existing) {
+      if (p.model3d && !existing.model3d) {
+        existing.model3d = p.model3d;
+        await existing.save();
+        console.log(`- ${p.name}: already there (3D model added)`);
+      } else {
+        console.log(`- ${p.name}: already there`);
+      }
       continue;
     }
     await new Product({

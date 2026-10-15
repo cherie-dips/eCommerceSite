@@ -271,6 +271,17 @@
 }
 .choose-card:hover { box-shadow: 0 10px 24px rgba(15, 23, 42, 0.1); transform: translateY(-2px); color: var(--text); }
 .choose-card img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 10px; background: #f4f4f6; }
+.choose-stage {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  background: radial-gradient(circle at 50% 40%, #ffffff, #eeeef1);
+  cursor: grab;
+  /* The 3D controls turn off touch scrolling; keep vertical swipes scrolling the page */
+  touch-action: pan-y !important;
+}
+.choose-stage:active { cursor: grabbing; }
+.choose-hint { text-align: center; margin-top: 1rem; }
 .choose-info { display: flex; flex-direction: column; }
 .choose-card .btn { align-self: flex-start; }
 @media (max-width: 640px) {

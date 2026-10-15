@@ -6,6 +6,7 @@ import api, { assetUrl, errorMessage } from "../utils/api";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
 import PrintAreaEditor from "../components/PrintAreaEditor";
+import { PRODUCT_TYPES } from "../components/three/productTypes";
 
 const DEFAULT_AREA = { x: 0.3, y: 0.28, width: 0.4, height: 0.4, widthCm: 20 };
 const SIDES = [
@@ -182,10 +183,12 @@ export default function ProductForm() {
           </label>
           {form.customizable && (
             <div className="field" style={{ marginTop: "0.8rem", maxWidth: 300 }}>
-              <label>3D preview</label>
+              <label>3D model</label>
               <select className="select" value={form.model3d} onChange={set("model3d")}>
                 <option value="">None</option>
-                <option value="mug">Mug</option>
+                {PRODUCT_TYPES.map((m) => (
+                  <option key={m.key} value={m.key}>{m.name}</option>
+                ))}
               </select>
             </div>
           )}
