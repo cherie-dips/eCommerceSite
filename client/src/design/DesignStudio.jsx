@@ -1,6 +1,6 @@
 // The design studio: add photos, logos, text and shapes to a product, get layout
-// suggestions and save it / add it to the cart.
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+// suggestions, see the design on the product's 3D model and save it / add it to the cart.
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import api, { assetUrl, errorMessage } from "../utils/api";
 import { useAuth } from "../context/AuthContext";
@@ -28,7 +28,11 @@ import { loadFont, loadFontsFor } from "./fonts";
 import { clearDraft, loadDraft, saveDraft } from "./draftStore";
 import "../styles/DesignStudio.css";
 
+// The 3D library is only downloaded when someone opens the 3D view
+const ProductViewer = lazy(() => import("../components/three/ProductViewer"));
+
 const NO_LAYERS = []; // same empty list every time, so nothing redraws needlessly
+const SIDES_3D = ["front", "back"]; // sides shown on the 3D model
 const nextFrame = () => new Promise((resolve) => requestAnimationFrame(() => resolve()));
 const isTyping = (target) => ["INPUT", "TEXTAREA", "SELECT"].includes(target?.tagName) || target?.isContentEditable;
 
@@ -72,6 +76,8 @@ export default function DesignStudio({ product, initialDesign, onAddToCart, onSa
   const [quantity, setQuantity] = useState(1);
   const [saving, setSaving] = useState("");
   const [tab, setTab] = useState("add");
+  const [show3D, setShow3D] = useState(false);
+  const [designs3D, setDesigns3D] = useState({}); // side -> picture of that side's design
 
   const canvasBoxRef = useRef(null);
   const [canvasWidth, setCanvasWidth] = useState(560);
@@ -342,6 +348,27 @@ export default function DesignStudio({ product, initialDesign, onAddToCart, onSa
     }
   };
 
+  // ---- 3D view: the front/back designs as pictures, shown on the 3D model ----
+  useEffect(() => {
+    if (!show3D) return undefined;
+    const timer = setTimeout(async () => {
+      const pictures = {};
+      for (const view of views.filter((v) => SIDES_3D.includes(v.key))) {
+        const viewLayers = (design[view.key] || []).filter((l) => !l.hidden);
+        if (!viewLayers.length) continue;
+        await loadFontsFor(viewLayers);
+        const viewH = mockups[view.key]?.H || designHeight(view.area);
+        try {
+          pictures[view.key] = renderPrintFile({ layers: viewLayers, images, H: viewH, pixelWidth: 1024 });
+        } catch {
+          // A picture from another website can't be exported; that side is left blank
+        }
+      }
+      setDesigns3D(pictures);
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [show3D, design, views, mockups, images, fontsVersion]);
+
   // ---- Saving ----
   const saveDesign = async ({ addToCart }) => {
     const sides = views.filter((v) => (design[v.key] || []).some((l) => !l.hidden));
@@ -586,6 +613,7 @@ export default function DesignStudio({ product, initialDesign, onAddToCart, onSa
                   onClick={() => {
                     setActiveKey(v.key);
                     setSelectedId(null);
+                    setShow3D(false);
                   }}
                 >
                   {v.label}
@@ -600,23 +628,35 @@ export default function DesignStudio({ product, initialDesign, onAddToCart, onSa
             <label className="checkbox small">
               <input type="checkbox" checked={showGuides} onChange={(e) => setShowGuides(e.target.checked)} /> Print area
             </label>
+            <button className={`btn btn-sm ${show3D ? "btn-primary" : "btn-secondary"}`} onClick={() => setShow3D((s) => !s)}>
+              {show3D ? "Back to editing" : "3D view"}
+            </button>
           </div>
         </div>
 
         <div className="studio-canvas" ref={canvasBoxRef}>
-          <DesignCanvas
-            width={canvasWidth}
-            mockup={mockup?.img}
-            area={activeView.area}
-            H={H}
-            layers={layers}
-            images={images}
-            selectedId={selectedId}
-            onSelect={select}
-            onChange={updateLayer}
-            showGuides={showGuides}
-            fontsVersion={fontsVersion}
-          />
+          {show3D ? (
+            <div className="studio-3d">
+              <Suspense fallback={<div className="spinner" />}>
+                <ProductViewer product={product} designs={designs3D} height={canvasWidth} />
+              </Suspense>
+              <span className="studio-3d-hint">Drag to turn the product</span>
+            </div>
+          ) : (
+            <DesignCanvas
+              width={canvasWidth}
+              mockup={mockup?.img}
+              area={activeView.area}
+              H={H}
+              layers={layers}
+              images={images}
+              selectedId={selectedId}
+              onSelect={select}
+              onChange={updateLayer}
+              showGuides={showGuides}
+              fontsVersion={fontsVersion}
+            />
+          )}
         </div>
         <p className="muted small studio-help">
           Drag to move · corner handles resize · top handle rotates · Delete removes · arrow keys nudge.

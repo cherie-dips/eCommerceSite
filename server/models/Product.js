@@ -2,8 +2,17 @@ const mongoose = require("mongoose");
 
 const CATEGORIES = ["Drinkware", "Apparel", "Bags", "Stationery", "Tech", "Office Kits", "Other"];
 const VIEWS = ["front", "back", "side"];
-// Products with a 3D model on the "Design your own" page (the mug also has a live 3D preview).
-const MODELS_3D = ["mug", "tshirt", "tote", "notebook", "cap", "bottle", "phonecase", "mousepad"];
+// Built-in 3D models, used only by the demo products. Sellers upload their own .glb model.
+const BUILT_IN_MODELS = ["mug", "tshirt", "tote", "notebook", "cap", "bottle", "phonecase", "mousepad"];
+
+// Where a side's design sits on the 3D model, in the model's own coordinates:
+// a point on its surface, the surface direction there, and the design's width as a
+// fraction (0-1) of the model's width.
+const printSpotSchema = new mongoose.Schema({
+  point:  { type: [Number], required: true },
+  normal: { type: [Number], required: true },
+  size:   { type: Number, min: 0.05, max: 1, required: true },
+}, { _id: false });
 
 // Where a design can be printed on a product photo.
 // x, y, width, height are fractions (0-1) of the photo; widthCm is the real printed width.
@@ -34,8 +43,16 @@ const productSchema = new mongoose.Schema({
     back:  printAreaSchema,
     side:  printAreaSchema,
   },
-  // Optional 3D model shown on the "Design your own" page (one of MODELS_3D).
-  model3d:  { type: String, enum: ["", ...MODELS_3D], default: "" },
+  // The product's 3D model: the seller's uploaded .glb file ("uploads/models/abc.glb"),
+  // or a built-in model (demo products only). Every product in the store has one.
+  modelFile: { type: String, default: "" },
+  model3d:  { type: String, enum: ["", ...BUILT_IN_MODELS], default: "" },
+  // Where the front/back designs go on the 3D model. Without one, the design is
+  // placed in the middle of that side.
+  modelPrintSpots: {
+    front: printSpotSchema,
+    back:  printSpotSchema,
+  },
   active:   { type: Boolean, default: true },
   retailerId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   likedBy:  [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
@@ -49,4 +66,4 @@ productSchema.index({ active: 1, category: 1, createdAt: -1 });
 module.exports = mongoose.model("Product", productSchema);
 module.exports.CATEGORIES = CATEGORIES;
 module.exports.VIEWS = VIEWS;
-module.exports.MODELS_3D = MODELS_3D;
+module.exports.BUILT_IN_MODELS = BUILT_IN_MODELS;

@@ -1,12 +1,15 @@
-// Add or edit a product (sellers): photos for each side, where designs can be printed,
-// price, stock and category.
-import { useEffect, useState } from "react";
+// Add or edit a product (sellers): its 3D model and where designs go on it, photos for
+// each side with their print areas, price, stock and category.
+import { lazy, Suspense, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import api, { assetUrl, errorMessage } from "../utils/api";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
 import PrintAreaEditor from "../components/PrintAreaEditor";
-import { PRODUCT_TYPES } from "../components/three/productTypes";
+import { DEFAULT_SPOT_SIZE } from "../components/three/printSpots";
+
+const ProductViewer = lazy(() => import("../components/three/ProductViewer"));
+const MAX_MODEL_MB = 25;
 
 const DEFAULT_AREA = { x: 0.3, y: 0.28, width: 0.4, height: 0.4, widthCm: 20 };
 const SIDES = [
@@ -22,7 +25,9 @@ const emptyForm = {
   price: "",
   stock: 100,
   customizable: true,
-  model3d: "",
+  modelFile: "", // the uploaded .glb
+  model3d: "", // built-in model (demo products only)
+  modelPrintSpots: {},
   photos: { front: "", back: "", side: "" },
   printAreas: { front: DEFAULT_AREA },
 };
@@ -37,6 +42,7 @@ export default function ProductForm() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(editing);
   const [uploading, setUploading] = useState("");
+  const [placing, setPlacing] = useState("front"); // side whose print spot a click on the model sets
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
@@ -56,7 +62,9 @@ export default function ProductForm() {
         price: p.price,
         stock: p.stock ?? 0,
         customizable: p.customizable !== false,
+        modelFile: p.modelFile || "",
         model3d: p.model3d || "",
+        modelPrintSpots: p.modelPrintSpots || {},
         photos: { front: p.image, back: p.images?.back || "", side: p.images?.side || "" },
         printAreas: { front: p.printAreas?.front || DEFAULT_AREA, ...(p.printAreas?.back && { back: p.printAreas.back }), ...(p.printAreas?.side && { side: p.printAreas.side }) },
         active: p.active !== false,
@@ -73,11 +81,33 @@ export default function ProductForm() {
   }, [editing, id]);
 
   const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.type === "checkbox" ? e.target.checked : e.target.value }));
-  // Picking a product type also fills in its usual category
-  const chooseType = (e) => {
-    const type = PRODUCT_TYPES.find((t) => t.key === e.target.value);
-    setForm((f) => ({ ...f, model3d: e.target.value, category: type?.category || f.category }));
+
+  const uploadModel = async (file) => {
+    if (!file) return;
+    if (!/\.glb$/i.test(file.name)) return toast.error("Upload the 3D model as a .glb file.");
+    if (file.size > MAX_MODEL_MB * 1024 * 1024) return toast.error(`The 3D model must be ${MAX_MODEL_MB} MB or smaller.`);
+    setUploading("model");
+    try {
+      const data = new FormData();
+      data.append("model", file);
+      const res = await api.post("/products/upload-model", data, { timeout: 300000 });
+      // Print spots belong to the old model, so they start again
+      setForm((f) => ({ ...f, modelFile: res.data.path, modelPrintSpots: {} }));
+      toast.success("3D model uploaded. Click it to choose where designs are printed.");
+    } catch (err) {
+      toast.error(errorMessage(err, "The 3D model couldn't be uploaded."));
+    } finally {
+      setUploading("");
+    }
   };
+
+  const setSpot = (side, spot) =>
+    setForm((f) => {
+      const spots = { ...f.modelPrintSpots };
+      if (spot) spots[side] = spot;
+      else delete spots[side];
+      return { ...f, modelPrintSpots: spots };
+    });
 
   const uploadPhoto = async (side, file) => {
     if (!file) return;
@@ -108,6 +138,10 @@ export default function ProductForm() {
   const submit = async (e) => {
     e.preventDefault();
     setError("");
+    if (!form.modelFile && !form.model3d) {
+      setError("Please upload the product's 3D model (.glb file).");
+      return;
+    }
     if (!form.photos.front) {
       setError("Please upload a front photo.");
       return;
@@ -120,7 +154,9 @@ export default function ProductForm() {
       price: Number(form.price),
       stock: Number(form.stock),
       customizable: form.customizable,
+      modelFile: form.modelFile,
       model3d: form.model3d,
+      modelPrintSpots: form.modelPrintSpots,
       image: form.photos.front,
       images: { back: form.photos.back || undefined, side: form.photos.side || undefined },
       printAreas: Object.fromEntries(Object.entries(form.printAreas).filter(([side]) => form.photos[side])),
@@ -139,6 +175,18 @@ export default function ProductForm() {
 
   if (loading) return <div className="page"><div className="spinner" /></div>;
   const waiting = user?.role === "retailer" && user?.approved === false;
+  const hasModel = Boolean(form.modelFile || form.model3d);
+  // Designs can go on the front, and on the back when there's a back photo to design on
+  const spotSides = [["front", "Front design"], ...(form.photos.back ? [["back", "Back design"]] : [])];
+  const side = spotSides.some(([s]) => s === placing) ? placing : "front";
+  const spot = form.modelPrintSpots[side];
+  // "Design goes here" boxes, shaped like each side's print area (photos are roughly square)
+  const placeholders = Object.fromEntries(
+    spotSides.map(([s]) => {
+      const area = form.printAreas[s] || DEFAULT_AREA;
+      return [s, area.height / area.width];
+    })
+  );
 
   return (
     <div className="page page-narrow" style={{ maxWidth: 880 }}>
@@ -158,16 +206,6 @@ export default function ProductForm() {
       <form onSubmit={submit}>
         <div className="card">
           <h2 className="section-title">Details</h2>
-          <div className="field">
-            <label>Product type</label>
-            <select className="select" value={form.model3d} onChange={chooseType} required>
-              <option value="" disabled>Choose a product type</option>
-              {PRODUCT_TYPES.map((t) => (
-                <option key={t.key} value={t.key}>{t.name}</option>
-              ))}
-            </select>
-            <span className="hint">Customers see your product as this 3D model.</span>
-          </div>
           <div className="field">
             <label>Product name</label>
             <input className="input" value={form.name} onChange={set("name")} required maxLength={120} placeholder="e.g. Classic White Mug" />
@@ -196,6 +234,71 @@ export default function ProductForm() {
           <label className="checkbox">
             <input type="checkbox" checked={form.customizable} onChange={set("customizable")} /> Customers can add their own design
           </label>
+        </div>
+
+        <div className="card">
+          <h2 className="section-title">3D model</h2>
+          <p className="muted small">
+            Customers turn this model around on the Design page and see their design on it. Upload one <b>.glb</b> file
+            (up to {MAX_MODEL_MB} MB) with its textures included.
+          </p>
+          <div className="row">
+            <label className="btn btn-secondary btn-sm">
+              {uploading === "model" ? "Uploading..." : hasModel ? "Replace 3D model" : "Upload 3D model (.glb)"}
+              <input
+                type="file"
+                accept=".glb,model/gltf-binary"
+                hidden
+                onChange={(e) => {
+                  uploadModel(e.target.files[0]);
+                  e.target.value = "";
+                }}
+              />
+            </label>
+            {!form.modelFile && form.model3d && <span className="muted small">This demo product uses a built-in model.</span>}
+          </div>
+          {hasModel && (
+            <>
+              {form.customizable && (
+                <div className="model-controls">
+                  {spotSides.length > 1 && (
+                    <div className="segmented">
+                      {spotSides.map(([s, label]) => (
+                        <button type="button" key={s} className={s === side ? "active" : ""} onClick={() => setPlacing(s)}>{label}</button>
+                      ))}
+                    </div>
+                  )}
+                  <label className="small">
+                    Design size
+                    <input
+                      type="range"
+                      min="5"
+                      max="100"
+                      value={Math.round((spot?.size ?? DEFAULT_SPOT_SIZE) * 100)}
+                      disabled={!spot}
+                      onChange={(e) => setSpot(side, { ...spot, size: Number(e.target.value) / 100 })}
+                    />
+                  </label>
+                  {spot && <button type="button" className="btn btn-ghost btn-sm" onClick={() => setSpot(side, null)}>Reset to centre</button>}
+                </div>
+              )}
+              <Suspense fallback={<div className="spinner" />}>
+                <ProductViewer
+                  product={{ modelFile: form.modelFile, model3d: form.model3d }}
+                  spots={form.modelPrintSpots}
+                  placeholders={form.customizable ? placeholders : undefined}
+                  editSide={form.customizable ? side : null}
+                  onPlace={setSpot}
+                  height={380}
+                />
+              </Suspense>
+              <span className="hint">
+                {form.customizable
+                  ? `Click the model where the ${side} design is printed. Drag to turn it.${spot ? "" : " Until you click, it goes in the middle of that side."}`
+                  : "Drag to turn the model."}
+              </span>
+            </>
+          )}
         </div>
 
         <div className="card">

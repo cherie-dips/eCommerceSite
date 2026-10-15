@@ -94,4 +94,19 @@ async function createProduct(retailer, overrides = {}) {
 const PNG = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==", "base64");
 const pngBlob = () => new Blob([PNG], { type: "image/png" });
 
-module.exports = { startTestServer, stopTestServer, api, createUser, createProduct, pngBlob, PNG, config };
+// Smallest valid .glb 3D model: the 20-byte header and a JSON chunk with one (empty) shape
+function glbBuffer(json = { asset: { version: "2.0" }, meshes: [{ primitives: [] }] }) {
+  let text = JSON.stringify(json);
+  while (text.length % 4) text += " ";
+  const chunk = Buffer.from(text);
+  const header = Buffer.alloc(20);
+  header.write("glTF", 0, "ascii");
+  header.writeUInt32LE(2, 4);
+  header.writeUInt32LE(20 + chunk.length, 8);
+  header.writeUInt32LE(chunk.length, 12);
+  header.write("JSON", 16, "ascii");
+  return Buffer.concat([header, chunk]);
+}
+const glbBlob = (json) => new Blob([glbBuffer(json)], { type: "model/gltf-binary" });
+
+module.exports = { startTestServer, stopTestServer, api, createUser, createProduct, pngBlob, glbBlob, PNG, config };

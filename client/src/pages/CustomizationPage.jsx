@@ -6,15 +6,16 @@ import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import api from "../utils/api";
 import { useLikes } from "../context/LikesContext";
 import Stars from "../components/Stars";
-import { FitModel, PRODUCT_MODELS } from "../components/three/productModels";
+import ProductModel, { FitModel, ModelErrorBoundary } from "../components/three/ProductModel";
+import { BUILT_IN_MODELS } from "../components/three/builtInModels";
 import "../styles/Product.css";
 
-const MODELS = Object.fromEntries(PRODUCT_MODELS.map((m) => [m.key, m.Model]));
-const TYPE_ORDER = PRODUCT_MODELS.map((m) => m.key);
+const BUILT_IN_ORDER = Object.keys(BUILT_IN_MODELS);
+// Sellers' products (uploaded models) first, then the demo products in a fixed order
+const showOrder = (p) => (p.modelFile ? -1 : BUILT_IN_ORDER.indexOf(p.model3d));
 
 // One product turning slowly in its card; drag to turn it yourself.
-function ModelStage({ model }) {
-  const Model = model;
+function ModelStage({ product }) {
   const [middle, setMiddle] = useState(0.5);
   return (
     <>
@@ -24,12 +25,14 @@ function ModelStage({ model }) {
       <Suspense fallback={null}>
         <Environment preset="studio" environmentIntensity={0.45} />
       </Suspense>
-      <Suspense fallback={null}>
-        <FitModel onFit={(height) => setMiddle(height / 2)}>
-          <Model />
-        </FitModel>
-        <ContactShadows frames={1} scale={2.2} blur={2.4} far={1.2} opacity={0.35} />
-      </Suspense>
+      <ModelErrorBoundary>
+        <Suspense fallback={null}>
+          <FitModel onFit={(height) => setMiddle(height / 2)}>
+            <ProductModel product={product} />
+          </FitModel>
+          <ContactShadows frames={1} scale={2.2} blur={2.4} far={1.2} opacity={0.35} />
+        </Suspense>
+      </ModelErrorBoundary>
       <OrbitControls
         makeDefault
         target={[0, middle, 0]}
@@ -58,9 +61,8 @@ export default function CustomizationPage() {
     api
       .get("/products", { params: { sort: "popular", limit: 48 } })
       .then((res) => {
-        // Grouped by product type; most popular first within a type
-        const list = [...res.data.products].sort((a, b) => TYPE_ORDER.indexOf(a.model3d) - TYPE_ORDER.indexOf(b.model3d));
-        setProducts(list);
+        // Sorting is stable, so sellers' products stay most popular first
+        setProducts([...res.data.products].sort((a, b) => showOrder(a) - showOrder(b)));
       })
       .catch(() => setError("Couldn't load products. Please try again."))
       .finally(() => setLoading(false));
@@ -105,7 +107,7 @@ export default function CustomizationPage() {
             return (
               <div key={product._id} className="choose-card">
                 <View className="choose-stage" index={i + 1}>
-                  <ModelStage model={MODELS[product.model3d]} />
+                  <ModelStage product={product} />
                 </View>
                 <div className="choose-info">
                   <Link to={`/products/${product._id}`} className="choose-name">{product.name}</Link>

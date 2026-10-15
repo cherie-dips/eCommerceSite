@@ -2,22 +2,22 @@
 
 **Live site: https://ecommercesite-production-2842.up.railway.app**
 
-Flagzen is an online store for custom-branded merchandise: T-shirts, mugs, tote bags, notebooks,
-caps, water bottles, phone cases and mouse pads. Customers pick a product from a gallery of rotating
-3D models, open it in a built-in **design studio**, upload their logo or photo, choose one of the
-suggested layouts, fine-tune it and order. Sellers get print-ready files with every order, and admins
-look after the whole store.
+Flagzen is an online store for custom-branded merchandise. Sellers list products with a **3D model**
+(an uploaded `.glb` file). Customers turn the products around in 3D, design them in the browser
+(upload a logo or photo, pick a suggested layout, fine-tune it and see it on the 3D model) and order.
+Sellers get print-ready files with every order, and admins look after the whole store.
 
 ## What it does
 
 **Customers**
-- **Design page:** every product shown as a rotating 3D model (drag to turn it), filtered by category.
+- **Design page:** every product shown as its rotating 3D model (drag to turn it), filtered by category.
 - **Design studio** on every product:
   - Upload photos and logos, add text (8 fonts, colours, outline, spacing) and shapes.
   - Move, resize and rotate everything; undo/redo; layers (order, lock, hide); front and back sides.
   - **3 instant design ideas** after an upload, based on the logo/photo's colours and shape.
   - **AI design ideas** (optional) from Claude, when the server has an Anthropic API key.
   - Print-quality warning when an image is too small for its printed size.
+  - **3D view:** the front and back designs shown on the product's 3D model, where the seller set them.
   - Unfinished designs are kept in the browser (they survive a refresh or logging in).
 - Likes, reviews and ratings.
 - Cart with saved addresses and discount codes; checkout with **Razorpay** (UPI, cards, net banking, wallets).
@@ -25,8 +25,9 @@ look after the whole store.
 - Sign up with email or Google, confirm email, reset a forgotten password.
 
 **Sellers**
-- Add/edit products: choose the product type (its 3D model), upload photos for each side and mark where
-  designs can be printed by dragging a box on the photo.
+- Add/edit products: upload the product's **3D model** (`.glb`, up to 25 MB, textures included) and
+  click it to choose where the front and back designs go; upload photos for each side and mark the
+  print area by dragging a box on the photo (this sets the size of the print files).
 - Stock levels, sales numbers, remove/restore products.
 - Orders: download print files (300 DPI PNG, transparent background), mark "being made", ship with
   courier + tracking ID, mark delivered, cancel (the customer is refunded).
@@ -51,6 +52,23 @@ look after the whole store.
 | AI design ideas | Anthropic Claude API (optional) |
 | Tests | node:test with an in-memory MongoDB |
 | Hosting | Railway (app + volume), GitHub Actions for tests and builds |
+
+## How 3D models work
+
+1. **Upload:** the seller uploads a `.glb` file. The server checks it is a real, self-contained glTF 2.0
+   file with at least one shape (no separate texture files), saves it under `uploads/models/` and the
+   product stores its path (`modelFile`).
+2. **Print spots:** in the product form the seller clicks the model where the front (and back) designs
+   go and sets their size. Each spot is saved in the model's own coordinates (`modelPrintSpots`), so it
+   stays right however big the model is shown. Without one, a design goes in the middle of that side.
+3. **Showing it:** the Design page draws every product's model through one shared WebGL canvas. In the
+   design studio's 3D view, each side's design is rendered to a picture and projected onto the model's
+   surface at its print spot.
+4. **Printing:** the print files come from the 2D design studio (sized by the print area on the
+   product photo) and are attached to every order for the seller.
+
+The demo products from `npm run seed` use built-in models drawn in code (`model3d`); every new product
+uses an uploaded model.
 
 ## Getting started
 
@@ -125,7 +143,8 @@ above and run `npm start`.
 client/                    Website (React)
   src/pages/               Pages (design page, product + studio, cart, checkout, orders, seller, admin...)
   src/design/              Design studio: canvas, layers, settings, suggestions, export
-  src/components/three/    3D product models
+  src/components/three/    3D: product models (uploaded .glb or built-in demo models), the 3D viewer,
+                           placing designs on a model
   src/components/          Shared pieces (navbar, product card, address form, print-area editor...)
   src/context/             Login, cart, likes, on-page messages
 server/                    API (Express)

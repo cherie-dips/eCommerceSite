@@ -1,6 +1,6 @@
 const { test, before, after } = require("node:test");
 const assert = require("node:assert/strict");
-const { startTestServer, stopTestServer, api, createUser, createProduct, pngBlob } = require("./helpers");
+const { startTestServer, stopTestServer, api, createUser, createProduct, pngBlob, glbBlob } = require("./helpers");
 const Order = require("../models/Order");
 
 before(startTestServer);
@@ -77,7 +77,86 @@ test("only products with a 3D model are listed, and new products need one", asyn
     body: { name: "No Model", price: 100, image: "uploads/products/test.jpg" },
   });
   assert.equal(r.status, 400);
-  assert.match(r.data.error, /product type/);
+  assert.match(r.data.error, /3D model/);
+});
+
+// Uploads a .glb (or any file) as the seller and returns the response
+const uploadModel = (blob, name = "model.glb") => {
+  const form = new FormData();
+  form.append("model", blob, name);
+  return api("POST", "/api/products/upload-model", { form, token: sellerToken });
+};
+
+test("sellers upload a .glb model; anything else is refused", async () => {
+  let r = await uploadModel(glbBlob());
+  assert.equal(r.status, 201);
+  assert.match(r.data.path, /^uploads\/models\/[\w-]+\.glb$/);
+  const file = await api("GET", `/${r.data.path}`);
+  assert.equal(file.status, 200);
+  assert.equal(file.headers.get("content-type"), "model/gltf-binary");
+
+  r = await uploadModel(pngBlob(), "photo.glb"); // a picture renamed to .glb
+  assert.equal(r.status, 400);
+  assert.match(r.data.error, /not a \.glb/);
+
+  r = await uploadModel(glbBlob(), "model.obj");
+  assert.equal(r.status, 400);
+  assert.match(r.data.error, /\.glb file/);
+
+  r = await uploadModel(glbBlob({ asset: { version: "2.0" }, meshes: [] }));
+  assert.equal(r.status, 400);
+  assert.match(r.data.error, /no shapes/);
+
+  r = await uploadModel(glbBlob({ asset: { version: "2.0" }, meshes: [{}], images: [{ uri: "texture.png" }] }));
+  assert.equal(r.status, 400);
+  assert.match(r.data.error, /single \.glb/);
+
+  const { token: customerToken } = await createUser();
+  const form = new FormData();
+  form.append("model", glbBlob(), "model.glb");
+  r = await api("POST", "/api/products/upload-model", { form, token: customerToken });
+  assert.equal(r.status, 403); // customers can't upload models
+});
+
+test("a product with an uploaded model is saved with its print spots and listed", async () => {
+  const model = (await uploadModel(glbBlob())).data.path;
+  let r = await api("POST", "/api/products", {
+    token: sellerToken,
+    body: {
+      name: "Seller Hoodie",
+      category: "Apparel",
+      price: 999,
+      image: "uploads/products/test.jpg",
+      modelFile: model,
+      modelPrintSpots: { front: { point: [0, 0.3, 0.1], normal: [0, 0, 2], size: 0.4 }, back: { point: [1, 2], normal: [0, 0, -1] } },
+    },
+  });
+  assert.equal(r.status, 201);
+  assert.equal(r.data.modelFile, model);
+  assert.deepEqual(r.data.modelPrintSpots.front, { point: [0, 0.3, 0.1], normal: [0, 0, 1], size: 0.4 });
+  assert.equal(r.data.modelPrintSpots.back, undefined); // the invalid spot was dropped
+  const id = r.data._id;
+
+  r = await api("GET", "/api/products?search=seller%20hoodie");
+  assert.equal(r.data.total, 1);
+
+  // A model path that wasn't uploaded here is refused
+  r = await api("POST", "/api/products", {
+    token: sellerToken,
+    body: { name: "Fake", price: 1, image: "uploads/products/test.jpg", modelFile: "uploads/models/missing.glb" },
+  });
+  assert.equal(r.status, 400);
+
+  // A new model clears the old print spots; the model can't be removed altogether
+  const newModel = (await uploadModel(glbBlob())).data.path;
+  r = await api("PUT", `/api/products/${id}`, { token: sellerToken, body: { modelFile: newModel } });
+  assert.equal(r.status, 200);
+  assert.equal(r.data.modelFile, newModel);
+  assert.equal(r.data.modelPrintSpots?.front, undefined);
+
+  r = await api("PUT", `/api/products/${id}`, { token: sellerToken, body: { modelFile: "" } });
+  assert.equal(r.status, 400);
+  assert.match(r.data.error, /3D model/);
 });
 
 test("only the owner can edit or remove a product; removed products disappear", async () => {

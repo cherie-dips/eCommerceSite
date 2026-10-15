@@ -1,10 +1,11 @@
-// 3D models of the products customers can design (shown on the "Design your own" page).
-// Every model is built from simple shapes, so they load instantly with no model files.
+// Built-in 3D models for the demo products only. Real products use the .glb model their
+// seller uploads (see ProductModel.jsx).
 // Sizes are in metres (roughly the real product), facing the camera along +Z with Y up.
-import { useLayoutEffect, useMemo, useRef } from "react";
+// This file exports a table of models rather than components, so hot reloading skips it.
+/* eslint-disable react-refresh/only-export-components */
+import { useMemo } from "react";
 import { RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
-import { PRODUCT_TYPES } from "./productTypes";
 
 const fabric = (color) => ({ color, roughness: 0.92, metalness: 0 });
 
@@ -244,41 +245,14 @@ function MousePadModel({ color = "#2b2d33" }) {
   );
 }
 
-const MODELS = {
-  tshirt: TShirtModel,
-  mug: MugModel,
-  tote: ToteModel,
-  notebook: NotebookModel,
-  cap: CapModel,
-  bottle: BottleModel,
-  phonecase: PhoneCaseModel,
-  mousepad: MousePadModel,
+// Built-in models by key (a product's `model3d`), in the order they're shown.
+export const BUILT_IN_MODELS = {
+  tshirt: { name: "T-shirt", Model: TShirtModel },
+  mug: { name: "Mug", Model: MugModel },
+  tote: { name: "Tote bag", Model: ToteModel },
+  notebook: { name: "Notebook", Model: NotebookModel },
+  cap: { name: "Cap", Model: CapModel },
+  bottle: { name: "Water bottle", Model: BottleModel },
+  phonecase: { name: "Phone case", Model: PhoneCaseModel },
+  mousepad: { name: "Mouse pad", Model: MousePadModel },
 };
-
-// Every product type with its 3D model, in the order shown on the page.
-export const PRODUCT_MODELS = PRODUCT_TYPES.map((t) => ({ ...t, Model: MODELS[t.key] }));
-
-// Scales any model to fit in a 1-unit box, standing on y = 0 and centred on the y axis.
-// Reports the fitted height so the camera can aim at the middle of the product.
-export function FitModel({ onFit, children }) {
-  const outer = useRef(null);
-  const inner = useRef(null);
-  useLayoutEffect(() => {
-    outer.current.scale.setScalar(1);
-    inner.current.position.set(0, 0, 0);
-    outer.current.updateWorldMatrix(true, true);
-    const box = new THREE.Box3().setFromObject(inner.current);
-    const size = box.getSize(new THREE.Vector3());
-    const scale = 1 / Math.max(size.x, size.y, size.z);
-    inner.current.position.set(-(box.min.x + box.max.x) / 2, -box.min.y, -(box.min.z + box.max.z) / 2);
-    outer.current.scale.setScalar(scale);
-    onFit?.(size.y * scale);
-    // Measured once when the model appears
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  return (
-    <group ref={outer}>
-      <group ref={inner}>{children}</group>
-    </group>
-  );
-}

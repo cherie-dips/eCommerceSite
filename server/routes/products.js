@@ -4,14 +4,29 @@ const Product = require("../models/Product");
 const Order = require("../models/Order");
 const Review = require("../models/Review");
 const { verifyToken, verifyApprovedRetailer } = require("../middleware/authMiddleware");
-const { imageUploader, UPLOAD_DIRS, publicPath } = require("../utils/uploads");
+const { imageUploader, modelUploader, isUploadedModel, UPLOAD_DIRS, publicPath } = require("../utils/uploads");
 
-const { CATEGORIES, MODELS_3D } = Product;
+const { CATEGORIES, BUILT_IN_MODELS } = Product;
 const router = express.Router();
 
 const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
 const isUploadedOrUrl = (v) => typeof v === "string" && (/^uploads\/products\/[\w.-]+$/.test(v) || /^https?:\/\/\S+$/i.test(v));
+
+// A design's spot on the 3D model (see Product.modelPrintSpots), or undefined if it isn't valid.
+const cleanPrintSpot = (spot) => {
+  if (!spot || typeof spot !== "object") return undefined;
+  const vector = (v) => (Array.isArray(v) && v.length === 3 && v.every(Number.isFinite) ? v : null);
+  const point = vector(spot.point);
+  const normal = vector(spot.normal);
+  const length = normal ? Math.hypot(...normal) : 0;
+  if (!point || length < 1e-6 || point.some((n) => Math.abs(n) > 1e6)) return undefined;
+  return {
+    point,
+    normal: normal.map((n) => n / length),
+    size: clamp(Number(spot.size) || 0.5, 0.05, 1),
+  };
+};
 
 const cleanPrintArea = (area) => {
   if (!area || typeof area !== "object") return undefined;
@@ -68,10 +83,19 @@ const cleanProduct = (body = {}, { partial = false } = {}) => {
       if (area) data.printAreas[view] = area;
     }
   }
-  // Every product is one of the 3D product types (the shop shows it as a 3D model)
-  if (!partial || has("model3d")) {
-    if (!MODELS_3D.includes(body.model3d)) return { error: "Choose the product type (3D model)." };
-    data.model3d = body.model3d;
+  // The 3D model: the seller's uploaded .glb (or a built-in model for the demo products)
+  if (has("modelFile")) {
+    if (body.modelFile && !isUploadedModel(body.modelFile)) return { error: "Upload the 3D model again." };
+    data.modelFile = body.modelFile || "";
+  }
+  if (has("model3d")) data.model3d = BUILT_IN_MODELS.includes(body.model3d) ? body.model3d : "";
+  if (!partial && !data.modelFile && !data.model3d) return { error: "Upload the product's 3D model (.glb file)." };
+  if (has("modelPrintSpots")) {
+    data.modelPrintSpots = {};
+    for (const side of ["front", "back"]) {
+      const spot = cleanPrintSpot(body.modelPrintSpots?.[side]);
+      if (spot) data.modelPrintSpots[side] = spot;
+    }
   }
   return { data };
 };
@@ -83,11 +107,14 @@ const canManage = (req, product) =>
 // ?search=&category=&sort=newest|price_asc|price_desc|popular|rating&page=&limit=&customizable=true
 // Only products with a 3D model are listed.
 router.get("/", async (req, res) => {
-  const filter = { active: { $ne: false }, model3d: { $in: MODELS_3D } };
+  const filter = {
+    active: { $ne: false },
+    $and: [{ $or: [{ modelFile: { $regex: /^uploads\/models\// } }, { model3d: { $in: BUILT_IN_MODELS } }] }],
+  };
   const search = String(req.query.search || "").trim();
   if (search) {
     const pattern = new RegExp(escapeRegex(search.slice(0, 80)), "i");
-    filter.$or = [{ name: pattern }, { description: pattern }, { category: pattern }];
+    filter.$and.push({ $or: [{ name: pattern }, { description: pattern }, { category: pattern }] });
   }
   if (CATEGORIES.includes(req.query.category)) filter.category = req.query.category;
   if (req.query.customizable === "true") filter.customizable = { $ne: false };
@@ -127,6 +154,17 @@ router.post(
   }
 );
 
+// === Upload a product's 3D model (approved retailers) -> { path } ===
+router.post(
+  "/upload-model",
+  verifyApprovedRetailer,
+  modelUploader(UPLOAD_DIRS.models, { maxSizeMb: 25, single: "model" }),
+  (req, res) => {
+    if (!req.file) return res.status(400).json({ error: "Choose a .glb file to upload." });
+    res.status(201).json({ path: publicPath(req.file) });
+  }
+);
+
 // === Create product (approved retailers) ===
 router.post("/", verifyApprovedRetailer, async (req, res) => {
   const { data, error } = cleanProduct(req.body);
@@ -155,7 +193,10 @@ router.put("/:id", verifyApprovedRetailer, async (req, res) => {
   const { data, error } = cleanProduct(req.body, { partial: true });
   if (error) return res.status(400).json({ error });
   if (req.body.active !== undefined) data.active = Boolean(req.body.active);
+  // Print spots belong to one model: a new model starts without them unless new ones are sent
+  if (data.modelFile !== undefined && data.modelFile !== product.modelFile && !data.modelPrintSpots) data.modelPrintSpots = {};
   product.set(data);
+  if (!product.modelFile && !product.model3d) return res.status(400).json({ error: "Upload the product's 3D model (.glb file)." });
   await product.save();
   res.json(product);
 });
