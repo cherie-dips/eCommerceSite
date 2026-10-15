@@ -52,12 +52,12 @@ export default function MyDesigns() {
               <div className="choose-info">
                 <strong>{product?.name || "Product removed"}</strong>
                 <span className="muted small">
-                  {d.mode === "3d" ? "3D design · " : ""}{new Date(d.createdAt).toLocaleDateString()}
+                  {new Date(d.createdAt).toLocaleDateString()}
                   {d.views.length > 1 ? ` · ${d.views.length} sides` : ""}
                 </span>
               </div>
               <div className="row">
-                {available && d.mode === "2d" && (
+                {available && (
                   <Link to={`/products/${product._id}?design=${d._id}`} className="btn btn-secondary btn-sm">Open</Link>
                 )}
                 {available && (

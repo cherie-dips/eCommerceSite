@@ -28,7 +28,7 @@ test("setup", async () => {
 // Saves a design with one uploaded logo, one preview and one print file.
 async function saveDesign(token, productId, layers) {
   const form = new FormData();
-  form.append("data", JSON.stringify({ productId, mode: "2d", views: [{ view: "front", layers }] }));
+  form.append("data", JSON.stringify({ productId, views: [{ view: "front", layers }] }));
   form.append("assets", pngBlob(), "logo.png");
   form.append("previews", pngBlob(), "preview.png");
   form.append("prints", pngBlob(), "print.png");

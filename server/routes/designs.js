@@ -13,7 +13,7 @@ const router = express.Router();
 
 const MAX_LAYERS = 60;
 const MAX_LAYER_JSON = 300 * 1024;
-const VIEWS_2D = ["front", "back", "side"];
+const VIEWS = ["front", "back", "side"];
 
 const uploadDesignFiles = imageUploader(UPLOAD_DIRS.designs, {
   maxSizeMb: 25,
@@ -102,8 +102,7 @@ router.post("/", verifyToken, uploadDesignFiles, async (req, res) => {
   const product = await Product.findById(data.productId);
   if (!product || product.active === false) return fail(404, "Product not found.");
 
-  const mode = data.mode === "3d" ? "3d" : "2d";
-  if (mode === "2d" && product.customizable === false) return fail(400, "This product can't be customised.");
+  if (product.customizable === false) return fail(400, "This product can't be customised.");
 
   const views = Array.isArray(data.views) ? data.views.slice(0, 3) : [];
   if (!views.length) return fail(400, "The design is empty.");
@@ -112,35 +111,27 @@ router.post("/", verifyToken, uploadDesignFiles, async (req, res) => {
   const previews = req.files?.previews || [];
   const prints = req.files?.prints || [];
   if (previews.length !== views.length) return fail(400, "A preview picture is missing.");
-  if (mode === "2d" && prints.length !== views.length) return fail(400, "A print file is missing.");
+  if (prints.length !== views.length) return fail(400, "A print file is missing.");
 
   const cleanViews = [];
   for (const [i, view] of views.entries()) {
-    const name = mode === "3d" ? "3d" : view.view;
-    if (mode === "2d" && !VIEWS_2D.includes(name)) return fail(400, "Unknown product side.");
+    if (!VIEWS.includes(view.view)) return fail(400, "Unknown product side.");
     const rawLayers = Array.isArray(view.layers) ? view.layers.slice(0, MAX_LAYERS) : [];
-    // 3D designs keep their own logo placement details; 2D layers are checked one by one.
-    const layers = mode === "3d"
-      ? rawLayers.map((l) => ({ ...l, src: /^asset:(\d+)$/.test(l?.src) ? assets[Number(l.src.slice(6))] : undefined }))
-      : rawLayers.map((l) => cleanLayer(l, assets)).filter(Boolean);
     cleanViews.push({
-      view: name,
-      layers,
+      view: view.view,
+      layers: rawLayers.map((l) => cleanLayer(l, assets)).filter(Boolean),
       previewPath: publicPath(previews[i]),
-      printPath: prints[i] ? publicPath(prints[i]) : undefined,
+      printPath: publicPath(prints[i]),
     });
   }
 
   const design = await new Design({
     userId: req.user.id,
     productId: product._id,
-    mode,
     name: str(data.name, 80) || `${product.name} design`,
     views: cleanViews,
     previewPath: cleanViews[0].previewPath,
     assets,
-    // Small extra details only (e.g. the 3D mug colour)
-    meta: data.meta && typeof data.meta === "object" && JSON.stringify(data.meta).length <= 5000 ? data.meta : undefined,
   }).save();
 
   res.status(201).json(design);

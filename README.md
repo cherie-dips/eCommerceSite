@@ -18,7 +18,6 @@ look after the whole store.
   - **3 instant design ideas** after an upload, based on the logo/photo's colours and shape.
   - **AI design ideas** (optional) from Claude, when the server has an Anthropic API key.
   - Print-quality warning when an image is too small for its printed size.
-  - Live **3D preview** of the design on mugs.
   - Unfinished designs are kept in the browser (they survive a refresh or logging in).
 - Likes, reviews and ratings.
 - Cart with saved addresses and discount codes; checkout with **Razorpay** (UPI, cards, net banking, wallets).
@@ -42,7 +41,7 @@ look after the whole store.
 | --- | --- |
 | Website (`client/`) | React 19, Vite, React Router, Material UI icons |
 | Design studio | Konva / react-konva (2D editor and print files) |
-| 3D | three.js, react-three-fiber, drei (product models, mug preview) |
+| 3D | three.js, react-three-fiber, drei (product models built in code, one shared WebGL canvas) |
 | Server (`server/`) | Node.js, Express 5, Helmet, rate limiting |
 | Database | MongoDB Atlas with Mongoose |
 | Login | JWT, bcrypt, Google Sign-In |
@@ -125,11 +124,10 @@ above and run `npm start`.
 ```
 client/                    Website (React)
   src/pages/               Pages (design page, product + studio, cart, checkout, orders, seller, admin...)
-  src/design/              Design studio: canvas, layers, settings, suggestions, export, mug 3D preview
-  src/components/three/    3D product models and shared 3D helpers
+  src/design/              Design studio: canvas, layers, settings, suggestions, export
+  src/components/three/    3D product models
   src/components/          Shared pieces (navbar, product card, address form, print-area editor...)
   src/context/             Login, cart, likes, on-page messages
-  public/models/           Mug 3D model
 server/                    API (Express)
   routes/                  API routes (auth, products, designs, orders, payments, admin, AI ideas)
   services/orders.js       Payment and order steps shared by routes, webhook and clean-up job

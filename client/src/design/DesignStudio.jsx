@@ -1,6 +1,6 @@
 // The design studio: add photos, logos, text and shapes to a product, get layout
-// suggestions, preview it (in 3D for mugs) and save it / add it to the cart.
-import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
+// suggestions and save it / add it to the cart.
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import api, { assetUrl, errorMessage } from "../utils/api";
 import { useAuth } from "../context/AuthContext";
@@ -27,8 +27,6 @@ import { renderPreview, renderPrintFile } from "./renderer";
 import { loadFont, loadFontsFor } from "./fonts";
 import { clearDraft, loadDraft, saveDraft } from "./draftStore";
 import "../styles/DesignStudio.css";
-
-const Mug3DPreview = lazy(() => import("./Mug3DPreview"));
 
 const NO_LAYERS = []; // same empty list every time, so nothing redraws needlessly
 const nextFrame = () => new Promise((resolve) => requestAnimationFrame(() => resolve()));
@@ -73,8 +71,6 @@ export default function DesignStudio({ product, initialDesign, onAddToCart, onSa
   const [fontsVersion, setFontsVersion] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [saving, setSaving] = useState("");
-  const [show3D, setShow3D] = useState(false);
-  const [texture3D, setTexture3D] = useState(null);
   const [tab, setTab] = useState("add");
 
   const canvasBoxRef = useRef(null);
@@ -127,7 +123,6 @@ export default function DesignStudio({ product, initialDesign, onAddToCart, onSa
     if (!initialDesign) return;
     const restored = {};
     for (const view of initialDesign.views || []) {
-      if (view.view === "3d") continue;
       restored[view.view] = (view.layers || []).map((l) => ({ ...l, id: l.id || newId() }));
     }
     history.reset(restored);
@@ -347,24 +342,6 @@ export default function DesignStudio({ product, initialDesign, onAddToCart, onSa
     }
   };
 
-  // ---- 3D preview (mugs) ----
-  const frontLayers = design.front || NO_LAYERS;
-  const frontMockup = mockups.front;
-  useEffect(() => {
-    if (!show3D) return;
-    const frontView = views.find((v) => v.key === "front");
-    const frontH = frontMockup?.H || designHeight(frontView.area);
-    const timer = setTimeout(async () => {
-      await loadFontsFor(frontLayers);
-      try {
-        setTexture3D(renderPrintFile({ layers: frontLayers, images, H: frontH, pixelWidth: 1024 }));
-      } catch {
-        setTexture3D(null);
-      }
-    }, 250);
-    return () => clearTimeout(timer);
-  }, [show3D, frontLayers, images, frontMockup, views, fontsVersion]);
-
   // ---- Saving ----
   const saveDesign = async ({ addToCart }) => {
     const sides = views.filter((v) => (design[v.key] || []).some((l) => !l.hidden));
@@ -430,7 +407,7 @@ export default function DesignStudio({ product, initialDesign, onAddToCart, onSa
         const file = assets.current.get(assetId);
         form.append("assets", file, file.name || "image.png");
       });
-      form.append("data", JSON.stringify({ productId: product._id, mode: "2d", name: `${product.name} design`, views: viewsData }));
+      form.append("data", JSON.stringify({ productId: product._id, name: `${product.name} design`, views: viewsData }));
 
       const res = await api.post("/designs", form, { timeout: 180000 });
       clearDraft(product._id);
@@ -609,7 +586,6 @@ export default function DesignStudio({ product, initialDesign, onAddToCart, onSa
                   onClick={() => {
                     setActiveKey(v.key);
                     setSelectedId(null);
-                    setShow3D(false);
                   }}
                 >
                   {v.label}
@@ -624,41 +600,23 @@ export default function DesignStudio({ product, initialDesign, onAddToCart, onSa
             <label className="checkbox small">
               <input type="checkbox" checked={showGuides} onChange={(e) => setShowGuides(e.target.checked)} /> Print area
             </label>
-            {product.model3d === "mug" && (
-              <button className={`btn btn-sm ${show3D ? "btn-primary" : "btn-secondary"}`} onClick={() => { setActiveKey("front"); setShow3D((s) => !s); }}>
-                {show3D ? "Back to editing" : "3D preview"}
-              </button>
-            )}
           </div>
         </div>
 
         <div className="studio-canvas" ref={canvasBoxRef}>
-          {show3D ? (
-            <div className="studio-3d" style={{ height: canvasWidth }}>
-              <Suspense fallback={<div className="spinner" />}>
-                <Mug3DPreview
-                  textureUrl={texture3D}
-                  widthCm={activeView.area.widthCm}
-                  heightCm={printHeightCm(activeView.area, H)}
-                />
-              </Suspense>
-              <span className="studio-3d-hint">Drag to turn the mug</span>
-            </div>
-          ) : (
-            <DesignCanvas
-              width={canvasWidth}
-              mockup={mockup?.img}
-              area={activeView.area}
-              H={H}
-              layers={layers}
-              images={images}
-              selectedId={selectedId}
-              onSelect={select}
-              onChange={updateLayer}
-              showGuides={showGuides}
-              fontsVersion={fontsVersion}
-            />
-          )}
+          <DesignCanvas
+            width={canvasWidth}
+            mockup={mockup?.img}
+            area={activeView.area}
+            H={H}
+            layers={layers}
+            images={images}
+            selectedId={selectedId}
+            onSelect={select}
+            onChange={updateLayer}
+            showGuides={showGuides}
+            fontsVersion={fontsVersion}
+          />
         </div>
         <p className="muted small studio-help">
           Drag to move · corner handles resize · top handle rotates · Delete removes · arrow keys nudge.

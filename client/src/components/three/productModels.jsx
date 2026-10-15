@@ -1,20 +1,33 @@
 // 3D models of the products customers can design (shown on the "Design your own" page).
-// The mug is a real model file; the others are built from simple shapes so they load instantly.
+// Every model is built from simple shapes, so they load instantly with no model files.
 // Sizes are in metres (roughly the real product), facing the camera along +Z with Y up.
 import { useLayoutEffect, useMemo, useRef } from "react";
 import { RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
-import { MODEL_PATHS, useModelMeshes } from "./modelUtils";
 import { PRODUCT_TYPES } from "./productTypes";
 
 const fabric = (color) => ({ color, roughness: 0.92, metalness: 0 });
 
-// ---------- Mug (model file) ----------
-function MugModel() {
-  const meshes = useModelMeshes(MODEL_PATHS.mug, "#ffffff");
-  return meshes.map((m) => (
-    <mesh key={m.key} geometry={m.geometry} material={m.material} position={m.position} quaternion={m.quaternion} scale={m.scale} castShadow />
-  ));
+// ---------- Mug: ceramic body (outer wall, rim and inside) with a C-shaped handle ----------
+function MugModel({ color = "#fbfbfa" }) {
+  const body = useMemo(() => {
+    const profile = [
+      [0, 0], [0.038, 0], [0.041, 0.004], [0.041, 0.095], [0.0395, 0.0965], [0.0375, 0.095], [0.0375, 0.008], [0, 0.008],
+    ].map(([r, y]) => new THREE.Vector2(r, y));
+    return new THREE.LatheGeometry(profile, 64);
+  }, []);
+  const glaze = { color, roughness: 0.22, metalness: 0 };
+  return (
+    <group>
+      <mesh geometry={body} castShadow>
+        <meshStandardMaterial {...glaze} side={THREE.DoubleSide} />
+      </mesh>
+      <mesh position={[0.04, 0.05, 0]} rotation={[0, 0, -Math.PI / 2]} scale={[1, 0.8, 1]} castShadow>
+        <torusGeometry args={[0.026, 0.0065, 16, 48, Math.PI]} />
+        <meshStandardMaterial {...glaze} />
+      </mesh>
+    </group>
+  );
 }
 
 // ---------- T-shirt: a soft, puffy shirt outline ----------

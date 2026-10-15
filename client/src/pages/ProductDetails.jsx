@@ -111,7 +111,7 @@ const ProductDetails = () => {
     api
       .get(`/designs/${designId}`)
       .then((res) => {
-        if (res.data.productId === id && res.data.mode === "2d") setInitialDesign(res.data);
+        if (res.data.productId === id) setInitialDesign(res.data);
       })
       .catch(() => toast.error("That design could not be opened."));
   }, [designId, id, user, toast]);

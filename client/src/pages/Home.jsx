@@ -19,7 +19,7 @@ const CATEGORIES = [
 const STEPS = [
   ["1", "Pick a product", "Mugs, T-shirts, tote bags, notebooks and more."],
   ["2", "Add your logo or photo", "Get 3 instant design ideas, then fine-tune text, colours and layout."],
-  ["3", "Preview and order", "See it on the product (in 3D for mugs). We print and deliver it."],
+  ["3", "Preview and order", "See your design on the product, then order. We print and deliver it."],
 ];
 
 export default function Home() {
