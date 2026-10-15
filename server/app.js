@@ -61,7 +61,7 @@ app.use("/api/admin", require("./routes/admin"));
 app.use("/api/design-suggestions", require("./routes/suggestions"));
 
 app.get("/api/health", (req, res) =>
-  res.json({ ok: true, payments: config.razorpay.enabled ? "razorpay" : "test", email: config.email.enabled, ai: config.ai.enabled })
+  res.json({ ok: true, payments: config.razorpay.enabled ? "razorpay" : config.isProduction ? "off" : "test", email: config.email.enabled, ai: config.ai.enabled })
 );
 
 app.use("/api", (req, res) => res.status(404).json({ error: "Not found" }));

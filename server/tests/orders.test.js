@@ -238,3 +238,17 @@ test("unpaid orders are cancelled after the time limit and their stock comes bac
     fake.restore();
   }
 });
+
+test("the live store takes no orders without Razorpay keys (never free orders)", async () => {
+  config.isProduction = true;
+  try {
+    const before = (await Product.findById(mug._id)).stock;
+    const r = await api("POST", "/api/orders", { token: customerToken, body: { items: [{ productId: mug._id, quantity: 1 }], address: ADDRESS } });
+    assert.equal(r.status, 503);
+    assert.equal((await Product.findById(mug._id)).stock, before); // no stock reserved
+    const health = await api("GET", "/api/health");
+    assert.equal(health.data.payments, "off");
+  } finally {
+    config.isProduction = false;
+  }
+});

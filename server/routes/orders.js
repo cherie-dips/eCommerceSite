@@ -34,8 +34,12 @@ const cleanAddress = (a = {}) => ({
 // === Place an order for everything in the cart ===
 // Body: { items: [{ productId, quantity, designId? }], address: {...}, discountCode? }
 // Stock is reserved straight away. With Razorpay keys set, the order waits for payment
-// (POST /:orderId/verify-payment); without keys it is paid immediately (test mode).
+// (POST /:orderId/verify-payment); without keys it is paid immediately (test mode, local only).
 router.post("/", verifyToken, async (req, res) => {
+  // The live store never hands out free orders: without Razorpay keys it takes no orders
+  if (!config.razorpay.enabled && config.isProduction) {
+    return res.status(503).json({ error: "Payments aren't available right now, so orders can't be placed. Please try again later." });
+  }
   const { items, discountCode: rawCode } = req.body || {};
   if (!Array.isArray(items) || items.length === 0) return res.status(400).json({ error: "Your cart is empty." });
   if (items.length > MAX_LINES) return res.status(400).json({ error: "Too many items in one order." });
@@ -120,6 +124,11 @@ router.post("/", verifyToken, async (req, res) => {
     });
     const subtotal = round2(items.reduce((sum, item) => sum + productsById.get(String(item.productId)).price * item.quantity, 0));
     const amount = round2(docs.reduce((sum, d) => sum + d.unitPrice * d.quantity, 0));
+    // Razorpay's smallest payment is ₹1 (100 paise)
+    if (provider === "razorpay" && amount < 1) {
+      await restock(reserved);
+      return res.status(400).json({ error: "The order total must be at least ₹1." });
+    }
 
     await Order.insertMany(docs);
     const checkout = await new Checkout({

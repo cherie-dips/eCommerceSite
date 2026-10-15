@@ -11,8 +11,7 @@ look after the whole store.
 ## What it does
 
 **Customers**
-- **Design page:** every product shown as a rotating 3D model (drag to turn it), filtered by category,
-  with a link to the **3D logo lab** for placing logos anywhere around a mug.
+- **Design page:** every product shown as a rotating 3D model (drag to turn it), filtered by category.
 - **Design studio** on every product:
   - Upload photos and logos, add text (8 fonts, colours, outline, spacing) and shapes.
   - Move, resize and rotate everything; undo/redo; layers (order, lock, hide); front and back sides.
@@ -43,12 +42,12 @@ look after the whole store.
 | --- | --- |
 | Website (`client/`) | React 19, Vite, React Router, Material UI icons |
 | Design studio | Konva / react-konva (2D editor and print files) |
-| 3D | three.js, react-three-fiber, drei (product models, mug preview, 3D logo lab) |
+| 3D | three.js, react-three-fiber, drei (product models, mug preview) |
 | Server (`server/`) | Node.js, Express 5, Helmet, rate limiting |
 | Database | MongoDB Atlas with Mongoose |
 | Login | JWT, bcrypt, Google Sign-In |
 | Uploads | Multer (stored on disk; a persistent volume in production) |
-| Payments | Razorpay (test mode without keys) |
+| Payments | Razorpay Standard Checkout (UPI, cards, net banking, wallets) |
 | Email | Nodemailer with any SMTP service (printed in the console without settings) |
 | AI design ideas | Anthropic Claude API (optional) |
 | Tests | node:test with an in-memory MongoDB |
@@ -84,7 +83,7 @@ All of these are off until their settings are added to `server/.env`; the store 
 
 | Service | Settings | Without it |
 | --- | --- | --- |
-| **Razorpay payments** | `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET` (+ `RAZORPAY_WEBHOOK_SECRET`) from the [Razorpay dashboard](https://dashboard.razorpay.com/app/keys). Add a webhook to `https://<server>/api/payments/razorpay/webhook` for `payment.captured` and `order.paid`. | Checkout runs in test mode: orders are marked paid without taking money. |
+| **Razorpay payments** | `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET` (+ `RAZORPAY_WEBHOOK_SECRET`) from the [Razorpay dashboard](https://dashboard.razorpay.com/app/keys). Add a webhook to `https://<server>/api/payments/razorpay/webhook` for `payment.captured` and `order.paid`. | Locally, checkout runs in test mode (orders are marked paid without taking money). On the live site (`NODE_ENV=production`) checkout is turned off, so no order is ever free. |
 | **Email** | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `EMAIL_FROM` (e.g. Resend, Brevo, Amazon SES) | Emails (confirmation links, reset links, order updates) are printed in the server console. |
 | **Google sign-in** | `GOOGLE_CLIENT_ID` (server) and `VITE_GOOGLE_CLIENT_ID` (client), the same value. Add every website address you use (e.g. `http://localhost:5173`, the live site) as an *Authorized JavaScript origin* in Google Cloud. | The Google button doesn't work; email sign-up still does. |
 | **AI design ideas** | `ANTHROPIC_API_KEY` from the [Anthropic console](https://console.anthropic.com). `AI_SUGGESTIONS_PER_HOUR` limits requests per user (default 10). Each request costs a few US cents. | Only the free "smart template" ideas are shown. |
@@ -113,8 +112,9 @@ API, the built website and the uploaded files.
 - **Uploads** are saved on a Railway volume mounted at `/data` (`UPLOAD_DIR=/data/uploads`), so they
   survive deploys and restarts.
 - **Railway variables:** `NODE_ENV=production`, `PORT=8080`, `UPLOAD_DIR=/data/uploads`, `MONGO_URI`,
-  `JWT_SECRET`, `CLIENT_URL` (the live address), `GOOGLE_CLIENT_ID`, `VITE_GOOGLE_CLIENT_ID`, plus any
-  optional services above.
+  `JWT_SECRET`, `CLIENT_URL` (the live address), `GOOGLE_CLIENT_ID`, `VITE_GOOGLE_CLIENT_ID`,
+  `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET` (`rzp_test_…` for test payments, `rzp_live_…` to take real
+  money after Razorpay KYC), plus any optional services above.
 - **MongoDB Atlas** must allow connections from anywhere (`0.0.0.0/0`), because Railway's address changes.
 
 To run it the same way on another host: build with `VITE_API_URL=/api npm run build`, set the variables

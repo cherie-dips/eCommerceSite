@@ -27,7 +27,7 @@ export default function Checkout() {
   const { user } = useAuth();
   const toast = useToast();
   const navigate = useNavigate();
-  const [paymentMode, setPaymentMode] = useState(null); // "razorpay" | "test"
+  const [paymentMode, setPaymentMode] = useState(null); // "razorpay" | "test" | "off"
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [placedOrderId, setPlacedOrderId] = useState(null);
@@ -191,9 +191,12 @@ export default function Checkout() {
                 Test mode: no real payment is taken. (Add Razorpay keys on the server to take real payments.)
               </div>
             )}
+            {paymentMode === "off" && (
+              <div className="notice notice-danger small">Payments aren't available right now, so orders can't be placed. Please try again later.</div>
+            )}
             {error && <div className="notice notice-danger small">{error}</div>}
 
-            <button className="btn btn-primary btn-lg btn-block" onClick={placeOrder} disabled={busy || !address}>
+            <button className="btn btn-primary btn-lg btn-block" onClick={placeOrder} disabled={busy || !address || paymentMode === "off"}>
               {busy ? "Processing..." : `Pay ₹${total.toFixed(2)}`}
             </button>
             <p className="muted small" style={{ textAlign: "center", marginBottom: 0 }}>

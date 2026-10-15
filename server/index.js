@@ -22,7 +22,8 @@ async function start() {
 
   app.listen(config.port, () => {
     console.log(`🚀 Server running on port ${config.port}`);
-    console.log(`   Payments: ${config.razorpay.enabled ? "Razorpay" : "test mode (no RAZORPAY keys)"}`);
+    const noKeys = config.isProduction ? "OFF, orders can't be placed (add RAZORPAY keys)" : "test mode (no RAZORPAY keys)";
+    console.log(`   Payments: ${config.razorpay.enabled ? "Razorpay" : noKeys}`);
     console.log(`   Email:    ${config.email.enabled ? "SMTP" : "printed here in the console (no SMTP_HOST)"}`);
     console.log(`   AI ideas: ${config.ai.enabled ? "on" : "off (no ANTHROPIC_API_KEY)"}`);
   });

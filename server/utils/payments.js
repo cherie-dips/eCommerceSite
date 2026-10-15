@@ -15,6 +15,10 @@ async function createRazorpayOrder({ amount, receipt, notes }) {
     body: JSON.stringify({ amount: Math.round(amount * 100), currency: "INR", receipt, notes }),
   });
   const data = await res.json().catch(() => ({}));
+  if (res.status === 401) {
+    // Server setup problem, not the customer's: the route answers 500 so they stay logged in
+    throw new Error("Razorpay rejected the API keys. Check RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET.");
+  }
   if (!res.ok) {
     throw new Error(`Razorpay order failed: ${data?.error?.description || res.status}`);
   }
