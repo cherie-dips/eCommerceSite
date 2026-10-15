@@ -4,7 +4,6 @@ import { useLikes } from "../context/LikesContext";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "../styles/Navbar.css";
-import RedeemOutlinedIcon from '@mui/icons-material/RedeemOutlined';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined';
@@ -44,9 +43,6 @@ export default function Navbar() {
         <Link to="/" className="navbar-logo text-black"> FLAGZEN </Link>
         <NavLink to="/" end className="navbar-icon-link" title="Home">
           <HomeOutlinedIcon alt="Home" className="navbar-icon" />
-        </NavLink>
-        <NavLink to="/products" className="navbar-icon-link" title="Products">
-          <RedeemOutlinedIcon alt="Products" className="navbar-icon" />
         </NavLink>
         <NavLink to="/customize" className="navbar-icon-link navbar-text-link" title="Design your own">
           <BrushOutlinedIcon className="navbar-icon" />

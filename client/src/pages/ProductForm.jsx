@@ -73,6 +73,11 @@ export default function ProductForm() {
   }, [editing, id]);
 
   const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.type === "checkbox" ? e.target.checked : e.target.value }));
+  // Picking a product type also fills in its usual category
+  const chooseType = (e) => {
+    const type = PRODUCT_TYPES.find((t) => t.key === e.target.value);
+    setForm((f) => ({ ...f, model3d: e.target.value, category: type?.category || f.category }));
+  };
 
   const uploadPhoto = async (side, file) => {
     if (!file) return;
@@ -154,6 +159,16 @@ export default function ProductForm() {
         <div className="card">
           <h2 className="section-title">Details</h2>
           <div className="field">
+            <label>Product type</label>
+            <select className="select" value={form.model3d} onChange={chooseType} required>
+              <option value="" disabled>Choose a product type</option>
+              {PRODUCT_TYPES.map((t) => (
+                <option key={t.key} value={t.key}>{t.name}</option>
+              ))}
+            </select>
+            <span className="hint">Customers see your product as this 3D model.</span>
+          </div>
+          <div className="field">
             <label>Product name</label>
             <input className="input" value={form.name} onChange={set("name")} required maxLength={120} placeholder="e.g. Classic White Mug" />
           </div>
@@ -181,17 +196,6 @@ export default function ProductForm() {
           <label className="checkbox">
             <input type="checkbox" checked={form.customizable} onChange={set("customizable")} /> Customers can add their own design
           </label>
-          {form.customizable && (
-            <div className="field" style={{ marginTop: "0.8rem", maxWidth: 300 }}>
-              <label>3D model</label>
-              <select className="select" value={form.model3d} onChange={set("model3d")}>
-                <option value="">None</option>
-                {PRODUCT_TYPES.map((m) => (
-                  <option key={m.key} value={m.key}>{m.name}</option>
-                ))}
-              </select>
-            </div>
-          )}
         </div>
 
         <div className="card">

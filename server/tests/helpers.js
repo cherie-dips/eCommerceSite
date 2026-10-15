@@ -80,6 +80,7 @@ async function createProduct(retailer, overrides = {}) {
   return new Product({
     name: "Test Mug",
     category: "Drinkware",
+    model3d: "mug",
     image: "uploads/products/test.jpg",
     price: 500,
     stock: 10,

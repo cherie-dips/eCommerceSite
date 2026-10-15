@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -11,7 +11,6 @@ import "./styles/ui.css";
 
 // Pages are loaded only when opened, so the first visit stays fast
 // (the 3D and design-editor code is large).
-const Products = lazy(() => import("./pages/Product"));
 const ProductDetails = lazy(() => import("./pages/ProductDetails"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
@@ -49,6 +48,12 @@ const LoadingSpinner = ({ message = "Restoring your session..." }) => (
 
 const SELLER_ROLES = ["retailer", "admin"];
 
+// Old /products links (e.g. /products?category=Bags) open the Design page with the same filter
+function ToDesignPage() {
+  const { search } = useLocation();
+  return <Navigate to={`/customize${search}`} replace />;
+}
+
 function AppContent() {
   const { isLoading } = useAuth();
 
@@ -65,7 +70,8 @@ function AppContent() {
           <Route path="/" element={<Home />} />
           <Route path="/customize" element={<CustomizationPage />} />
           <Route path="/customize-3d" element={<CustomizationPage3D />} />
-          <Route path="/products" element={<Products />} />
+          {/* The product list is part of the Design page now */}
+          <Route path="/products" element={<ToDesignPage />} />
           <Route path="/products/:id" element={<ProductDetails />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />

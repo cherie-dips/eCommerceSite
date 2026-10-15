@@ -6,9 +6,10 @@ import { useLikes } from "../context/LikesContext";
 import { useToast } from "../context/ToastContext";
 import { assetUrl } from "../utils/api";
 import Stars from "./Stars";
+import "../styles/Product.css";
 
 // Product tile with working like and add-to-cart buttons.
-// Used on the Home, Products and Liked Products pages.
+// Used on the Home and Liked Products pages.
 export default function ProductCard({ product }) {
   const { addToCart } = useCart();
   const { likedItems, toggleLike } = useLikes();

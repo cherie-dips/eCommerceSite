@@ -121,7 +121,7 @@ export default function Checkout() {
           <p>Your order ID is <b>{placedOrderId}</b>. We've emailed you a confirmation.</p>
           <div className="row" style={{ justifyContent: "center" }}>
             <Link to="/orders" className="btn btn-primary">Track your order</Link>
-            <Link to="/products" className="btn btn-secondary">Keep shopping</Link>
+            <Link to="/customize" className="btn btn-secondary">Keep shopping</Link>
           </div>
         </div>
       </div>
@@ -140,7 +140,7 @@ export default function Checkout() {
       {cartItems.length === 0 ? (
         <div className="empty">
           <h3>Your cart is empty</h3>
-          <Link to="/products" className="btn btn-primary">Browse products</Link>
+          <Link to="/customize" className="btn btn-primary">Browse products</Link>
         </div>
       ) : (
         <div className="checkout-grid">

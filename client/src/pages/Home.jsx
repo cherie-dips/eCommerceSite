@@ -12,7 +12,8 @@ const CATEGORIES = [
   ["Drinkware", "Mugs & bottles"],
   ["Bags", "Totes & backpacks"],
   ["Stationery", "Notebooks & pens"],
-  ["Office Kits", "Onboarding kits"],
+  ["Tech", "Phone cases"],
+  ["Office Kits", "Mouse pads & desk kits"],
 ];
 
 const STEPS = [
@@ -87,7 +88,7 @@ export default function Home() {
         <h2>Custom Product Categories</h2>
         <div className="category-cards">
           {CATEGORIES.map(([category, hint]) => (
-            <Link to={`/products?category=${encodeURIComponent(category)}`} className="category-card" key={category}>
+            <Link to={`/customize?category=${encodeURIComponent(category)}`} className="category-card" key={category}>
               <strong>{category}</strong>
               <span>{hint}</span>
             </Link>
@@ -100,7 +101,7 @@ export default function Home() {
         <div className="showcase-text">
           <h2>Your logo, on everything</h2>
           <p>From team mugs to event totes, every order is printed with your design and checked before it ships.</p>
-          <Link to="/products" className="btn btn-primary">Browse products</Link>
+          <Link to="/customize" className="btn btn-primary">Browse products</Link>
         </div>
         <img src={showcaseMugs} alt="Branded mugs" loading="lazy" />
         <img src={showcaseTote} alt="Branded tote bag" loading="lazy" />

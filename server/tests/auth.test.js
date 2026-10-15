@@ -66,7 +66,7 @@ test("new sellers wait for approval before listing products", async () => {
   assert.equal(r.data.user.approved, false);
   const sellerToken = r.data.token;
 
-  const product = { name: "Mug", price: 100, image: "uploads/products/a.jpg" };
+  const product = { name: "Mug", price: 100, image: "uploads/products/a.jpg", model3d: "mug" };
   r = await api("POST", "/api/products", { body: product, token: sellerToken });
   assert.equal(r.status, 403);
   assert.match(r.data.error, /approval/);

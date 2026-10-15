@@ -121,7 +121,7 @@ const ProductDetails = () => {
       <div className="page" style={{ textAlign: "center" }}>
         <div className="empty">
           <h3>{loadError}</h3>
-          <Link to="/products" className="btn btn-primary">Browse all products</Link>
+          <Link to="/customize" className="btn btn-primary">Browse all products</Link>
         </div>
       </div>
     );
@@ -149,7 +149,7 @@ const ProductDetails = () => {
     <div className="page" style={{ maxWidth: 1280 }}>
       <div className="product-head">
         <div>
-          <Link to="/products" className="small">← All products</Link>
+          <Link to="/customize" className="small">← All products</Link>
           <h1>{product.name}</h1>
           <div className="product-meta">
             <Stars value={product.ratingAvg} count={product.ratingCount} />

@@ -67,6 +67,19 @@ test("search, filter, sort and pages", async () => {
   assert.equal(r.status, 200); // odd characters don't break the search
 });
 
+test("only products with a 3D model are listed, and new products need one", async () => {
+  await createProduct(seller, { name: "Old Phone", category: "Tech", model3d: "" });
+  let r = await api("GET", "/api/products?search=old%20phone");
+  assert.equal(r.data.total, 0);
+
+  r = await api("POST", "/api/products", {
+    token: sellerToken,
+    body: { name: "No Model", price: 100, image: "uploads/products/test.jpg" },
+  });
+  assert.equal(r.status, 400);
+  assert.match(r.data.error, /product type/);
+});
+
 test("only the owner can edit or remove a product; removed products disappear", async () => {
   const product = await createProduct(seller, { name: "Editable" });
   const { token: otherSeller } = await createUser({ role: "retailer" });

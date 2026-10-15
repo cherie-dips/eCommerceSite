@@ -1,5 +1,5 @@
 /* ============================= */
-/* PRODUCTS PAGE (Grid + Cards)  */
+/* PRODUCT GRID + CARDS         */
 /* ============================= */
 
 .products-page {
@@ -97,11 +97,6 @@
   color: #4a5568;
 }
 
-/* Search and filters */
-.product-filters { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
-.product-search { display: flex; gap: 0.5rem; flex: 1 1 320px; }
-.product-filters .select { width: auto; min-width: 170px; }
-
 /* "Customisable" tag on product photos */
 .pc-tag {
   position: absolute;
@@ -121,5 +116,4 @@
   .products-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
   .product-card { padding: 0.75rem; }
   .pc-name { font-size: 0.95rem; }
-  .product-filters .select { flex: 1 1 140px; }
 }

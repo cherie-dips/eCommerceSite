@@ -140,7 +140,7 @@ export default function CartPage() {
             <h3>Cart ({itemCount} item{itemCount === 1 ? "" : "s"})</h3>
             {cartItems.length === 0 ? (
               <p>
-                Your cart is empty. <Link to="/products">Browse products</Link>
+                Your cart is empty. <Link to="/customize">Browse products</Link>
               </p>
             ) : (
               cartItems.map((item) => (
