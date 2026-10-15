@@ -1,45 +1,58 @@
 # Flagzen
 
-An online store for custom-branded merchandise (mugs, T-shirts, tote bags, notebooks and more) with a
-built-in **design studio**: customers upload their logo or photo, pick one of the suggested layouts,
-fine-tune it, preview it (in 3D for mugs) and order. Sellers receive print-ready files with every order.
+**Live site: https://ecommercesite-production-2842.up.railway.app**
 
-The plan for taking this to real customers is in [docs/ROADMAP.md](docs/ROADMAP.md).
+Flagzen is an online store for custom-branded merchandise: T-shirts, mugs, tote bags, notebooks,
+caps, water bottles, phone cases and mouse pads. Customers pick a product from a gallery of rotating
+3D models, open it in a built-in **design studio**, upload their logo or photo, choose one of the
+suggested layouts, fine-tune it and order. Sellers get print-ready files with every order, and admins
+look after the whole store.
 
 ## What it does
 
 **Customers**
-- Browse, search and filter products; like products; read and write reviews.
-- **Design studio** on every customisable product:
+- **Design page:** every product shown as a rotating 3D model (drag to turn it), filtered by category,
+  with a link to the **3D logo lab** for placing logos anywhere around a mug.
+- **Design studio** on every product:
   - Upload photos and logos, add text (8 fonts, colours, outline, spacing) and shapes.
   - Move, resize and rotate everything; undo/redo; layers (order, lock, hide); front and back sides.
   - **3 instant design ideas** after an upload, based on the logo/photo's colours and shape.
   - **AI design ideas** (optional) from Claude, when the server has an Anthropic API key.
   - Print-quality warning when an image is too small for its printed size.
-  - Rotating **3D models** of every product on the Design page, a live **3D preview** for mugs, and a separate 3D logo lab.
-  - Unfinished designs are kept in the browser (survive a refresh or logging in).
+  - Live **3D preview** of the design on mugs.
+  - Unfinished designs are kept in the browser (they survive a refresh or logging in).
+- Likes, reviews and ratings.
 - Cart with saved addresses and discount codes; checkout with **Razorpay** (UPI, cards, net banking, wallets).
 - My Orders (status steps, courier tracking, cancel with automatic refund), My Designs, Profile.
-- Sign up with email or Google, confirm email, reset forgotten password.
+- Sign up with email or Google, confirm email, reset a forgotten password.
 
 **Sellers**
-- Add/edit products with photos for each side, and mark where designs can be printed (drag a box on the photo).
+- Add/edit products: choose the product type (its 3D model), upload photos for each side and mark where
+  designs can be printed by dragging a box on the photo.
 - Stock levels, sales numbers, remove/restore products.
-- Orders: download print files (300 DPI PNG, transparent background), mark "being made", ship with courier + tracking ID, mark delivered, cancel (customer is refunded).
+- Orders: download print files (300 DPI PNG, transparent background), mark "being made", ship with
+  courier + tracking ID, mark delivered, cancel (the customer is refunded).
 - New seller accounts wait for admin approval.
 
 **Admins**
 - Store totals, approve sellers, change user roles, hide products, see every order.
 
-## How it's built
+## Tech stack
 
 | Part | Technology |
 | --- | --- |
-| Website (`client/`) | React 19 + Vite, React Router, Konva (2D design editor), three.js / react-three-fiber (3D) |
-| Server (`server/`) | Node.js + Express 5, MongoDB (Mongoose), JWT login, Multer uploads |
+| Website (`client/`) | React 19, Vite, React Router, Material UI icons |
+| Design studio | Konva / react-konva (2D editor and print files) |
+| 3D | three.js, react-three-fiber, drei (product models, mug preview, 3D logo lab) |
+| Server (`server/`) | Node.js, Express 5, Helmet, rate limiting |
+| Database | MongoDB Atlas with Mongoose |
+| Login | JWT, bcrypt, Google Sign-In |
+| Uploads | Multer (stored on disk; a persistent volume in production) |
 | Payments | Razorpay (test mode without keys) |
-| Email | Any SMTP service via Nodemailer (printed in the console without settings) |
-| AI ideas | Anthropic Claude API (optional) |
+| Email | Nodemailer with any SMTP service (printed in the console without settings) |
+| AI design ideas | Anthropic Claude API (optional) |
+| Tests | node:test with an in-memory MongoDB |
+| Hosting | Railway (app + volume), GitHub Actions for tests and builds |
 
 ## Getting started
 
@@ -53,7 +66,7 @@ npm run install:all
 cp server/.env.example server/.env      # at least MONGO_URI and JWT_SECRET
 cp client/.env.example client/.env      # optional
 
-# 3. Demo data: a demo seller and 4 ready-to-design products
+# 3. Demo data: a demo seller and one ready-to-design product of each type
 npm run seed
 
 # 4. Your admin account
@@ -73,7 +86,7 @@ All of these are off until their settings are added to `server/.env`; the store 
 | --- | --- | --- |
 | **Razorpay payments** | `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET` (+ `RAZORPAY_WEBHOOK_SECRET`) from the [Razorpay dashboard](https://dashboard.razorpay.com/app/keys). Add a webhook to `https://<server>/api/payments/razorpay/webhook` for `payment.captured` and `order.paid`. | Checkout runs in test mode: orders are marked paid without taking money. |
 | **Email** | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `EMAIL_FROM` (e.g. Resend, Brevo, Amazon SES) | Emails (confirmation links, reset links, order updates) are printed in the server console. |
-| **Google sign-in** | `GOOGLE_CLIENT_ID` (server) and `VITE_GOOGLE_CLIENT_ID` (client). Add every website address you use (e.g. `http://localhost:5173`, your live domain) as an *Authorized JavaScript origin* in Google Cloud. | The Google button doesn't work; email sign-up still does. |
+| **Google sign-in** | `GOOGLE_CLIENT_ID` (server) and `VITE_GOOGLE_CLIENT_ID` (client), the same value. Add every website address you use (e.g. `http://localhost:5173`, the live site) as an *Authorized JavaScript origin* in Google Cloud. | The Google button doesn't work; email sign-up still does. |
 | **AI design ideas** | `ANTHROPIC_API_KEY` from the [Anthropic console](https://console.anthropic.com). `AI_SUGGESTIONS_PER_HOUR` limits requests per user (default 10). Each request costs a few US cents. | Only the free "smart template" ideas are shown. |
 
 ## Commands (run from the project folder)
@@ -85,34 +98,46 @@ All of these are off until their settings are added to `server/.env`; the store 
 | `npm run lint` | Checks the website code |
 | `npm run build` | Builds the website for going live |
 | `npm start` | Starts the server (in production it also hosts the built website) |
-| `npm run seed` | Adds the demo seller and demo products |
+| `npm run seed` | Adds the demo seller and demo products (safe to run again) |
 | `npm run create-admin -- <email> <password> [name]` | Creates an admin, or makes an existing account an admin |
 
-## Going live (one server)
+## Deployment
 
-1. Build the website so it talks to the same server: `VITE_API_URL=/api npm run build`
-2. On the server set `NODE_ENV=production`, `CLIENT_URL=https://your-domain`, and the other settings.
-3. `npm start`. The server hosts the website, the API and uploaded files.
+The live site runs on [Railway](https://railway.com) as a single service: the Express server hosts the
+API, the built website and the uploaded files.
 
-Uploaded files are stored in `server/uploads/`. On hosts that wipe the disk on every deploy, use a
-persistent disk (or move uploads to cloud storage; see the roadmap).
+- **Every push to `main`** runs the GitHub Actions check (`.github/workflows/ci.yml`): server tests,
+  website lint and build. Railway waits for it to pass ("Wait for CI") and then deploys.
+- **Build and start commands** are in `railway.json`. On start, the server runs the seed script, which
+  only adds demo products that are missing.
+- **Uploads** are saved on a Railway volume mounted at `/data` (`UPLOAD_DIR=/data/uploads`), so they
+  survive deploys and restarts.
+- **Railway variables:** `NODE_ENV=production`, `PORT=8080`, `UPLOAD_DIR=/data/uploads`, `MONGO_URI`,
+  `JWT_SECRET`, `CLIENT_URL` (the live address), `GOOGLE_CLIENT_ID`, `VITE_GOOGLE_CLIENT_ID`, plus any
+  optional services above.
+- **MongoDB Atlas** must allow connections from anywhere (`0.0.0.0/0`), because Railway's address changes.
+
+To run it the same way on another host: build with `VITE_API_URL=/api npm run build`, set the variables
+above and run `npm start`.
 
 ## Project layout
 
 ```
-client/                 Website (React)
-  src/design/           Design studio: canvas, layers, settings, suggestions, export, 3D preview
-  src/pages/            Pages (shop, cart, checkout, orders, seller, admin...)
-  src/components/       Shared pieces (navbar, product card, address form, print-area editor...)
-  src/context/          Login, cart, likes, on-page messages
-  public/models/        3D models
-server/                 API (Express)
-  routes/               API routes (auth, products, designs, orders, payments, admin, AI ideas)
-  services/orders.js    Payment and order steps shared by routes, webhook and clean-up job
-  models/               Database models
-  utils/                Uploads, email, payments, rate limits, login tokens
-  scripts/              Demo data and create-admin
-  seed-assets/          Blank product photos used by the demo data
-  tests/                Server tests (node:test + temporary MongoDB)
-docs/ROADMAP.md         Plan for launching to real customers
+client/                    Website (React)
+  src/pages/               Pages (design page, product + studio, cart, checkout, orders, seller, admin...)
+  src/design/              Design studio: canvas, layers, settings, suggestions, export, mug 3D preview
+  src/components/three/    3D product models and shared 3D helpers
+  src/components/          Shared pieces (navbar, product card, address form, print-area editor...)
+  src/context/             Login, cart, likes, on-page messages
+  public/models/           Mug 3D model
+server/                    API (Express)
+  routes/                  API routes (auth, products, designs, orders, payments, admin, AI ideas)
+  services/orders.js       Payment and order steps shared by routes, webhook and clean-up job
+  models/                  Database models
+  utils/                   Uploads, email, payments, rate limits, login tokens
+  scripts/                 Demo data and create-admin
+  seed-assets/             Product photos used by the demo data
+  tests/                   Server tests (node:test + temporary MongoDB)
+.github/workflows/ci.yml   Tests and builds every push
+railway.json               Railway build and start settings
 ```
