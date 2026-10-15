@@ -1,0 +1,37 @@
+# Checks every push and pull request: server tests, website lint and build.
+# Railway ("Wait for CI") only deploys main when this passes.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            server/package-lock.json
+            client/package-lock.json
+
+      - name: Install
+        run: |
+          npm ci --prefix server
+          npm ci --prefix client
+
+      - name: Server tests
+        run: npm test --prefix server
+
+      - name: Website lint
+        run: npm run lint --prefix client
+
+      - name: Website build
+        run: npm run build --prefix client
+        env:
+          VITE_API_URL: /api

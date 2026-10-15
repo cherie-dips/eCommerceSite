@@ -1,0 +1,13 @@
+{
+  "$schema": "https://railway.com/railway.schema.json",
+  "build": {
+    "builder": "RAILPACK",
+    "buildCommand": "npm ci --prefix server --omit=dev && npm ci --prefix client --include=dev && VITE_API_URL=/api npm run build --prefix client"
+  },
+  "deploy": {
+    "startCommand": "npm run seed --prefix server && npm start --prefix server",
+    "healthcheckPath": "/api/health",
+    "healthcheckTimeout": 120,
+    "restartPolicyType": "ON_FAILURE"
+  }
+}

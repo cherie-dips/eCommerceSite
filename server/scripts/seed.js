@@ -131,6 +131,9 @@ async function main() {
   for (const p of PRODUCTS) {
     const existing = await Product.findOne({ name: p.name, retailerId: seller._id });
     if (existing) {
+      // Put the photos back if this server's upload folder doesn't have them (e.g. a new host)
+      copyAsset(p.image);
+      if (p.images?.back) copyAsset(p.images.back);
       if (p.model3d && !existing.model3d) {
         existing.model3d = p.model3d;
         await existing.save();
